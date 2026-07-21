@@ -644,6 +644,85 @@ section { padding: 4.5rem 0; }
 .wa-float:hover { transform: scale(1.08); }
 .wa-float svg { width: 30px; height: 30px; fill: #fff; }
 
+/* ---------- Passo a passo (Processos) ---------- */
+.steps { list-style: none; counter-reset: step; margin-top: 1.6rem; }
+.steps li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 1.8rem 4.2rem;
+}
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  box-shadow: 0 6px 16px rgba(176, 141, 87, .35);
+}
+.steps li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 1.32rem;
+  top: 2.9rem;
+  bottom: .2rem;
+  width: 1px;
+  background: var(--gold-faint);
+}
+.steps h3 { font-size: 1.15rem; margin-bottom: .25rem; }
+.steps p { font-size: .95rem; color: var(--ink-soft); }
+
+.aftercare-box {
+  background: var(--white);
+  border: 1px solid var(--gold-faint);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem 1.6rem;
+  margin-top: 2rem;
+}
+.aftercare-box h2 { font-size: 1.35rem; margin-bottom: .7rem; }
+.aftercare-box ul { list-style: none; }
+.aftercare-box ul li {
+  padding: .35rem 0 .35rem 1.6rem;
+  position: relative;
+  font-size: .95rem;
+  color: var(--ink-soft);
+}
+.aftercare-box ul li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  top: .5rem;
+  color: var(--gold);
+  font-size: .8rem;
+}
+
+.proc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  margin-top: 1.6rem;
+}
+.proc-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  background: var(--cream-2);
+  border: 1px solid var(--gold-faint);
+  border-radius: 999px;
+  padding: .45rem 1.1rem;
+  font-size: .85rem;
+  color: var(--ink-soft);
+}
+
 /* ---------- Formulários ---------- */
 .form-card {
   background: var(--white);
