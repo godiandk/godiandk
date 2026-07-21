@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A Minha Conta — Inova Beauty</title>
-<meta name="description" content="Crie a sua conta Inova Beauty e receba um cupom de 10% no mês do seu aniversário.">
+<meta name="description" content="Crie a sua conta Inova Beauty: cartão de fidelidade com selos, cupom de aniversário e vantagens exclusivas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
+<link rel="manifest" href="../manifest.webmanifest">
+<meta name="theme-color" content="#191411">
+<link rel="apple-touch-icon" href="../img/icon-192.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -47,51 +50,94 @@
     <ol class="breadcrumb"><li><a href="../">Home</a></li><li>A minha conta</li></ol>
     <span class="eyebrow-label">Clientes</span>
     <h1>A minha conta</h1>
-    <p class="lead">Crie a sua conta gratuita e ganhe um cupom de 10% no mês do seu aniversário. 🎂</p>
+    <p class="lead">Cartão de fidelidade digital: junte 10 selos e ganhe um Threading de Sobrancelhas GRÁTIS. E ainda: 10% no mês do seu aniversário. 🎂</p>
   </div>
 </section>
 <section>
   <div class="container" style="max-width:760px">
 
-    <div class="form-card" id="signupCard">
-      <h2 style="margin-bottom:1.2rem">Criar conta</h2>
-      <form id="accForm" novalidate>
-        <div class="form-grid">
-          <div class="form-field">
-            <label for="aName">Nome*</label>
-            <input id="aName" type="text" required placeholder="O seu nome">
-          </div>
-          <div class="form-field">
-            <label for="aPhone">Telemóvel*</label>
-            <input id="aPhone" type="tel" required placeholder="9XX XXX XXX">
-          </div>
-          <div class="form-field">
-            <label for="aEmail">Email</label>
-            <input id="aEmail" type="email" placeholder="opcional">
-          </div>
-          <div class="form-field">
-            <label for="aBirth">Data de nascimento*</label>
-            <input id="aBirth" type="date" required>
-            <span class="form-hint">Usada para o seu cupom de aniversário 🎁</span>
-          </div>
+    <div id="authArea">
+      <div class="form-card">
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab active" data-auth="login">Entrar</button>
+          <button type="button" class="auth-tab" data-auth="signup">Criar conta</button>
         </div>
-        <div class="form-msg" id="accMsg"></div>
-        <div class="center-actions">
-          <button type="submit" class="btn btn-gold">Criar a minha conta</button>
-        </div>
-        <p class="form-hint text-center mt-2">Os seus dados ficam guardados apenas neste dispositivo (navegador).</p>
-      </form>
+
+        <form id="loginForm" novalidate>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="lPhone">Telemóvel</label>
+              <input id="lPhone" type="tel" required placeholder="9XX XXX XXX" autocomplete="tel">
+            </div>
+            <div class="form-field">
+              <label for="lPass">Senha</label>
+              <input id="lPass" type="password" required placeholder="A sua senha" autocomplete="current-password">
+            </div>
+          </div>
+          <div class="form-msg" id="loginMsg"></div>
+          <div class="center-actions"><button type="submit" class="btn btn-gold">Entrar</button></div>
+        </form>
+
+        <form id="signupForm" novalidate style="display:none">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="sName">Nome*</label>
+              <input id="sName" type="text" required placeholder="O seu nome" autocomplete="name">
+            </div>
+            <div class="form-field">
+              <label for="sPhone">Telemóvel* (obrigatório)</label>
+              <input id="sPhone" type="tel" required placeholder="9XX XXX XXX" autocomplete="tel">
+              <span class="form-hint">1 conta por número — evita duplicados.</span>
+            </div>
+            <div class="form-field">
+              <label for="sEmail">Email*</label>
+              <input id="sEmail" type="email" required placeholder="o.seu@email.com" autocomplete="email">
+            </div>
+            <div class="form-field">
+              <label for="sBirth">Data de nascimento*</label>
+              <input id="sBirth" type="date" required>
+              <span class="form-hint">Para o seu cupom de aniversário 🎁</span>
+            </div>
+            <div class="form-field">
+              <label for="sPass">Senha* (mín. 6 caracteres)</label>
+              <input id="sPass" type="password" required autocomplete="new-password">
+            </div>
+            <div class="form-field">
+              <label for="sPass2">Confirmar senha*</label>
+              <input id="sPass2" type="password" required autocomplete="new-password">
+            </div>
+          </div>
+          <div class="form-msg" id="signupMsg"></div>
+          <div class="center-actions"><button type="submit" class="btn btn-gold">Criar a minha conta</button></div>
+          <p class="form-hint text-center mt-2">🔒 A sua senha é protegida com criptografia (SHA-256 + salt) e os dados ficam guardados apenas neste dispositivo — nunca são enviados para terceiros.</p>
+        </form>
+      </div>
     </div>
 
-    <div id="profileCard" style="display:none">
+    <div id="profileArea" style="display:none">
       <div class="form-card">
-        <h2 id="helloName" style="margin-bottom:.4rem">Olá!</h2>
-        <p class="lead" style="font-size:1rem" id="profileInfo"></p>
+        <h2 id="helloName" style="margin-bottom:.3rem">Olá!</h2>
+        <p class="form-hint" id="profileInfo"></p>
         <div id="bdayArea" class="mt-2"></div>
+
+        <div class="loyalty-card">
+          <h3>💛 Cartão de Fidelidade</h3>
+          <p class="lc-sub">Cada procedimento vale 1 selo. Ao 10.º selo, ganha um <strong>Threading de Sobrancelhas GRÁTIS</strong>.</p>
+          <div class="stamp-grid" id="stampGrid"></div>
+          <p class="lc-sub" id="stampCount"></p>
+          <div class="stamp-form">
+            <input id="stampInput" type="text" placeholder="Código do selo (INOVA-S…)">
+            <button type="button" class="btn btn-gold" id="stampBtn" style="padding:.7rem 1.4rem">Adicionar selo</button>
+          </div>
+          <p class="lc-sub" style="margin-top:.7rem">Recebe o código da Thayana no fim de cada procedimento — é a assinatura digital dela a autenticar o seu selo. ✍️</p>
+          <div class="lc-msg" id="stampMsg"></div>
+          <div id="rewardsArea" class="mt-2"></div>
+        </div>
+
         <div class="center-actions">
           <a class="btn btn-wa" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%20para%20micropigmenta%C3%A7%C3%A3o%2C%20pode%20ajudar%3F" target="_blank" rel="noopener">Agendar no WhatsApp</a>
-          <a class="btn btn-outline" href="../agendar/">Marcação online</a>
-          <button type="button" class="btn btn-outline" id="logoutBtn" style="border-color:#a33;color:#a33">Apagar conta</button>
+          <button type="button" class="btn btn-outline" id="logoutBtn">Sair</button>
+          <button type="button" class="btn btn-outline" id="deleteBtn" style="border-color:#a33;color:#a33">Apagar conta</button>
         </div>
       </div>
     </div>
@@ -99,69 +145,147 @@
   </div>
 </section>
 <script src="../coupon.js"></script>
+<script src="../auth.js"></script>
 <script>
 (function () {
-  var LS = "inova_account";
-  var signup = document.getElementById("signupCard");
-  var profile = document.getElementById("profileCard");
+  var authArea = document.getElementById("authArea");
+  var profileArea = document.getElementById("profileArea");
+  var loginForm = document.getElementById("loginForm");
+  var signupForm = document.getElementById("signupForm");
 
-  function load() {
-    var acc = null;
-    try { acc = JSON.parse(localStorage.getItem(LS)); } catch (e) {}
-    if (!acc || !acc.name) return;
-    signup.style.display = "none";
-    profile.style.display = "block";
+  document.querySelectorAll(".auth-tab").forEach(function (t) {
+    t.addEventListener("click", function () {
+      document.querySelectorAll(".auth-tab").forEach(function (x) { x.classList.remove("active"); });
+      t.classList.add("active");
+      loginForm.style.display = t.getAttribute("data-auth") === "login" ? "block" : "none";
+      signupForm.style.display = t.getAttribute("data-auth") === "signup" ? "block" : "none";
+    });
+  });
+
+  function msg(el, text, ok) {
+    el.className = "form-msg " + (ok ? "ok" : "err");
+    el.textContent = text;
+  }
+
+  function renderProfile() {
+    var acc = window.InovaAuth.current();
+    if (!acc) { authArea.style.display = "block"; profileArea.style.display = "none"; return; }
+    authArea.style.display = "none";
+    profileArea.style.display = "block";
     document.getElementById("helloName").textContent = "Olá, " + acc.name.split(" ")[0] + "! 💛";
-    var birth = new Date(acc.birth + "T12:00:00");
+    var b = new Date(acc.birth + "T12:00:00");
     document.getElementById("profileInfo").textContent =
-      "Telemóvel: " + acc.phone + (acc.email ? " · Email: " + acc.email : "") +
-      " · Aniversário: " + String(birth.getDate()).padStart(2, "0") + "/" + String(birth.getMonth() + 1).padStart(2, "0");
+      "Telemóvel: " + acc.phone + " · Email: " + acc.email +
+      " · Aniversário: " + String(b.getDate()).padStart(2, "0") + "/" + String(b.getMonth() + 1).padStart(2, "0");
 
-    var area = document.getElementById("bdayArea");
+    var bdayArea = document.getElementById("bdayArea");
     var now = new Date();
-    if (birth.getMonth() === now.getMonth()) {
+    if (b.getMonth() === now.getMonth()) {
       var c = window.InovaCoupon.birthdayCoupon(acc.phone, now);
       var exp = c.expiry.split("-");
-      area.innerHTML =
-        '<div class="coupon-card">' +
-        '<div class="c-label">🎂 Feliz aniversário! O seu presente</div>' +
+      bdayArea.innerHTML =
+        '<div class="coupon-card"><div class="c-label">🎂 Feliz aniversário! O seu presente</div>' +
         '<div class="c-pct">' + c.pct + '% de desconto</div>' +
         '<div>Apresente este código na sua próxima visita:</div>' +
         '<span class="c-code">' + c.code + '</span>' +
-        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · utilizável 1 única vez · não acumulável</div>' +
-        '</div>';
-    } else {
-      var m = String(birth.getMonth() + 1).padStart(2, "0");
-      area.innerHTML = '<p class="form-hint">🎁 No mês do seu aniversário (mês ' + m + '), o seu cupom de 10% aparece aqui automaticamente.</p>';
+        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · utilizável 1 única vez</div></div>';
+    } else { bdayArea.innerHTML = ""; }
+
+    var grid = document.getElementById("stampGrid");
+    grid.innerHTML = "";
+    var n = (acc.stamps || []).length;
+    for (var i = 0; i < 10; i++) {
+      var s = document.createElement("div");
+      s.className = "stamp" + (i < n ? " filled" : "");
+      s.textContent = i < n ? "✦" : (i + 1);
+      grid.appendChild(s);
     }
+    document.getElementById("stampCount").textContent =
+      n === 0 ? "Ainda sem selos — comece na próxima visita!" :
+      "Tem " + n + " de 10 selos. Faltam " + (10 - n) + " para o prémio!";
+
+    var rw = document.getElementById("rewardsArea");
+    rw.innerHTML = "";
+    (acc.rewards || []).forEach(function (r) {
+      var exp = r.expiry.split("-");
+      rw.innerHTML +=
+        '<div class="coupon-card" style="margin-top:1rem"><div class="c-label">🏆 Prémio de fidelidade</div>' +
+        '<div class="c-pct">Threading GRÁTIS</div>' +
+        '<div>Apresente este código no estúdio (desconto de 100% no Threading de Sobrancelhas):</div>' +
+        '<span class="c-code">' + r.code + '</span>' +
+        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · utilizável 1 única vez</div></div>';
+    });
   }
 
-  document.getElementById("accForm").addEventListener("submit", function (e) {
+  loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    var msg = document.getElementById("accMsg");
-    msg.className = "form-msg";
-    var name = document.getElementById("aName").value.trim();
-    var phone = document.getElementById("aPhone").value.trim();
-    var email = document.getElementById("aEmail").value.trim();
-    var birth = document.getElementById("aBirth").value;
-    if (!name || !phone || !birth) {
-      msg.className = "form-msg err";
-      msg.textContent = "Preencha o nome, o telemóvel e a data de nascimento.";
-      return;
+    window.InovaAuth.login(document.getElementById("lPhone").value, document.getElementById("lPass").value)
+      .then(function (r) {
+        if (r.error) return msg(document.getElementById("loginMsg"), r.error, false);
+        renderProfile();
+      });
+  });
+
+  signupForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    window.InovaAuth.register({
+      name: document.getElementById("sName").value,
+      phone: document.getElementById("sPhone").value,
+      email: document.getElementById("sEmail").value,
+      birth: document.getElementById("sBirth").value,
+      pass: document.getElementById("sPass").value,
+      pass2: document.getElementById("sPass2").value
+    }).then(function (r) {
+      if (r.error) return msg(document.getElementById("signupMsg"), r.error, false);
+      renderProfile();
+    });
+  });
+
+  document.getElementById("stampBtn").addEventListener("click", function () {
+    var acc = window.InovaAuth.current();
+    if (!acc) return;
+    var lcMsg = document.getElementById("stampMsg");
+    var code = document.getElementById("stampInput").value.trim().toUpperCase();
+    var r = window.InovaCoupon.parse(code);
+    lcMsg.className = "lc-msg";
+    if (!r.valid) { lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ " + r.reason; return; }
+    if (r.type !== "selo") { lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ Este código não é um selo de fidelidade."; return; }
+    if (r.expired) { lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ Este selo já expirou."; return; }
+    if (r.used || (acc.stamps || []).indexOf(r.code) >= 0) {
+      lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ Este selo já foi utilizado."; return;
     }
-    localStorage.setItem(LS, JSON.stringify({ name: name, phone: phone, email: email, birth: birth, created: new Date().toISOString() }));
-    load();
+    window.InovaCoupon.markUsed(r.code);
+    acc.stamps = acc.stamps || [];
+    acc.stamps.push(r.code);
+    document.getElementById("stampInput").value = "";
+    if (acc.stamps.length >= 10) {
+      acc.cycle = (acc.cycle || 0) + 1;
+      acc.stamps = [];
+      var reward = window.InovaCoupon.rewardCoupon(acc.phone, acc.cycle);
+      acc.rewards = acc.rewards || [];
+      acc.rewards.push({ code: reward.code, expiry: reward.expiry, earned: new Date().toISOString() });
+      lcMsg.className = "lc-msg ok";
+      lcMsg.textContent = "🎉 PARABÉNS! Completou 10 selos — ganhou um Threading de Sobrancelhas GRÁTIS! O seu cupom está abaixo.";
+    } else {
+      lcMsg.className = "lc-msg ok";
+      lcMsg.textContent = "✅ Selo adicionado! Tem agora " + acc.stamps.length + " de 10.";
+    }
+    window.InovaAuth.save(acc);
+    renderProfile();
   });
 
   document.getElementById("logoutBtn").addEventListener("click", function () {
-    if (confirm("Apagar a conta deste dispositivo?")) {
-      localStorage.removeItem(LS);
-      profile.style.display = "none";
-      signup.style.display = "block";
+    window.InovaAuth.logout();
+    renderProfile();
+  });
+  document.getElementById("deleteBtn").addEventListener("click", function () {
+    if (confirm("Apagar a sua conta deste dispositivo? Os selos e prémios serão perdidos.")) {
+      window.InovaAuth.removeCurrent();
+      renderProfile();
     }
   });
 
-  load();
+  renderProfile();
 })();
 </script>
 <section>
@@ -200,6 +324,7 @@
         <li><a href="tel:+351919277205">Telefone: +351 919 277 205</a></li>
         <li><a href="../agendar/">Marcação online</a></li>
         <li><a href="../conta/">A minha conta</a></li>
+        <li><a href="../app/">📱 Instalar a APP</a></li>
       </ul>
     </div>
   </div>
@@ -207,6 +332,7 @@
     © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../painel/" style="color:inherit">Área reservada</a>
   </div>
 </footer>
+<a class="app-float" href="../app/" aria-label="Instalar a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
 <a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%20para%20micropigmenta%C3%A7%C3%A3o%2C%20pode%20ajudar%3F" target="_blank" rel="noopener" aria-label="Agendar pelo WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg></a>
 <script>window.INOVA_PREFIX="../";</script>
 <script src="../main.js"></script>
