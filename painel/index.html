@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel — Inova Beauty</title>
+<meta name="description" content="Área reservada Inova Beauty: geração e validação de cupons de desconto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+</head>
+<body data-no-chat>
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="../">Inova <span>Beauty</span></a>
+    <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="main-nav" aria-label="Navegação principal">
+      <ul>
+        <li><a class="nav-link" href="../">Home</a></li>
+        <li class="has-dropdown">
+          <a class="nav-link" href="../servicos/">Serviços</a>
+          <ul class="dropdown">
+            <li><a href="../servicos/sobrancelhas/">Sobrancelhas</a></li>
+            <li><a href="../servicos/pestanas/">Pestanas</a></li>
+            <li><a href="../servicos/micropigmentacao/">Micropigmentação</a></li>
+            <li><a href="../servicos/threading/">Threading</a></li>
+            <li><a href="../servicos/depilacao-laser/">Depilação a Laser</a></li>
+            <li class="dd-all"><a href="../servicos/">Todos os serviços →</a></li>
+          </ul>
+        </li>
+        <li><a class="nav-link" href="../precario/">Preçário</a></li>
+        <li><a class="nav-link" href="../sobre/">Sobre</a></li>
+        <li><a class="nav-link" href="../contato/">Contato</a></li>
+        <li><a class="nav-link" href="../localizacao/">Localização</a></li>
+        <li class="nav-cta"><a class="btn btn-gold" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%20para%20micropigmenta%C3%A7%C3%A3o%2C%20pode%20ajudar%3F" target="_blank" rel="noopener">Agendar</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<section class="page-hero">
+  <div class="container">
+    
+    <span class="eyebrow-label">Área reservada</span>
+    <h1>Painel de cupons</h1>
+    <p class="lead">Gere cupons de desconto e de aniversário, e valide os cupons apresentados pelas clientes.</p>
+  </div>
+</section>
+<section>
+  <div class="container" style="max-width:860px">
+
+    <div class="form-card" id="pinGate">
+      <h2 style="margin-bottom:1rem">Acesso reservado</h2>
+      <div class="form-grid">
+        <div class="form-field full">
+          <label for="pinInput">PIN de acesso</label>
+          <input id="pinInput" type="password" inputmode="numeric" placeholder="PIN (inicial: 1234)">
+          <span class="form-hint">Pode alterar o PIN depois de entrar. Nota: esta proteção é básica (o site não tem servidor).</span>
+        </div>
+      </div>
+      <div class="form-msg" id="pinMsg"></div>
+      <div class="center-actions"><button type="button" class="btn btn-gold" id="pinBtn">Entrar</button></div>
+    </div>
+
+    <div id="panelArea" style="display:none">
+      <div class="panel-tabs">
+        <button type="button" class="panel-tab active" data-tab="gen">🎟️ Gerar cupom</button>
+        <button type="button" class="panel-tab" data-tab="val">✅ Validar cupom</button>
+        <button type="button" class="panel-tab" data-tab="hist">📒 Histórico</button>
+        <button type="button" class="panel-tab" data-tab="conf">⚙️ Definições</button>
+      </div>
+
+      <div class="panel-section active" id="tab-gen">
+        <div class="form-card">
+          <h3 style="margin-bottom:1rem">Gerar novo cupom</h3>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="gType">Tipo</label>
+              <select id="gType">
+                <option value="desconto">Desconto</option>
+                <option value="aniversario">Aniversário</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="gPct">Percentagem de desconto (%)</label>
+              <input id="gPct" type="number" min="1" max="100" value="10">
+              <span class="form-hint">A margem que decide oferecer (1–100%).</span>
+            </div>
+            <div class="form-field full">
+              <label for="gExp">Válido até</label>
+              <input id="gExp" type="date">
+            </div>
+          </div>
+          <div class="form-msg" id="genMsg"></div>
+          <div class="center-actions"><button type="button" class="btn btn-gold" id="genBtn">Gerar cupom</button></div>
+          <div id="genResult" class="mt-2"></div>
+        </div>
+      </div>
+
+      <div class="panel-section" id="tab-val">
+        <div class="form-card">
+          <h3 style="margin-bottom:1rem">Validar cupom da cliente</h3>
+          <div class="form-grid">
+            <div class="form-field full">
+              <label for="vCode">Código do cupom</label>
+              <input id="vCode" type="text" placeholder="INOVA-…">
+            </div>
+          </div>
+          <div class="form-msg" id="valMsg"></div>
+          <div class="center-actions">
+            <button type="button" class="btn btn-outline" id="valBtn">Verificar</button>
+            <button type="button" class="btn btn-gold" id="useBtn" style="display:none">Marcar como usado</button>
+          </div>
+          <p class="form-hint text-center mt-2">Um cupom marcado como usado neste dispositivo nunca mais valida — garante a utilização única.</p>
+        </div>
+      </div>
+
+      <div class="panel-section" id="tab-hist">
+        <div class="form-card">
+          <h3>Cupons gerados</h3>
+          <div class="coupon-log table-scroll" id="genLog"></div>
+          <h3 class="mt-2">Cupons usados</h3>
+          <div class="coupon-log table-scroll" id="usedLog"></div>
+        </div>
+      </div>
+
+      <div class="panel-section" id="tab-conf">
+        <div class="form-card">
+          <h3 style="margin-bottom:1rem">Alterar PIN</h3>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="newPin">Novo PIN</label>
+              <input id="newPin" type="password" inputmode="numeric" placeholder="4+ dígitos">
+            </div>
+          </div>
+          <div class="form-msg" id="confMsg"></div>
+          <div class="center-actions"><button type="button" class="btn btn-outline" id="pinSaveBtn">Guardar PIN</button></div>
+          <p class="form-hint mt-2">⚠️ Importante: os registos de cupons usados/gerados e o PIN ficam guardados neste dispositivo (navegador). Use sempre o mesmo dispositivo do estúdio para validar cupons.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="../coupon.js"></script>
+<script>
+(function () {
+  var LS_PIN = "inova_admin_pin";
+  function getPin() { return localStorage.getItem(LS_PIN) || "1234"; }
+
+  var gate = document.getElementById("pinGate");
+  var area = document.getElementById("panelArea");
+
+  document.getElementById("pinBtn").addEventListener("click", function () {
+    var v = document.getElementById("pinInput").value;
+    var msg = document.getElementById("pinMsg");
+    if (v === getPin()) {
+      gate.style.display = "none";
+      area.style.display = "block";
+      renderLogs();
+    } else {
+      msg.className = "form-msg err";
+      msg.textContent = "PIN incorreto.";
+    }
+  });
+  document.getElementById("pinInput").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") document.getElementById("pinBtn").click();
+  });
+
+  document.querySelectorAll(".panel-tab").forEach(function (t) {
+    t.addEventListener("click", function () {
+      document.querySelectorAll(".panel-tab").forEach(function (x) { x.classList.remove("active"); });
+      document.querySelectorAll(".panel-section").forEach(function (x) { x.classList.remove("active"); });
+      t.classList.add("active");
+      document.getElementById("tab-" + t.getAttribute("data-tab")).classList.add("active");
+      if (t.getAttribute("data-tab") === "hist") renderLogs();
+    });
+  });
+
+  // validade por omissão: +30 dias
+  var d = new Date(); d.setDate(d.getDate() + 30);
+  document.getElementById("gExp").value = d.toISOString().slice(0, 10);
+
+  document.getElementById("genBtn").addEventListener("click", function () {
+    var msg = document.getElementById("genMsg");
+    msg.className = "form-msg";
+    var r = window.InovaCoupon.generate(
+      document.getElementById("gType").value,
+      document.getElementById("gPct").value,
+      document.getElementById("gExp").value
+    );
+    if (r.error) {
+      msg.className = "form-msg err";
+      msg.textContent = r.error;
+      return;
+    }
+    var exp = r.expiry.split("-");
+    document.getElementById("genResult").innerHTML =
+      '<div class="coupon-card">' +
+      '<div class="c-label">' + (r.type === "aniversario" ? "🎂 Cupom de aniversário" : "🎟️ Cupom de desconto") + '</div>' +
+      '<div class="c-pct">' + r.pct + '% de desconto</div>' +
+      '<div>Envie este código à cliente:</div>' +
+      '<span class="c-code">' + r.code + '</span>' +
+      '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · utilizável 1 única vez</div>' +
+      '</div>';
+  });
+
+  var lastChecked = null;
+  document.getElementById("valBtn").addEventListener("click", function () {
+    var msg = document.getElementById("valMsg");
+    var useBtn = document.getElementById("useBtn");
+    useBtn.style.display = "none";
+    lastChecked = null;
+    var r = window.InovaCoupon.parse(document.getElementById("vCode").value);
+    if (!r.valid) { msg.className = "form-msg err"; msg.textContent = "❌ " + r.reason; return; }
+    if (r.expired) { msg.className = "form-msg err"; msg.textContent = "❌ Cupom expirado em " + r.expiry.toLocaleDateString("pt-PT") + "."; return; }
+    if (r.used) { msg.className = "form-msg err"; msg.textContent = "❌ Este cupom JÁ FOI UTILIZADO — não é válido novamente."; return; }
+    msg.className = "form-msg ok";
+    msg.textContent = "✅ Cupom VÁLIDO: " + r.pct + "% de desconto" +
+      (r.type === "aniversario" ? " (aniversário)" : "") +
+      " · expira a " + r.expiry.toLocaleDateString("pt-PT") + ".";
+    lastChecked = r.code;
+    useBtn.style.display = "inline-flex";
+  });
+
+  document.getElementById("useBtn").addEventListener("click", function () {
+    var msg = document.getElementById("valMsg");
+    if (lastChecked && window.InovaCoupon.markUsed(lastChecked)) {
+      msg.className = "form-msg ok";
+      msg.textContent = "✅ Cupom aplicado e marcado como usado. Não poderá ser reutilizado.";
+      document.getElementById("useBtn").style.display = "none";
+      renderLogs();
+    }
+  });
+
+  function table(rows, headers) {
+    if (!rows.length) return '<p class="form-hint">Sem registos.</p>';
+    var h = "<tr>" + headers.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr>";
+    return "<table>" + h + rows.join("") + "</table>";
+  }
+
+  function renderLogs() {
+    var gen = window.InovaCoupon.generatedList().map(function (g) {
+      var used = window.InovaCoupon.isUsed(g.code);
+      return "<tr><td style='font-family:monospace'>" + g.code + "</td><td>" + g.pct + "%</td><td>" + g.expiry +
+        "</td><td>" + (used ? "<span class='badge used'>usado</span>" : "<span class='badge ok'>ativo</span>") + "</td></tr>";
+    });
+    document.getElementById("genLog").innerHTML = table(gen, ["Código", "%", "Validade", "Estado"]);
+    var used = window.InovaCoupon.usedList().map(function (u) {
+      return "<tr><td style='font-family:monospace'>" + u.code + "</td><td>" + new Date(u.at).toLocaleString("pt-PT") + "</td></tr>";
+    });
+    document.getElementById("usedLog").innerHTML = table(used, ["Código", "Usado em"]);
+  }
+
+  document.getElementById("pinSaveBtn").addEventListener("click", function () {
+    var v = document.getElementById("newPin").value.trim();
+    var msg = document.getElementById("confMsg");
+    if (v.length < 4) { msg.className = "form-msg err"; msg.textContent = "O PIN deve ter pelo menos 4 dígitos."; return; }
+    localStorage.setItem(LS_PIN, v);
+    msg.className = "form-msg ok";
+    msg.textContent = "PIN atualizado com sucesso.";
+  });
+})();
+</script>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="../">Inova <span>Beauty</span></a>
+      <p>Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas, pestanas e micropigmentação.</p>
+    </div>
+    <div>
+      <h4>Navegação</h4>
+      <ul>
+        <li><a href="../servicos/">Serviços</a></li>
+        <li><a href="../precario/">Preçário</a></li>
+        <li><a href="../sobre/">Sobre</a></li>
+        <li><a href="../contato/">Contato</a></li>
+        <li><a href="../localizacao/">Localização</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contactos</h4>
+      <ul>
+        <li><a href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%20para%20micropigmenta%C3%A7%C3%A3o%2C%20pode%20ajudar%3F" target="_blank" rel="noopener">WhatsApp: +351 919 277 205</a></li>
+        <li><a href="tel:+351919277205">Telefone: +351 919 277 205</a></li>
+        <li><a href="../agendar/">Marcação online</a></li>
+        <li><a href="../conta/">A minha conta</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../painel/" style="color:inherit">Área reservada</a>
+  </div>
+</footer>
+<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%20para%20micropigmenta%C3%A7%C3%A3o%2C%20pode%20ajudar%3F" target="_blank" rel="noopener" aria-label="Agendar pelo WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg></a>
+<script>window.INOVA_PREFIX="../";</script>
+<script src="../main.js"></script>
+</body>
+</html>
