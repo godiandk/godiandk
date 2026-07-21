@@ -138,7 +138,7 @@ section { padding: 4.5rem 0; }
 }
 .brand span { color: var(--gold); }
 
-.main-nav ul {
+.main-nav > ul {
   display: flex;
   align-items: center;
   gap: 1.6rem;
@@ -235,13 +235,13 @@ section { padding: 4.5rem 0; }
     transition: max-height .35s ease;
   }
   .main-nav.open { max-height: calc(100vh - 76px); overflow-y: auto; box-shadow: var(--shadow); }
-  .main-nav ul {
+  .main-nav > ul {
     flex-direction: column;
     align-items: stretch;
     gap: 0;
     padding: 1rem 0 1.4rem;
   }
-  .main-nav ul > li { text-align: center; }
+  .main-nav > ul > li { text-align: center; }
   .main-nav a.nav-link {
     display: block;
     padding: .85rem 1rem;
