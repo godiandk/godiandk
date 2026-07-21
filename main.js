@@ -59,7 +59,8 @@
     panel.className = "chat-panel";
     panel.innerHTML =
       '<div class="chat-head">' +
-      '  <div><div class="ch-title">Inova Beauty</div><div class="ch-status">● Online — respondemos já</div></div>' +
+      '  <div class="ch-id"><img class="ch-avatar" src="' + P + 'img/thayana-avatar.jpg" alt="Thayana — Inova Beauty">' +
+      '  <div><div class="ch-title">Inova Beauty</div><div class="ch-status">● Online — respondemos já</div></div></div>' +
       '  <button type="button" aria-label="Fechar chat">✕</button>' +
       '</div>' +
       '<div class="chat-body"></div>' +
@@ -130,4 +131,50 @@
   }
 
   if (!document.body.hasAttribute("data-no-chat")) buildChat();
+
+  /* ---------- Carrossel do hero (home) ---------- */
+  var slider = document.querySelector(".hero-slider");
+  if (slider) {
+    var slides = slider.querySelectorAll(".hs-slide");
+    var dotsWrap = slider.querySelector(".hs-dots");
+    var idx = 0, timer = null, DELAY = 5500;
+
+    slides.forEach(function (_, i) {
+      var d = document.createElement("button");
+      d.type = "button";
+      d.setAttribute("aria-label", "Ir para o slide " + (i + 1));
+      if (i === 0) d.classList.add("active");
+      d.addEventListener("click", function () { go(i); restart(); });
+      dotsWrap.appendChild(d);
+    });
+    var dots = dotsWrap.querySelectorAll("button");
+
+    function go(i) {
+      idx = (i + slides.length) % slides.length;
+      slides.forEach(function (s, n) { s.classList.toggle("active", n === idx); });
+      dots.forEach(function (d, n) { d.classList.toggle("active", n === idx); });
+    }
+    function next() { go(idx + 1); }
+    function restart() {
+      clearInterval(timer);
+      timer = setInterval(next, DELAY);
+    }
+
+    slider.querySelector(".hs-arrow.prev").addEventListener("click", function () { go(idx - 1); restart(); });
+    slider.querySelector(".hs-arrow.next").addEventListener("click", function () { go(idx + 1); restart(); });
+    slider.addEventListener("mouseenter", function () { clearInterval(timer); });
+    slider.addEventListener("mouseleave", restart);
+
+    var touchX = null;
+    slider.addEventListener("touchstart", function (e) { touchX = e.touches[0].clientX; }, { passive: true });
+    slider.addEventListener("touchend", function (e) {
+      if (touchX === null) return;
+      var dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 45) { go(idx + (dx < 0 ? 1 : -1)); }
+      touchX = null;
+      restart();
+    }, { passive: true });
+
+    restart();
+  }
 })();
