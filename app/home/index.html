@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>APP — Inova Beauty</title>
+<meta name="description" content="A app Inova Beauty: marcações, cartão de fidelidade e conta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="manifest" href="../../manifest.webmanifest">
+<meta name="theme-color" content="#191411">
+<link rel="apple-touch-icon" href="../../img/icon-192.png">
+<link rel="icon" href="../../img/icon-192.png">
+</head>
+<body class="app-shell" data-no-chat>
+
+<header class="app-bar">
+  <a href="../../" aria-label="Ver site completo" style="font-size:1.1rem">🌐</a>
+  <div class="ab-brand">Inova <span>Beauty</span></div>
+  <img src="../../img/thayana-avatar.jpg" alt="Thayana">
+</header>
+
+<!-- ===== INÍCIO ===== -->
+<main class="app-screen active" id="scr-inicio">
+  <div class="app-hero-mini">
+    <img src="../../img/thayana-cutout.png" alt="Thayana">
+    <div>
+      <div class="ahm-title" id="homeGreet">Olá! 👋</div>
+      <div class="ahm-sub">Bem-vinda à Inova Beauty.<br>Beleza, precisão e cuidado.</div>
+    </div>
+  </div>
+  <div id="homeStamps" style="margin-top:1rem"></div>
+  <div class="qa-grid">
+    <div class="qa-card" data-goto="marcar"><span class="qa-icon">📅</span>Marcar horário</div>
+    <div class="qa-card" data-goto="cartao"><span class="qa-icon">💛</span>Cartão de selos</div>
+    <a class="qa-card" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%20para%20micropigmenta%C3%A7%C3%A3o%2C%20pode%20ajudar%3F" target="_blank" rel="noopener" style="display:block"><span class="qa-icon">💬</span>WhatsApp</a>
+    <a class="qa-card" href="../../precario/" style="display:block"><span class="qa-icon">💶</span>Preçário</a>
+    <a class="qa-card" href="../../servicos/" style="display:block"><span class="qa-icon">✨</span>Serviços</a>
+    <a class="qa-card" href="../../processos/" style="display:block"><span class="qa-icon">📖</span>Como é feito</a>
+  </div>
+</main>
+
+<!-- ===== MARCAR ===== -->
+<main class="app-screen" id="scr-marcar">
+  <h1>Marcar horário</h1>
+  <p class="as-sub">O pedido segue pronto para o nosso WhatsApp — confirmamos em minutos.</p>
+  <div class="form-card" style="padding:1.3rem 1.1rem">
+    <form id="bookForm" novalidate>
+      <div class="form-grid" style="grid-template-columns:1fr">
+        <div class="form-field"><label for="bName">Nome*</label><input id="bName" type="text" required></div>
+        <div class="form-field"><label for="bService">Serviço*</label><select id="bService"><option>Threading de Sobrancelhas</option><option>Brow Lamination</option><option>Henna de Sobrancelhas</option><option>Tintura de Sobrancelhas</option><option>Alisamento de Sobrancelhas</option><option>Lifting de Pestanas</option><option>Permanente de Pestanas</option><option>Tintura de Pestanas</option><option>Extensão de Pestanas</option><option>Micropigmentação de Sobrancelhas</option><option>Micropigmentação de Eyeliner</option><option>Micropigmentação de Lábios</option><option>Threading (rosto)</option><option>Depilação a Laser</option><option>Outro (indico na mensagem)</option></select></div>
+        <div class="form-field"><label for="bDate">Dia preferido*</label><input id="bDate" type="date" required></div>
+        <div class="form-field"><label for="bTime">Hora preferida*</label>
+          <select id="bTime"><option>09:00</option><option>10:00</option><option>11:00</option><option>12:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option></select>
+        </div>
+        <div class="form-field"><label for="bCoupon">Cupom (opcional)</label><input id="bCoupon" type="text" placeholder="INOVA-…"><span class="form-hint" id="couponHint"></span></div>
+      </div>
+      <div class="form-msg" id="bookMsg"></div>
+      <div class="center-actions"><button type="submit" class="btn btn-wa">Enviar pelo WhatsApp</button></div>
+    </form>
+  </div>
+</main>
+
+<!-- ===== CARTÃO ===== -->
+<main class="app-screen" id="scr-cartao">
+  <h1>Cartão de Fidelidade</h1>
+  <p class="as-sub">Cada procedimento vale 1 selo. Ao 10.º selo: <strong>Threading de Sobrancelhas GRÁTIS</strong>.</p>
+  <div id="cardNeedLogin" class="form-card" style="text-align:center;padding:1.6rem 1.2rem">
+    <p>Inicie sessão para ver o seu cartão de selos.</p>
+    <div class="center-actions"><button type="button" class="btn btn-gold" data-goto="conta">Entrar / Registar-se</button></div>
+  </div>
+  <div id="cardArea" style="display:none">
+    <div class="loyalty-card" style="margin-top:0">
+      <h3>💛 Os meus selos</h3>
+      <div class="stamp-grid" id="stampGrid"></div>
+      <p class="lc-sub" id="stampCount"></p>
+      <div class="stamp-form">
+        <input id="stampInput" type="text" placeholder="Código do selo (INOVA-S…)">
+        <button type="button" class="btn btn-gold" id="stampBtn" style="padding:.7rem 1.2rem">Adicionar</button>
+      </div>
+      <p class="lc-sub" style="margin-top:.7rem">O código é entregue pela Thayana no fim de cada procedimento — é a assinatura digital dela. ✍️</p>
+      <div class="lc-msg" id="stampMsg"></div>
+      <div id="rewardsArea" class="mt-2"></div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== CONTA ===== -->
+<main class="app-screen" id="scr-conta">
+  <h1>A minha conta</h1>
+  <div id="authArea">
+    <div class="form-card" style="padding:1.3rem 1.1rem">
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" data-auth="login">Entrar</button>
+        <button type="button" class="auth-tab" data-auth="signup">Registar-se</button>
+      </div>
+      <form id="loginForm" novalidate>
+        <div class="form-grid" style="grid-template-columns:1fr">
+          <div class="form-field"><label for="lPhone">Telemóvel</label><input id="lPhone" type="tel" autocomplete="tel"></div>
+          <div class="form-field"><label for="lPass">Senha</label><input id="lPass" type="password" autocomplete="current-password"></div>
+        </div>
+        <div class="form-msg" id="loginMsg"></div>
+        <div class="center-actions"><button type="submit" class="btn btn-gold">Entrar</button></div>
+      </form>
+      <form id="signupForm" novalidate style="display:none">
+        <div class="form-grid" style="grid-template-columns:1fr">
+          <div class="form-field"><label for="sName">Nome*</label><input id="sName" type="text" autocomplete="name"></div>
+          <div class="form-field"><label for="sPhone">Telemóvel* (obrigatório)</label><input id="sPhone" type="tel" autocomplete="tel"><span class="form-hint">1 conta por número.</span></div>
+          <div class="form-field"><label for="sEmail">Email*</label><input id="sEmail" type="email" autocomplete="email"></div>
+          <div class="form-field"><label for="sBirth">Data de nascimento* (obrigatória)</label><input id="sBirth" type="date"><span class="form-hint">Para receber o seu voucher de aniversário 🎁</span></div>
+          <div class="form-field"><label for="sPass">Senha* (mín. 6)</label><input id="sPass" type="password" autocomplete="new-password"></div>
+          <div class="form-field"><label for="sPass2">Confirmar senha*</label><input id="sPass2" type="password" autocomplete="new-password"></div>
+        </div>
+        <div class="form-msg" id="signupMsg"></div>
+        <div class="center-actions"><button type="submit" class="btn btn-gold">Criar a minha conta</button></div>
+        <p class="form-hint text-center mt-2">🔒 Senha protegida com criptografia (SHA-256 + salt), guardada só neste dispositivo.</p>
+      </form>
+    </div>
+  </div>
+  <div id="profileArea" style="display:none">
+    <div class="form-card" style="padding:1.4rem 1.2rem">
+      <h2 id="helloName" style="margin-bottom:.3rem">Olá!</h2>
+      <p class="form-hint" id="profileInfo"></p>
+      <div id="bdayArea" class="mt-2"></div>
+      <div class="center-actions">
+        <button type="button" class="btn btn-outline" id="logoutBtn">Sair</button>
+        <button type="button" class="btn btn-outline" id="deleteBtn" style="border-color:#a33;color:#a33">Apagar conta</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="tabbar" aria-label="Navegação da app">
+  <button type="button" class="active" data-tab="inicio"><span class="tb-icon">🏠</span>Início</button>
+  <button type="button" data-tab="marcar"><span class="tb-icon">📅</span>Marcar</button>
+  <button type="button" data-tab="cartao"><span class="tb-icon">💛</span>Cartão</button>
+  <button type="button" data-tab="conta"><span class="tb-icon">👤</span>Conta</button>
+</nav>
+
+<script src="../../coupon.js"></script>
+<script src="../../auth.js"></script>
+<script>
+(function () {
+  /* navegação por abas */
+  function show(tab) {
+    document.querySelectorAll(".app-screen").forEach(function (s) { s.classList.remove("active"); });
+    document.getElementById("scr-" + tab).classList.add("active");
+    document.querySelectorAll(".tabbar button").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-tab") === tab);
+    });
+    window.scrollTo(0, 0);
+    render();
+  }
+  document.querySelectorAll(".tabbar button").forEach(function (b) {
+    b.addEventListener("click", function () { show(b.getAttribute("data-tab")); });
+  });
+  document.querySelectorAll("[data-goto]").forEach(function (b) {
+    b.addEventListener("click", function () { show(b.getAttribute("data-goto")); });
+  });
+
+  function render() {
+    var acc = window.InovaAuth.current();
+    document.getElementById("homeGreet").textContent = acc ? "Olá, " + acc.name.split(" ")[0] + "! 💛" : "Olá! 👋";
+
+    /* resumo dos selos no início */
+    var hs = document.getElementById("homeStamps");
+    if (acc) {
+      var n = (acc.stamps || []).length;
+      hs.innerHTML = '<div class="form-card" style="padding:.9rem 1.1rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer" id="hsCard">' +
+        '<span>💛 Selos: <strong>' + n + ' / 10</strong></span><span style="color:var(--gold)">Ver cartão →</span></div>';
+      document.getElementById("hsCard").addEventListener("click", function () { show("cartao"); });
+    } else {
+      hs.innerHTML = '<div class="form-card" style="padding:.9rem 1.1rem;text-align:center;cursor:pointer" id="hsCard">👤 <strong>Entre ou registe-se</strong> para juntar selos e ganhar prémios</div>';
+      document.getElementById("hsCard").addEventListener("click", function () { show("conta"); });
+    }
+
+    /* cartão */
+    document.getElementById("cardNeedLogin").style.display = acc ? "none" : "block";
+    document.getElementById("cardArea").style.display = acc ? "block" : "none";
+    if (acc) {
+      var grid = document.getElementById("stampGrid");
+      grid.innerHTML = "";
+      var ns = (acc.stamps || []).length;
+      for (var i = 0; i < 10; i++) {
+        var s = document.createElement("div");
+        s.className = "stamp" + (i < ns ? " filled" : "");
+        s.textContent = i < ns ? "✦" : (i + 1);
+        grid.appendChild(s);
+      }
+      document.getElementById("stampCount").textContent =
+        ns === 0 ? "Ainda sem selos — começa na próxima visita!" : "Tem " + ns + " de 10 selos. Faltam " + (10 - ns) + "!";
+      var rw = document.getElementById("rewardsArea");
+      rw.innerHTML = "";
+      (acc.rewards || []).forEach(function (r) {
+        var exp = r.expiry.split("-");
+        rw.innerHTML += '<div class="coupon-card" style="margin-top:1rem"><div class="c-label">🏆 Prémio de fidelidade</div>' +
+          '<div class="c-pct">Threading GRÁTIS</div><span class="c-code">' + r.code + '</span>' +
+          '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · 1 única vez</div></div>';
+      });
+    }
+
+    /* conta */
+    document.getElementById("authArea").style.display = acc ? "none" : "block";
+    document.getElementById("profileArea").style.display = acc ? "block" : "none";
+    if (acc) {
+      document.getElementById("helloName").textContent = "Olá, " + acc.name.split(" ")[0] + "! 💛";
+      var b = new Date(acc.birth + "T12:00:00");
+      document.getElementById("profileInfo").textContent = "Telemóvel: " + acc.phone + " · Email: " + acc.email +
+        " · Aniversário: " + String(b.getDate()).padStart(2, "0") + "/" + String(b.getMonth() + 1).padStart(2, "0");
+      var bd = document.getElementById("bdayArea");
+      var now = new Date();
+      if (b.getMonth() === now.getMonth()) {
+        var c = window.InovaCoupon.birthdayCoupon(acc.phone, now);
+        var exp = c.expiry.split("-");
+        bd.innerHTML = '<div class="coupon-card"><div class="c-label">🎂 O seu presente de aniversário</div>' +
+          '<div class="c-pct">' + c.pct + '% de desconto</div><span class="c-code">' + c.code + '</span>' +
+          '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · 1 única vez</div></div>';
+      } else { bd.innerHTML = ""; }
+      if (acc.name) document.getElementById("bName").value = acc.name;
+    }
+  }
+
+  /* autenticação */
+  document.querySelectorAll(".auth-tab").forEach(function (t) {
+    t.addEventListener("click", function () {
+      document.querySelectorAll(".auth-tab").forEach(function (x) { x.classList.remove("active"); });
+      t.classList.add("active");
+      document.getElementById("loginForm").style.display = t.getAttribute("data-auth") === "login" ? "block" : "none";
+      document.getElementById("signupForm").style.display = t.getAttribute("data-auth") === "signup" ? "block" : "none";
+    });
+  });
+  function msg(el, text) { el.className = "form-msg err"; el.textContent = text; }
+  document.getElementById("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    window.InovaAuth.login(document.getElementById("lPhone").value, document.getElementById("lPass").value)
+      .then(function (r) { if (r.error) return msg(document.getElementById("loginMsg"), r.error); render(); });
+  });
+  document.getElementById("signupForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    window.InovaAuth.register({
+      name: document.getElementById("sName").value,
+      phone: document.getElementById("sPhone").value,
+      email: document.getElementById("sEmail").value,
+      birth: document.getElementById("sBirth").value,
+      pass: document.getElementById("sPass").value,
+      pass2: document.getElementById("sPass2").value
+    }).then(function (r) { if (r.error) return msg(document.getElementById("signupMsg"), r.error); render(); });
+  });
+  document.getElementById("logoutBtn").addEventListener("click", function () { window.InovaAuth.logout(); render(); });
+  document.getElementById("deleteBtn").addEventListener("click", function () {
+    if (confirm("Apagar a conta deste dispositivo? Selos e prémios serão perdidos.")) { window.InovaAuth.removeCurrent(); render(); }
+  });
+
+  /* selos */
+  document.getElementById("stampBtn").addEventListener("click", function () {
+    var acc = window.InovaAuth.current();
+    if (!acc) return;
+    var lcMsg = document.getElementById("stampMsg");
+    var r = window.InovaCoupon.parse(document.getElementById("stampInput").value);
+    lcMsg.className = "lc-msg err";
+    if (!r.valid) { lcMsg.textContent = "❌ " + r.reason; return; }
+    if (r.type !== "selo") { lcMsg.textContent = "❌ Este código não é um selo."; return; }
+    if (r.expired) { lcMsg.textContent = "❌ Selo expirado."; return; }
+    if (r.used || (acc.stamps || []).indexOf(r.code) >= 0) { lcMsg.textContent = "❌ Este selo já foi utilizado."; return; }
+    window.InovaCoupon.markUsed(r.code);
+    acc.stamps = acc.stamps || [];
+    acc.stamps.push(r.code);
+    document.getElementById("stampInput").value = "";
+    lcMsg.className = "lc-msg ok";
+    if (acc.stamps.length >= 10) {
+      acc.cycle = (acc.cycle || 0) + 1;
+      acc.stamps = [];
+      var reward = window.InovaCoupon.rewardCoupon(acc.phone, acc.cycle);
+      acc.rewards = acc.rewards || [];
+      acc.rewards.push({ code: reward.code, expiry: reward.expiry, earned: new Date().toISOString() });
+      lcMsg.textContent = "🎉 10 selos! Ganhou um Threading de Sobrancelhas GRÁTIS — cupom abaixo.";
+    } else {
+      lcMsg.textContent = "✅ Selo adicionado! " + acc.stamps.length + " de 10.";
+    }
+    window.InovaAuth.save(acc);
+    render();
+  });
+
+  /* marcação */
+  var couponInput = document.getElementById("bCoupon");
+  couponInput.addEventListener("input", function () {
+    var hint = document.getElementById("couponHint");
+    hint.textContent = "";
+    var v = couponInput.value.trim();
+    if (!v) return;
+    var r = window.InovaCoupon.parse(v);
+    hint.textContent = !r.valid ? "⚠️ " + r.reason : (r.expired ? "⚠️ Cupom expirado." : "✅ Válido: " + r.pct + "% de desconto.");
+  });
+  document.getElementById("bookForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var bm = document.getElementById("bookMsg");
+    var name = document.getElementById("bName").value.trim();
+    var date = document.getElementById("bDate").value;
+    if (!name || !date) { bm.className = "form-msg err"; bm.textContent = "Preencha o nome e o dia."; return; }
+    var d = date.split("-");
+    var lines = [
+      "Olá Inova beauty. Desejo marcar um horário para micropigmentação, pode ajudar?", "",
+      "📋 Pedido de marcação (via APP):",
+      "• Nome: " + name,
+      "• Serviço: " + document.getElementById("bService").value,
+      "• Dia: " + d[2] + "/" + d[1] + "/" + d[0],
+      "• Hora: " + document.getElementById("bTime").value
+    ];
+    var cp = couponInput.value.trim().toUpperCase();
+    if (cp) lines.push("• Cupom: " + cp);
+    bm.className = "form-msg ok";
+    bm.textContent = "A abrir o WhatsApp…";
+    window.open("https://wa.me/351919277205?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
+  });
+
+  /* service worker */
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    navigator.serviceWorker.register("../../sw.js").catch(function () {});
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

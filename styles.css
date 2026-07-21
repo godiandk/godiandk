@@ -1088,13 +1088,15 @@ section { padding: 4.5rem 0; }
 .stamp {
   aspect-ratio: 1;
   border-radius: 50%;
-  border: 2px dashed rgba(201, 171, 124, .5);
+  border: 2px dashed rgba(201, 171, 124, .4);
   display: grid;
   place-items: center;
   font-size: 1.3rem;
-  color: rgba(201, 171, 124, .35);
+  color: rgba(201, 171, 124, .45);
+  opacity: .5;
 }
 .stamp.filled {
+  opacity: 1;
   border-style: solid;
   border-color: var(--gold-soft);
   background: linear-gradient(135deg, var(--gold), var(--gold-soft));
@@ -1198,6 +1200,134 @@ section { padding: 4.5rem 0; }
 .phone-mock .pm-notch { width: 90px; height: 8px; border-radius: 8px; background: rgba(201,171,124,.4); margin: 0 auto .9rem; }
 .phone-mock img { width: 76px; border-radius: 20px; margin: .6rem auto; }
 .phone-mock .pm-name { font-family: var(--font-display); letter-spacing: .1em; }
+
+/* ---------- Botões Entrar / Registar no menu ---------- */
+.nav-auth { display: flex; align-items: center; gap: .5rem; }
+.nav-auth .btn-login {
+  font-size: .78rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: .5rem .6rem;
+  transition: color .2s;
+}
+.nav-auth .btn-login:hover { color: var(--gold); }
+.nav-auth .btn-signup {
+  font-size: .74rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  border-radius: 999px;
+  padding: .5rem 1.1rem;
+  transition: all .2s;
+}
+.nav-auth .btn-signup:hover { background: var(--gold); color: var(--white); }
+@media (max-width: 900px) {
+  .nav-auth { justify-content: center; margin-top: .6rem; }
+}
+
+/* ---------- APP SHELL (interface de aplicação) ---------- */
+body.app-shell {
+  background: var(--cream);
+  padding-bottom: 84px;
+}
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(140deg, var(--dark), var(--dark-2));
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 1.2rem;
+  border-bottom: 1px solid rgba(201, 171, 124, .35);
+}
+.app-bar .ab-brand {
+  font-family: var(--font-display);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-size: 1.05rem;
+}
+.app-bar .ab-brand span { color: var(--gold-soft); }
+.app-bar img { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--gold-soft); }
+
+.app-screen { display: none; padding: 1.3rem 1.1rem 2rem; max-width: 560px; margin-inline: auto; }
+.app-screen.active { display: block; }
+.app-screen h1 { font-size: 1.7rem; margin-bottom: .3rem; }
+.app-screen .as-sub { font-size: .92rem; color: var(--ink-soft); margin-bottom: 1.2rem; }
+
+.qa-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .9rem;
+  margin-top: 1.2rem;
+}
+.qa-card {
+  background: var(--white);
+  border: 1px solid var(--gold-faint);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1rem;
+  text-align: center;
+  font-size: .85rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+  transition: transform .2s;
+  cursor: pointer;
+}
+.qa-card:active { transform: scale(.96); }
+.qa-card .qa-icon { font-size: 1.7rem; display: block; margin-bottom: .4rem; }
+
+.app-hero-mini {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background:
+    radial-gradient(ellipse at 85% 15%, rgba(201, 171, 124, .3), transparent 55%),
+    linear-gradient(140deg, var(--dark), var(--dark-2));
+  border: 1px solid var(--gold-soft);
+  border-radius: var(--radius);
+  color: var(--white);
+  padding: 1.1rem 1.2rem;
+}
+.app-hero-mini img { width: 84px; filter: drop-shadow(0 6px 14px rgba(0,0,0,.4)); }
+.app-hero-mini .ahm-title { font-family: var(--font-display); font-size: 1.15rem; }
+.app-hero-mini .ahm-sub { font-size: .8rem; color: rgba(255,253,250,.72); }
+
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 110;
+  display: flex;
+  background: var(--white);
+  border-top: 1px solid var(--gold-faint);
+  box-shadow: 0 -8px 24px rgba(33, 26, 20, .1);
+  padding: .45rem 0 calc(.45rem + env(safe-area-inset-bottom));
+}
+.tabbar button {
+  flex: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: .68rem;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .15rem;
+  padding: .3rem 0;
+  transition: color .2s;
+}
+.tabbar button .tb-icon { font-size: 1.35rem; line-height: 1; }
+.tabbar button.active { color: var(--gold); font-weight: 500; }
+.tabbar button.active .tb-icon { transform: translateY(-2px); }
 
 /* ---------- Utilidades ---------- */
 .text-center { text-align: center; }
