@@ -132,6 +132,15 @@
 
   if (!document.body.hasAttribute("data-no-chat")) buildChat();
 
+  /* ---------- App (PWA): service worker + botão flutuante ---------- */
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    navigator.serviceWorker.register(P + "sw.js").catch(function () {});
+  }
+  if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
+    var af = document.querySelector(".app-float");
+    if (af) af.style.display = "none";
+  }
+
   /* ---------- Carrossel do hero (home) ---------- */
   var slider = document.querySelector(".hero-slider");
   if (slider) {

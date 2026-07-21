@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marcação Online — Inova Beauty</title>
-<meta name="description" content="Marque o seu horário na Inova Beauty: escolha o serviço, dia e hora e envie o pedido diretamente pelo WhatsApp.">
+<title>APP Inova Beauty — Instalar</title>
+<meta name="description" content="Instale a app Inova Beauty no seu telemóvel: marcações, cartão de fidelidade com selos, cupons e preçário — tudo à distância de um toque.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -47,109 +47,82 @@
 </header>
 <section class="page-hero">
   <div class="container">
-    <ol class="breadcrumb"><li><a href="../">Home</a></li><li>Marcação online</li></ol>
-    <span class="eyebrow-label">Agendamento</span>
-    <h1>Marcação online</h1>
-    <p class="lead">Preencha os dados e o pedido segue pronto no WhatsApp — confirmamos o seu horário em minutos.</p>
+    <ol class="breadcrumb"><li><a href="../">Home</a></li><li>APP</li></ol>
+    <span class="eyebrow-label">📱 A nossa app</span>
+    <h1>Inova Beauty no seu telemóvel</h1>
+    <p class="lead">Instale a app gratuita e tenha marcações, cartão de fidelidade, cupons e preçário sempre à mão — até funciona sem internet.</p>
   </div>
 </section>
 <section>
-  <div class="container" style="max-width:760px">
-    <div class="form-card">
-      <form id="bookForm" novalidate>
-        <div class="form-grid">
-          <div class="form-field">
-            <label for="bName">Nome*</label>
-            <input id="bName" type="text" required placeholder="O seu nome">
-          </div>
-          <div class="form-field">
-            <label for="bService">Serviço*</label>
-            <select id="bService" required><option>Threading de Sobrancelhas</option><option>Brow Lamination</option><option>Henna de Sobrancelhas</option><option>Tintura de Sobrancelhas</option><option>Alisamento de Sobrancelhas</option><option>Lifting de Pestanas</option><option>Permanente de Pestanas</option><option>Tintura de Pestanas</option><option>Extensão de Pestanas</option><option>Micropigmentação de Sobrancelhas</option><option>Micropigmentação de Eyeliner</option><option>Micropigmentação de Lábios</option><option>Threading (rosto)</option><option>Depilação a Laser</option><option>Outro (indico na mensagem)</option></select>
-          </div>
-          <div class="form-field">
-            <label for="bDate">Dia preferido*</label>
-            <input id="bDate" type="date" required>
-          </div>
-          <div class="form-field">
-            <label for="bTime">Hora preferida*</label>
-            <select id="bTime" required>
-              <option>09:00</option><option>10:00</option><option>11:00</option>
-              <option>12:00</option><option>14:00</option><option>15:00</option>
-              <option>16:00</option><option>17:00</option><option>18:00</option>
-            </select>
-          </div>
-          <div class="form-field full">
-            <label for="bCoupon">Cupom de desconto (opcional)</label>
-            <input id="bCoupon" type="text" placeholder="Ex.: INOVA-D15-XXXX-XXXXXX-XXXX">
-            <span class="form-hint" id="couponHint"></span>
-          </div>
-          <div class="form-field full">
-            <label for="bNotes">Observações (opcional)</label>
-            <textarea id="bNotes" rows="3" placeholder="Alguma informação que devamos saber?"></textarea>
-          </div>
-        </div>
-        <div class="form-msg" id="bookMsg"></div>
-        <div class="center-actions">
-          <button type="submit" class="btn btn-wa">Enviar pedido pelo WhatsApp</button>
-        </div>
-        <p class="form-hint text-center mt-2">Ao enviar, abre o WhatsApp com a sua mensagem já preenchida — basta confirmar.</p>
-      </form>
+  <div class="container split">
+    <div class="phone-mock">
+      <div class="pm-notch"></div>
+      <img src="../img/icon-192.png" alt="Ícone da app Inova Beauty">
+      <div class="pm-name">Inova Beauty</div>
+      <p style="font-size:.8rem;color:rgba(255,253,250,.65);margin-top:.4rem">O seu estúdio de beleza,<br>à distância de um toque</p>
+    </div>
+    <div>
+      <span class="eyebrow-label">Vantagens</span>
+      <h2>Tudo o que a app faz por si</h2>
+      <ul class="tick-list">
+        <li><strong>Cartão de fidelidade</strong> — junte selos e ganhe um Threading GRÁTIS ao 10.º</li>
+        <li><strong>Marcação em 1 minuto</strong> — pedido direto para o WhatsApp</li>
+        <li><strong>Cupom de aniversário</strong> — 10% automático no seu mês</li>
+        <li><strong>Preçário completo</strong> — sempre atualizado, mesmo offline</li>
+        <li><strong>Grátis</strong> — sem lojas de apps, instala direto do site</li>
+      </ul>
+      <div class="mt-2 center-actions" style="justify-content:flex-start">
+        <button type="button" class="btn btn-gold" id="installBtn">📲 Instalar a APP agora</button>
+      </div>
+      <div class="form-msg" id="installMsg"></div>
+      <div class="mt-2">
+        <p class="form-hint"><strong>iPhone/iPad:</strong> abra este site no Safari → toque em <strong>Partilhar</strong> (quadrado com seta) → <strong>Adicionar ao ecrã principal</strong>.</p>
+        <p class="form-hint"><strong>Android:</strong> toque no botão acima, ou no menu ⋮ do navegador → <strong>Instalar aplicação</strong>.</p>
+      </div>
     </div>
   </div>
 </section>
-<script src="../coupon.js"></script>
 <script>
 (function () {
-  var form = document.getElementById("bookForm");
-  var msg = document.getElementById("bookMsg");
-  var couponInput = document.getElementById("bCoupon");
-  var couponHint = document.getElementById("couponHint");
-
-  couponInput.addEventListener("input", function () {
-    var v = couponInput.value.trim();
-    couponHint.textContent = "";
-    if (!v) return;
-    var r = window.InovaCoupon.parse(v);
-    if (!r.valid) { couponHint.textContent = "⚠️ " + r.reason; return; }
-    if (r.expired) { couponHint.textContent = "⚠️ Este cupom já expirou."; return; }
-    couponHint.textContent = "✅ Cupom válido: " + r.pct + "% de desconto" +
-      (r.type === "aniversario" ? " (aniversário)" : "") + ".";
-  });
-
-  form.addEventListener("submit", function (e) {
+  var deferred = null;
+  var btn = document.getElementById("installBtn");
+  var msg = document.getElementById("installMsg");
+  window.addEventListener("beforeinstallprompt", function (e) {
     e.preventDefault();
-    msg.className = "form-msg";
-    var name = document.getElementById("bName").value.trim();
-    var service = document.getElementById("bService").value;
-    var date = document.getElementById("bDate").value;
-    var time = document.getElementById("bTime").value;
-    var notes = document.getElementById("bNotes").value.trim();
-    var coupon = couponInput.value.trim().toUpperCase();
-    if (!name || !date) {
-      msg.className = "form-msg err";
-      msg.textContent = "Por favor preencha o nome e o dia preferido.";
-      return;
+    deferred = e;
+  });
+  btn.addEventListener("click", function () {
+    if (deferred) {
+      deferred.prompt();
+      deferred.userChoice.then(function (r) {
+        if (r.outcome === "accepted") {
+          msg.className = "form-msg ok";
+          msg.textContent = "🎉 App instalada! Procure o ícone Inova Beauty no seu ecrã principal.";
+        }
+        deferred = null;
+      });
+    } else if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
+      msg.className = "form-msg ok";
+      msg.textContent = "✅ Já está a usar a app! 💛";
+    } else {
+      msg.className = "form-msg ok";
+      msg.textContent = "Use o menu do navegador: no Android é ⋮ → «Instalar aplicação»; no iPhone é Partilhar → «Adicionar ao ecrã principal».";
     }
-    var d = date.split("-");
-    var dateFmt = d[2] + "/" + d[1] + "/" + d[0];
-    var lines = [
-      "Olá Inova beauty. Desejo marcar um horário para micropigmentação, pode ajudar?",
-      "",
-      "📋 Pedido de marcação:",
-      "• Nome: " + name,
-      "• Serviço: " + service,
-      "• Dia: " + dateFmt,
-      "• Hora: " + time
-    ];
-    if (coupon) lines.push("• Cupom: " + coupon);
-    if (notes) lines.push("• Obs.: " + notes);
-    var url = "https://wa.me/351919277205?text=" + encodeURIComponent(lines.join("\n"));
-    msg.className = "form-msg ok";
-    msg.textContent = "A abrir o WhatsApp com o seu pedido…";
-    window.open(url, "_blank", "noopener");
   });
 })();
 </script>
+<section>
+  <div class="container">
+    <div class="cta-band">
+      <h2>Pronta para realçar a sua beleza?</h2>
+      <p>Marque o seu horário em segundos pelo WhatsApp — respondemos rapidamente.</p>
+      <div class="center-actions" style="margin-top:0">
+        <a class="btn btn-wa" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%20para%20micropigmenta%C3%A7%C3%A3o%2C%20pode%20ajudar%3F" target="_blank" rel="noopener">Agendar no WhatsApp</a>
+        <a class="btn btn-dark-outline" href="../agendar/">Marcação online</a>
+      </div>
+    </div>
+  </div>
+</section>
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>

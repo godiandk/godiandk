@@ -58,7 +58,7 @@
   }
 
   function build(type, pct, expStr, seed) {
-    var t = type === "aniversario" ? "A" : "D";
+    var t = type === "aniversario" ? "A" : (type === "selo" ? "S" : "D");
     var body = t + pct + "-" + randToken(seed) + "-" + expStr;
     return "INOVA-" + body + "-" + checksum(body);
   }
@@ -91,22 +91,44 @@
 
   function parse(code) {
     code = String(code || "").trim().toUpperCase().replace(/\s+/g, "");
-    var m = /^INOVA-([AD])(\d{1,3})-([A-Z0-9]{4})-(\d{6})-([A-Z0-9]{4})$/.exec(code);
-    if (!m) return { valid: false, reason: "Formato de cupom inválido." };
+    var m = /^INOVA-([ADS])(\d{1,3})-([A-Z0-9]{4})-(\d{6})-([A-Z0-9]{4})$/.exec(code);
+    if (!m) return { valid: false, reason: "Formato de código inválido." };
     var body = m[1] + m[2] + "-" + m[3] + "-" + m[4];
-    if (checksum(body) !== m[5]) return { valid: false, reason: "Cupom inválido (código de verificação não confere)." };
+    if (checksum(body) !== m[5]) return { valid: false, reason: "Código inválido (verificação não confere)." };
     var pct = parseInt(m[2], 10);
     var expDate = expToDate(m[4]);
     var expired = new Date() > expDate;
     return {
       valid: true,
       code: code,
-      type: m[1] === "A" ? "aniversario" : "desconto",
+      type: m[1] === "A" ? "aniversario" : (m[1] === "S" ? "selo" : "desconto"),
       pct: pct,
       expiry: expDate,
       expired: expired,
       used: isUsed(code)
     };
+  }
+
+  /* Selo de fidelidade: código assinado que a Thayana entrega após
+     cada procedimento. A cliente insere na conta e ganha 1 selo. */
+  function generateStamp(expiryDateStr) {
+    var exp = toExp(expiryDateStr);
+    if (!exp) return { error: "Data de validade inválida." };
+    var code = build("selo", 1, exp);
+    var gen = readList(LS_GEN);
+    gen.unshift({ code: code, type: "selo", pct: 1, expiry: expiryDateStr, created: new Date().toISOString() });
+    writeList(LS_GEN, gen.slice(0, 300));
+    return { code: code, expiry: expiryDateStr };
+  }
+
+  /* Prémio dos 10 selos: cupom 100% determinístico por telefone+ciclo
+     (não é possível "gerar de novo" outro código para o mesmo ciclo). */
+  function rewardCoupon(phone, cycle) {
+    var d = new Date();
+    d.setDate(d.getDate() + 60);
+    var expStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    var seed = "REWARD|" + String(phone).replace(/\D/g, "") + "|" + cycle;
+    return { code: build("desconto", 100, toExp(expStr), seed), pct: 100, expiry: expStr };
   }
 
   function readList(key) {
@@ -133,6 +155,8 @@
 
   window.InovaCoupon = {
     generate: generate,
+    generateStamp: generateStamp,
+    rewardCoupon: rewardCoupon,
     birthdayCoupon: birthdayCoupon,
     parse: parse,
     isUsed: isUsed,

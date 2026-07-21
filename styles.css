@@ -1065,6 +1065,140 @@ section { padding: 4.5rem 0; }
   .chat-fab { padding: .9rem; }
 }
 
+/* ---------- Cartão de fidelidade ---------- */
+.loyalty-card {
+  background:
+    radial-gradient(ellipse at 85% 10%, rgba(201, 171, 124, .3), transparent 55%),
+    linear-gradient(140deg, var(--dark), var(--dark-2));
+  color: var(--white);
+  border: 1px solid var(--gold-soft);
+  border-radius: var(--radius);
+  padding: 1.8rem 1.7rem;
+  margin-top: 1.6rem;
+}
+.loyalty-card h3 { color: var(--white); margin-bottom: .2rem; }
+.loyalty-card .lc-sub { font-size: .85rem; color: rgba(255, 253, 250, .7); }
+.stamp-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .8rem;
+  margin: 1.4rem 0 1.2rem;
+  max-width: 400px;
+}
+.stamp {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px dashed rgba(201, 171, 124, .5);
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  color: rgba(201, 171, 124, .35);
+}
+.stamp.filled {
+  border-style: solid;
+  border-color: var(--gold-soft);
+  background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+  color: var(--white);
+  box-shadow: 0 6px 16px rgba(176, 141, 87, .4);
+}
+.stamp-form { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1rem; }
+.stamp-form input {
+  flex: 1;
+  min-width: 200px;
+  font-family: monospace;
+  letter-spacing: .06em;
+  background: rgba(255, 253, 250, .08);
+  border: 1px solid rgba(201, 171, 124, .5);
+  border-radius: 10px;
+  color: var(--white);
+  padding: .7rem .9rem;
+  outline: none;
+}
+.stamp-form input::placeholder { color: rgba(255, 253, 250, .4); }
+.lc-msg { margin-top: .8rem; font-size: .88rem; display: none; padding: .6rem .9rem; border-radius: 8px; }
+.lc-msg.ok { display: block; background: rgba(37, 211, 102, .15); color: #7ce8a8; }
+.lc-msg.err { display: block; background: rgba(220, 70, 70, .18); color: #ff9c9c; }
+
+/* ---------- Tabs de autenticação ---------- */
+.auth-tabs { display: flex; gap: .6rem; margin-bottom: 1.5rem; }
+.auth-tab {
+  flex: 1;
+  padding: .7rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--gold-faint);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: .82rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all .2s;
+}
+.auth-tab.active { background: var(--gold); border-color: var(--gold); color: var(--white); }
+
+/* ---------- Botão flutuante do app ---------- */
+.app-float {
+  position: fixed;
+  right: 1.4rem;
+  bottom: 5.6rem;
+  z-index: 90;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--dark), var(--dark-2));
+  border: 1.5px solid var(--gold-soft);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--gold-soft);
+  font-family: var(--font-body);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .08em;
+  line-height: 1.25;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .35);
+  transition: transform .25s;
+}
+.app-float:hover { transform: scale(1.08); }
+.app-float .af-icon { font-size: 1.25rem; display: block; }
+
+/* ---------- Personagem recortada ---------- */
+.hs-media img.hs-cutout {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  filter: drop-shadow(0 18px 34px rgba(0, 0, 0, .45));
+  width: min(360px, 82%);
+  align-self: end;
+}
+.cutout-stage {
+  display: grid;
+  place-items: center;
+  padding: 1rem 0;
+}
+.cutout-stage img {
+  width: min(420px, 90%);
+  filter: drop-shadow(0 20px 40px rgba(33, 26, 20, .25));
+}
+
+/* ---------- Página do app ---------- */
+.phone-mock {
+  width: min(270px, 80%);
+  margin-inline: auto;
+  background: var(--dark);
+  border: 2px solid var(--gold-soft);
+  border-radius: 34px;
+  padding: 1rem .9rem 1.4rem;
+  box-shadow: var(--shadow);
+  text-align: center;
+  color: var(--white);
+}
+.phone-mock .pm-notch { width: 90px; height: 8px; border-radius: 8px; background: rgba(201,171,124,.4); margin: 0 auto .9rem; }
+.phone-mock img { width: 76px; border-radius: 20px; margin: .6rem auto; }
+.phone-mock .pm-name { font-family: var(--font-display); letter-spacing: .1em; }
+
 /* ---------- Utilidades ---------- */
 .text-center { text-align: center; }
 .mt-2 { margin-top: 2rem; }
