@@ -1227,6 +1227,92 @@ section { padding: 4.5rem 0; }
   .nav-auth { justify-content: center; margin-top: .6rem; }
 }
 
+/* Utilizadora com sessão iniciada — avatar + nome no menu */
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: .84rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: var(--ink-soft);
+  padding: .3rem .7rem .3rem .3rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: all .2s;
+}
+.nav-user:hover { background: var(--cream-2); border-color: var(--gold-faint); color: var(--gold); }
+.nav-user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--gold-soft);
+  background: var(--cream-2);
+  flex-shrink: 0;
+}
+
+/* Seletor de foto de perfil no registo */
+.avatar-picker {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  margin-bottom: .4rem;
+}
+.avatar-picker .ap-preview {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold-faint);
+  background: var(--cream-2);
+  flex-shrink: 0;
+}
+.avatar-picker .ap-actions { display: flex; flex-direction: column; gap: .5rem; }
+.avatar-picker input[type="file"] { display: none; }
+.avatar-picker .ap-btn {
+  display: inline-block;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  background: transparent;
+  border-radius: 999px;
+  padding: .45rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: .76rem;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: center;
+  transition: all .2s;
+}
+.avatar-picker .ap-btn:hover { background: var(--gold); color: var(--white); }
+.avatar-picker .ap-hint { font-size: .78rem; color: var(--ink-soft); font-style: italic; }
+
+/* Seletor de sexo no registo */
+.gender-picker { display: flex; gap: .7rem; }
+.gender-picker label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  border: 1px solid var(--gold-faint);
+  border-radius: 10px;
+  padding: .65rem;
+  font-size: .88rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all .2s;
+}
+.gender-picker input { accent-color: var(--gold); margin: 0; }
+.gender-picker label.picked {
+  border-color: var(--gold);
+  background: var(--cream-2);
+  color: var(--gold);
+  font-weight: 500;
+}
+
 /* ---------- APP SHELL (interface de aplicação) ---------- */
 body.app-shell {
   background: var(--cream);

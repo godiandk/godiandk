@@ -106,6 +106,24 @@
       </form>
       <form id="signupForm" novalidate style="display:none">
         <div class="form-grid" style="grid-template-columns:1fr">
+          <div class="form-field">
+            <label>Foto de perfil (opcional)</label>
+            <div class="avatar-picker">
+              <img class="ap-preview" id="sAvatarPreview" alt="Pré-visualização do avatar">
+              <div class="ap-actions">
+                <label class="ap-btn" for="sPhotoFile">Escolher foto</label>
+                <input type="file" id="sPhotoFile" accept="image/*">
+                <span class="ap-hint">Se não escolher, usamos um ícone</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-field">
+            <label>Sexo*</label>
+            <div class="gender-picker">
+              <label id="genderMLabel"><input type="radio" name="sGender" value="M" required> Masculino</label>
+              <label id="genderFLabel"><input type="radio" name="sGender" value="F" required> Feminino</label>
+            </div>
+          </div>
           <div class="form-field"><label for="sName">Nome*</label><input id="sName" type="text" autocomplete="name"></div>
           <div class="form-field"><label for="sPhone">Telemóvel* (obrigatório)</label><input id="sPhone" type="tel" autocomplete="tel"><span class="form-hint">1 conta por número.</span></div>
           <div class="form-field"><label for="sEmail">Email*</label><input id="sEmail" type="email" autocomplete="email"></div>
@@ -121,7 +139,10 @@
   </div>
   <div id="profileArea" style="display:none">
     <div class="form-card" style="padding:1.4rem 1.2rem">
-      <h2 id="helloName" style="margin-bottom:.3rem">Olá!</h2>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.5rem">
+        <img id="profileAvatar" alt="" style="width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-faint);flex-shrink:0">
+        <h2 id="helloName" style="margin-bottom:0">Olá!</h2>
+      </div>
       <p class="form-hint" id="profileInfo"></p>
       <div id="bdayArea" class="mt-2"></div>
       <div class="center-actions">
@@ -206,6 +227,7 @@
     document.getElementById("profileArea").style.display = acc ? "block" : "none";
     if (acc) {
       document.getElementById("helloName").textContent = "Olá, " + acc.name.split(" ")[0] + "! 💛";
+      document.getElementById("profileAvatar").src = window.InovaAuth.avatarUrl(acc);
       var b = new Date(acc.birth + "T12:00:00");
       document.getElementById("profileInfo").textContent = "Telemóvel: " + acc.phone + " · Email: " + acc.email +
         " · Aniversário: " + String(b.getDate()).padStart(2, "0") + "/" + String(b.getMonth() + 1).padStart(2, "0");
@@ -232,6 +254,31 @@
     });
   });
   function msg(el, text) { el.className = "form-msg err"; el.textContent = text; }
+
+  /* Foto de perfil e sexo no registo */
+  var sPhoto = null;
+  function updateAvatarPreview() {
+    var checked = document.querySelector('input[name="sGender"]:checked');
+    var gender = checked ? checked.value : "M";
+    document.getElementById("sAvatarPreview").src = sPhoto || window.InovaAuth.defaultAvatar(gender);
+  }
+  document.querySelectorAll('input[name="sGender"]').forEach(function (r) {
+    r.addEventListener("change", function () {
+      document.getElementById("genderMLabel").classList.toggle("picked", r.value === "M" && r.checked);
+      document.getElementById("genderFLabel").classList.toggle("picked", r.value === "F" && r.checked);
+      updateAvatarPreview();
+    });
+  });
+  document.getElementById("sPhotoFile").addEventListener("change", function (e) {
+    var f = e.target.files[0];
+    if (!f) return;
+    window.InovaAuth.fileToAvatar(f).then(function (dataUrl) {
+      sPhoto = dataUrl;
+      updateAvatarPreview();
+    }).catch(function (err) { msg(document.getElementById("signupMsg"), err.message); });
+  });
+  updateAvatarPreview();
+
   document.getElementById("loginForm").addEventListener("submit", function (e) {
     e.preventDefault();
     window.InovaAuth.login(document.getElementById("lPhone").value, document.getElementById("lPass").value)
@@ -239,11 +286,14 @@
   });
   document.getElementById("signupForm").addEventListener("submit", function (e) {
     e.preventDefault();
+    var genderChecked = document.querySelector('input[name="sGender"]:checked');
     window.InovaAuth.register({
       name: document.getElementById("sName").value,
       phone: document.getElementById("sPhone").value,
       email: document.getElementById("sEmail").value,
       birth: document.getElementById("sBirth").value,
+      gender: genderChecked ? genderChecked.value : null,
+      photo: sPhoto,
       pass: document.getElementById("sPass").value,
       pass2: document.getElementById("sPass2").value
     }).then(function (r) { if (r.error) return msg(document.getElementById("signupMsg"), r.error); render(); });

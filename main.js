@@ -5,6 +5,22 @@
   var WA = "https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%20para%20micropigmenta%C3%A7%C3%A3o%2C%20pode%20ajudar%3F";
   var P = window.INOVA_PREFIX || "./";
 
+  /* ---------- Sessão iniciada: mostrar avatar + nome no menu ---------- */
+  if (window.InovaAuth) {
+    var loggedAcc = window.InovaAuth.current();
+    var navAuthBoxes = document.querySelectorAll(".nav-auth");
+    if (loggedAcc && navAuthBoxes.length) {
+      var avatarSrc = window.InovaAuth.avatarUrl(loggedAcc);
+      var firstName = loggedAcc.name.split(" ")[0];
+      navAuthBoxes.forEach(function (box) {
+        box.innerHTML =
+          '<a class="nav-user" href="' + P + 'conta/">' +
+          '<img class="nav-user-avatar" src="' + avatarSrc + '" alt="' + firstName + '">' +
+          '<span>' + firstName + '</span></a>';
+      });
+    }
+  }
+
   /* ---------- Menu mobile (hamburger) ---------- */
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.querySelector(".main-nav");
