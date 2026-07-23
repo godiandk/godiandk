@@ -515,6 +515,35 @@ section { padding: 4.5rem 0; }
 .sub-link.sub-link-main { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
 .sub-link.sub-link-main:hover { background: var(--gold); color: var(--white); }
 
+/* ---------- Indisponível ---------- */
+.unavail-badge {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: .62rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #a3856a;
+  background: rgba(176, 141, 87, .12);
+  border: 1px solid rgba(176, 141, 87, .3);
+  border-radius: 999px;
+  padding: .2rem .7rem;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.price-cat.is-unavailable { opacity: .55; }
+.service-card.is-unavailable { opacity: .68; }
+.service-card.is-unavailable .card-media { filter: grayscale(.6); }
+.card-unavail {
+  display: inline-block;
+  margin-top: .4rem;
+  font-size: .72rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #a3856a;
+  font-weight: 500;
+}
+
 /* ---------- Preçário ---------- */
 .price-section { max-width: 820px; margin-inline: auto; }
 .price-cat { margin-top: 3.2rem; }
