@@ -46,6 +46,7 @@
     if (phone.length < 9) return Promise.resolve({ error: "Número de telemóvel inválido (mínimo 9 dígitos)." });
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email || "")) return Promise.resolve({ error: "Indique um email válido." });
     if (!data.birth) return Promise.resolve({ error: "Indique a sua data de nascimento." });
+    if (data.gender !== "M" && data.gender !== "F") return Promise.resolve({ error: "Selecione o sexo (Masculino ou Feminino)." });
     if (!data.pass || data.pass.length < 6) return Promise.resolve({ error: "A senha deve ter pelo menos 6 caracteres." });
     if (data.pass !== data.pass2) return Promise.resolve({ error: "As senhas não coincidem — verifique a confirmação." });
 
@@ -65,6 +66,8 @@
         phone: phone,
         email: data.email.trim(),
         birth: data.birth,
+        gender: data.gender,
+        photo: data.photo || null,
         salt: salt,
         passHash: hash,
         created: new Date().toISOString(),
@@ -115,12 +118,67 @@
     logout();
   }
 
+  /* Avatar padrão (silhueta), usado quando a cliente não envia foto */
+  function defaultAvatar(gender) {
+    var isF = gender === "F";
+    var bg = "#f3ece2", fg = "#b08d57";
+    var hair = isF
+      ? '<path d="M50 16C33 16 21 29 21 46v11c0 4 2 8 6 10l2-15c1-9 10-16 21-16s20 7 21 16l2 15c4-2 6-6 6-10V46C79 29 67 16 50 16z" fill="' + fg + '"/>'
+      : "";
+    var svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+      '<circle cx="50" cy="50" r="50" fill="' + bg + '"/>' +
+      hair +
+      '<circle cx="50" cy="42" r="17" fill="' + fg + '"/>' +
+      '<path d="M50 62c-19 0-32 13-32 28v10h64V90c0-15-13-28-32-28z" fill="' + fg + '"/>' +
+      '</svg>';
+    return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+  }
+
+  function avatarUrl(acc) {
+    if (!acc) return defaultAvatar("M");
+    return acc.photo || defaultAvatar(acc.gender || "M");
+  }
+
+  /* Lê um ficheiro de imagem escolhido pela cliente, recorta ao centro
+     e reduz para um avatar quadrado leve (guardável no dispositivo). */
+  function fileToAvatar(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return resolve(null);
+      if (!/^image\//.test(file.type)) return reject(new Error("O ficheiro tem de ser uma imagem."));
+      if (file.size > 8 * 1024 * 1024) return reject(new Error("Imagem demasiado grande (máx. 8MB)."));
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error("Não foi possível ler a imagem.")); };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error("Ficheiro de imagem inválido.")); };
+        img.onload = function () {
+          var SIZE = 200;
+          var canvas = document.createElement("canvas");
+          canvas.width = SIZE;
+          canvas.height = SIZE;
+          var ctx = canvas.getContext("2d");
+          var side = Math.min(img.width, img.height);
+          var sx = (img.width - side) / 2;
+          var sy = (img.height - side) / 2;
+          ctx.drawImage(img, sx, sy, side, side, 0, 0, SIZE, SIZE);
+          resolve(canvas.toDataURL("image/jpeg", 0.85));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   window.InovaAuth = {
     register: register,
     login: login,
     logout: logout,
     current: current,
     save: save,
-    removeCurrent: removeCurrent
+    removeCurrent: removeCurrent,
+    avatarUrl: avatarUrl,
+    defaultAvatar: defaultAvatar,
+    fileToAvatar: fileToAvatar
   };
 })();
