@@ -24,6 +24,13 @@
   function notify() { changeCbs.forEach(function (cb) { try { cb(currentAcc); } catch (e) {} }); }
 
   /* ---------------- Avatar ---------------- */
+  var CHARS = ["av1", "av2", "av3", "av4", "av5", "av6", "av7", "av8"];
+  function charPath(id) { return "img/avatares/" + id + ".jpg"; }
+  function withPrefix(path) { return (window.INOVA_PREFIX || "") + path; }
+  function charList() {
+    return CHARS.map(function (id) { return { id: id, path: charPath(id), url: withPrefix(charPath(id)) }; });
+  }
+
   function defaultAvatar(gender, name) {
     var isF = gender === "F";
     var bg = "#f3ece2", fg = "#b08d57";
@@ -51,7 +58,9 @@
 
   function avatarUrl(acc) {
     if (!acc) return defaultAvatar("M");
-    return acc.photo || defaultAvatar(acc.gender || "", acc.name || "");
+    if (acc.photo) return acc.photo;
+    if (acc.avatarChar) return withPrefix(acc.avatarChar);
+    return defaultAvatar(acc.gender || "", acc.name || "");
   }
 
   function fileToAvatar(file) {
@@ -175,6 +184,7 @@
         var acc = {
           name: data.name.trim(), email: data.email.trim(), phone: digits(data.phone),
           birth: data.birth, gender: data.gender, photo: data.photo || null,
+          avatarChar: data.avatarChar || null,
           stamps: [], cycle: 0, rewards: [],
           criadoEm: firebase.firestore.FieldValue.serverTimestamp()
         };
@@ -193,7 +203,8 @@
     return sha256(salt + "|" + data.pass).then(function (hash) {
       accs[phone] = {
         name: data.name.trim(), phone: phone, email: data.email.trim(), birth: data.birth,
-        gender: data.gender, photo: data.photo || null, salt: salt, passHash: hash,
+        gender: data.gender, photo: data.photo || null, avatarChar: data.avatarChar || null,
+        salt: salt, passHash: hash,
         created: new Date().toISOString(), stamps: [], cycle: 0, rewards: []
       };
       writeAccounts(accs);
@@ -317,6 +328,7 @@
     isAdmin: isAdmin,
     avatarUrl: avatarUrl,
     defaultAvatar: defaultAvatar,
-    fileToAvatar: fileToAvatar
+    fileToAvatar: fileToAvatar,
+    charList: charList
   };
 })();
