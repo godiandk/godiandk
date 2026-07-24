@@ -108,9 +108,9 @@
         </div>
         <div class="form-msg" id="bookMsg"></div>
         <div class="center-actions">
-          <button type="submit" class="btn btn-wa">Enviar pedido pelo WhatsApp</button>
+          <button type="submit" class="btn btn-gold">✨ Confirmar marcação</button>
         </div>
-        <p class="form-hint text-center mt-2" id="bookNote">Ao enviar, abre o WhatsApp com a sua mensagem já preenchida. Se tiver sessão iniciada, a marcação fica também registada para o estúdio.</p>
+        <p class="form-hint text-center mt-2" id="bookNote">A sua marcação fica registada diretamente para o estúdio. Confirmamos o seu horário em breve.</p>
       </form>
     </div>
   </div>
@@ -174,36 +174,31 @@
     var reward = usarPremio ? window.InovaAuth.activeReward() : null;
     var d = date.split("-");
     var dateFmt = d[2] + "/" + d[1] + "/" + d[0];
-    var lines = [
-      "Olá Inova beauty. Desejo marcar um horário para micropigmentação, pode ajudar?",
-      "",
-      "📋 Pedido de marcação:",
-      "• Nome: " + name,
-      "• Telemóvel: " + phone,
-      "• Serviço: " + service,
-      "• Dia: " + dateFmt,
-      "• Hora: " + time
-    ];
-    if (reward) {
-      lines.push("• 🎁 PRÉMIO DE FIDELIDADE: Sobrancelha GRÁTIS (completou 10 selos)");
-      lines.push("• Voucher: " + reward.code);
-    }
-    if (coupon) lines.push("• Cupom: " + coupon);
-    if (notes) lines.push("• Obs.: " + notes);
-    var url = "https://wa.me/351919277205?text=" + encodeURIComponent(lines.join("\n"));
+    var btn = form.querySelector('button[type="submit"]');
+    if (btn) { btn.disabled = true; }
 
     window.InovaAuth.saveBooking({
       nome: name, telefone: phone, servico: service, dia: date, hora: time, observacoes: notes, cupom: coupon,
       gratuito: !!reward, motivo: reward ? "Prémio de fidelidade — 10 selos completos" : "", voucher: reward ? reward.code : ""
     }).then(function (r) {
       var after = reward ? window.InovaAuth.consumeReward(reward.code, { dia: date, hora: time }) : Promise.resolve();
-      after.then(function () {
+      return after.then(function () {
         msg.className = "form-msg ok";
-        msg.textContent = reward
-          ? "🎁 Marcação com PRÉMIO registada! A abrir o WhatsApp para confirmar…"
-          : ((r && r.ok) ? "✅ Marcação registada! A abrir o WhatsApp para confirmar…" : "A abrir o WhatsApp com o seu pedido…");
-        window.open(url, "_blank", "noopener");
+        msg.innerHTML = "✅ <strong>Marcação feita com sucesso!</strong><br>" +
+          (reward ? "🎁 Prémio de fidelidade aplicado — Sobrancelha grátis.<br>" : "") +
+          service + " · " + dateFmt + " às " + time + ".<br>" +
+          "A sua marcação ficou registada. Confirmamos o seu horário em breve. 💛";
+        form.reset();
+        var ro = document.getElementById("rewardOpt"); if (ro) ro.remove();
+        document.getElementById("bService").disabled = false;
+        document.getElementById("rewardBanner").style.display = "none";
+        if (btn) { btn.disabled = false; }
+        if (msg.scrollIntoView) msg.scrollIntoView({ behavior: "smooth", block: "center" });
       });
+    }).catch(function (e) {
+      msg.className = "form-msg err";
+      msg.textContent = "Não foi possível registar a marcação: " + ((e && (e.message || e)) || "tente novamente") + ".";
+      if (btn) { btn.disabled = false; }
     });
   });
 })();
