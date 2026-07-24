@@ -13,13 +13,17 @@
 <meta name="theme-color" content="#191411">
 <link rel="apple-touch-icon" href="../../img/icon-192.png">
 <link rel="icon" href="../../img/icon-192.png">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../../firebase-config.js"></script>
 </head>
 <body class="app-shell" data-no-chat>
 
 <header class="app-bar">
   <a href="../../" aria-label="Ver site completo" style="font-size:1.1rem">🌐</a>
   <div class="ab-brand">Inova <span>Beauty</span></div>
-  <img src="../../img/thayana-avatar.jpg" alt="Thayana">
+  <img id="appBarAvatar" src="../../img/thayana-avatar.jpg" alt="A minha conta" style="cursor:pointer">
 </header>
 
 <!-- ===== INÍCIO ===== -->
@@ -98,11 +102,12 @@
       </div>
       <form id="loginForm" novalidate>
         <div class="form-grid" style="grid-template-columns:1fr">
-          <div class="form-field"><label for="lPhone">Telemóvel</label><input id="lPhone" type="tel" autocomplete="tel"></div>
+          <div class="form-field"><label for="lEmail">Email</label><input id="lEmail" type="email" autocomplete="email"></div>
           <div class="form-field"><label for="lPass">Senha</label><input id="lPass" type="password" autocomplete="current-password"></div>
         </div>
         <div class="form-msg" id="loginMsg"></div>
         <div class="center-actions"><button type="submit" class="btn btn-gold">Entrar</button></div>
+        <p class="text-center mt-2"><a href="#" id="forgotLink" style="font-size:.85rem;color:var(--gold)">Esqueci a minha senha</a></p>
       </form>
       <form id="signupForm" novalidate style="display:none">
         <div class="form-grid" style="grid-template-columns:1fr">
@@ -145,10 +150,40 @@
       </div>
       <p class="form-hint" id="profileInfo"></p>
       <div id="bdayArea" class="mt-2"></div>
-      <div class="center-actions">
-        <button type="button" class="btn btn-outline" id="logoutBtn">Sair</button>
-        <button type="button" class="btn btn-outline" id="deleteBtn" style="border-color:#a33;color:#a33">Apagar conta</button>
+      <div id="adminLinkArea"></div>
+    </div>
+
+    <div class="settings-card" id="settingsCard">
+      <h3>⚙️ Configurações da conta</h3>
+      <div class="avatar-picker" style="margin-top:1rem">
+        <img class="ap-preview" id="setAvatar" alt="Avatar">
+        <div class="ap-actions">
+          <label class="ap-btn" for="setPhotoFile">Trocar foto</label>
+          <input type="file" id="setPhotoFile" accept="image/*">
+          <button type="button" class="ap-btn" id="setPhotoRemove" style="border-color:#a33;color:#a33">Remover foto</button>
+        </div>
       </div>
+      <div class="form-grid" style="grid-template-columns:1fr;margin-top:1rem">
+        <div class="form-field"><label for="setName">Nome</label><input id="setName" type="text"></div>
+        <div class="form-field"><label for="setPhone">Telemóvel</label><input id="setPhone" type="tel"></div>
+        <div class="form-field">
+          <label>Sexo</label>
+          <div class="gender-picker">
+            <label id="setGenderM"><input type="radio" name="setGender" value="M"> Masculino</label>
+            <label id="setGenderF"><input type="radio" name="setGender" value="F"> Feminino</label>
+          </div>
+        </div>
+      </div>
+      <div class="form-msg" id="setMsg"></div>
+      <div class="center-actions" style="justify-content:flex-start">
+        <button type="button" class="btn btn-gold" id="setSaveBtn">Guardar</button>
+        <button type="button" class="btn btn-outline" id="setPassBtn">Alterar senha</button>
+      </div>
+    </div>
+
+    <div class="center-actions">
+      <button type="button" class="btn btn-outline" id="logoutBtn">Sair</button>
+      <button type="button" class="btn btn-outline" id="deleteBtn" style="border-color:#a33;color:#a33">Apagar conta</button>
     </div>
   </div>
 </main>
@@ -241,6 +276,25 @@
           '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · 1 única vez</div></div>';
       } else { bd.innerHTML = ""; }
       if (acc.name) document.getElementById("bName").value = acc.name;
+
+      // avatar no topo
+      document.getElementById("appBarAvatar").src = window.InovaAuth.avatarUrl(acc);
+
+      // admin
+      document.getElementById("adminLinkArea").innerHTML = window.InovaAuth.isAdmin(acc)
+        ? '<a class="admin-banner" href="../../painel/">🛠️ Painel de administração</a>' : "";
+
+      // configurações
+      setPhoto = undefined;
+      document.getElementById("setAvatar").src = window.InovaAuth.avatarUrl(acc);
+      document.getElementById("setName").value = acc.name || "";
+      document.getElementById("setPhone").value = acc.phone || "";
+      document.getElementById("setGenderM").querySelector("input").checked = acc.gender === "M";
+      document.getElementById("setGenderF").querySelector("input").checked = acc.gender === "F";
+      document.getElementById("setGenderM").classList.toggle("picked", acc.gender === "M");
+      document.getElementById("setGenderF").classList.toggle("picked", acc.gender === "F");
+    } else {
+      document.getElementById("appBarAvatar").src = window.InovaAuth.avatarUrl(null);
     }
   }
 
@@ -281,12 +335,23 @@
 
   document.getElementById("loginForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    window.InovaAuth.login(document.getElementById("lPhone").value, document.getElementById("lPass").value)
-      .then(function (r) { if (r.error) return msg(document.getElementById("loginMsg"), r.error); render(); });
+    window.InovaAuth.login(document.getElementById("lEmail").value, document.getElementById("lPass").value)
+      .then(function (r) { if (r.error) return msg(document.getElementById("loginMsg"), r.error); });
+  });
+  document.getElementById("forgotLink").addEventListener("click", function (e) {
+    e.preventDefault();
+    var lm = document.getElementById("loginMsg");
+    var email = document.getElementById("lEmail").value.trim();
+    if (!email) { msg(lm, "Escreva o email acima e clique novamente."); return; }
+    window.InovaAuth.resetPassword(email).then(function (r) {
+      if (r.error) return msg(lm, r.error);
+      lm.className = "form-msg ok"; lm.textContent = "✅ Link de recuperação enviado para " + email + ".";
+    });
   });
   document.getElementById("signupForm").addEventListener("submit", function (e) {
     e.preventDefault();
     var genderChecked = document.querySelector('input[name="sGender"]:checked');
+    var sb = e.target.querySelector('button[type=submit]'); sb.disabled = true;
     window.InovaAuth.register({
       name: document.getElementById("sName").value,
       phone: document.getElementById("sPhone").value,
@@ -296,11 +361,55 @@
       photo: sPhoto,
       pass: document.getElementById("sPass").value,
       pass2: document.getElementById("sPass2").value
-    }).then(function (r) { if (r.error) return msg(document.getElementById("signupMsg"), r.error); render(); });
+    }).then(function (r) { sb.disabled = false; if (r.error) return msg(document.getElementById("signupMsg"), r.error); });
   });
-  document.getElementById("logoutBtn").addEventListener("click", function () { window.InovaAuth.logout(); render(); });
+  document.getElementById("logoutBtn").addEventListener("click", function () { window.InovaAuth.logout(); });
   document.getElementById("deleteBtn").addEventListener("click", function () {
-    if (confirm("Apagar a conta deste dispositivo? Selos e prémios serão perdidos.")) { window.InovaAuth.removeCurrent(); render(); }
+    if (confirm("Apagar a conta? Selos e prémios serão perdidos definitivamente.")) { window.InovaAuth.removeCurrent(); }
+  });
+
+  /* avatar do topo → aba conta */
+  document.getElementById("appBarAvatar").addEventListener("click", function () { show("conta"); });
+
+  /* configurações da conta */
+  var setPhoto;
+  document.querySelectorAll('input[name="setGender"]').forEach(function (r) {
+    r.addEventListener("change", function () {
+      document.getElementById("setGenderM").classList.toggle("picked", r.value === "M" && r.checked);
+      document.getElementById("setGenderF").classList.toggle("picked", r.value === "F" && r.checked);
+      var a0 = window.InovaAuth.current();
+      if ((setPhoto === undefined || setPhoto === null) && (!a0 || !a0.photo))
+        document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar(r.value, "");
+    });
+  });
+  document.getElementById("setPhotoFile").addEventListener("change", function (e) {
+    var f = e.target.files[0]; if (!f) return;
+    window.InovaAuth.fileToAvatar(f).then(function (d) { setPhoto = d; document.getElementById("setAvatar").src = d; })
+      .catch(function (err) { msg(document.getElementById("setMsg"), err.message); });
+  });
+  document.getElementById("setPhotoRemove").addEventListener("click", function () {
+    setPhoto = null;
+    var g = document.querySelector('input[name="setGender"]:checked');
+    document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar(g ? g.value : "", "");
+  });
+  document.getElementById("setSaveBtn").addEventListener("click", function () {
+    var sm = document.getElementById("setMsg");
+    var g = document.querySelector('input[name="setGender"]:checked');
+    var changes = { name: document.getElementById("setName").value.trim(), phone: document.getElementById("setPhone").value.trim(), gender: g ? g.value : "" };
+    if (setPhoto !== undefined) changes.photo = setPhoto;
+    if (!changes.name) { msg(sm, "O nome não pode ficar vazio."); return; }
+    window.InovaAuth.update(changes).then(function (r) {
+      if (r.error) return msg(sm, r.error);
+      sm.className = "form-msg ok"; sm.textContent = "✅ Alterações guardadas!";
+    });
+  });
+  document.getElementById("setPassBtn").addEventListener("click", function () {
+    var acc = window.InovaAuth.current(); var sm = document.getElementById("setMsg");
+    if (!acc || !acc.email) return;
+    window.InovaAuth.resetPassword(acc.email).then(function (r) {
+      if (r.error) return msg(sm, r.error);
+      sm.className = "form-msg ok"; sm.textContent = "✅ Link para alterar senha enviado para " + acc.email + ".";
+    });
   });
 
   /* selos */
@@ -370,6 +479,7 @@
     navigator.serviceWorker.register("../../sw.js").catch(function () {});
   }
 
+  window.InovaAuth.onChange(render);
   render();
 })();
 </script>

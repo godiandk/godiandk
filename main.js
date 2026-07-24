@@ -7,18 +7,22 @@
 
   /* ---------- Sessão iniciada: mostrar avatar + nome no menu ---------- */
   if (window.InovaAuth) {
-    var loggedAcc = window.InovaAuth.current();
     var navAuthBoxes = document.querySelectorAll(".nav-auth");
-    if (loggedAcc && navAuthBoxes.length) {
-      var avatarSrc = window.InovaAuth.avatarUrl(loggedAcc);
-      var firstName = loggedAcc.name.split(" ")[0];
-      navAuthBoxes.forEach(function (box) {
-        box.innerHTML =
-          '<a class="nav-user" href="' + P + 'conta/">' +
-          '<img class="nav-user-avatar" src="' + avatarSrc + '" alt="' + firstName + '">' +
-          '<span>' + firstName + '</span></a>';
+    var navAuthDefault = [];
+    navAuthBoxes.forEach(function (box) { navAuthDefault.push(box.innerHTML); });
+    window.InovaAuth.onChange(function (acc) {
+      navAuthBoxes.forEach(function (box, i) {
+        if (acc && acc.name) {
+          var firstName = acc.name.split(" ")[0];
+          box.innerHTML =
+            '<a class="nav-user" href="' + P + 'conta/">' +
+            '<img class="nav-user-avatar" src="' + window.InovaAuth.avatarUrl(acc) + '" alt="' + firstName + '">' +
+            '<span>' + firstName + '</span></a>';
+        } else {
+          box.innerHTML = navAuthDefault[i];
+        }
       });
-    }
+    });
   }
 
   /* ---------- Menu mobile (hamburger) ---------- */

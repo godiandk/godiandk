@@ -8,6 +8,8 @@
 (function () {
   "use strict";
 
+  if (window.InovaCoupon) return; // evita dupla inicialização
+
   var SALT = "INOVA-BEAUTY-SEGREDO-2026";
   var LS_USED = "inova_used_coupons";
   var LS_GEN = "inova_generated_coupons";
