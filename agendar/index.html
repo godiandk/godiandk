@@ -64,6 +64,14 @@
 </section>
 <section>
   <div class="container" style="max-width:760px">
+    <div class="reward-card won" id="rewardBanner" style="display:none;margin-bottom:1.2rem">
+      <div class="rw-label">🎁 Tem um prémio para usar!</div>
+      <div class="rw-title">Sobrancelha Grátis</div>
+      <div class="rw-note">Ganhou por completar 10 selos. Marque este serviço e não paga nada.</div>
+      <label style="display:flex;align-items:center;gap:.5rem;margin-top:.7rem;cursor:pointer;font-size:.95rem">
+        <input type="checkbox" id="useReward" style="accent-color:#fff;width:18px;height:18px"> Usar o meu prémio nesta marcação
+      </label>
+    </div>
     <div class="form-card">
       <form id="bookForm" novalidate>
         <div class="form-grid">
@@ -116,10 +124,23 @@
   var couponInput = document.getElementById("bCoupon");
   var couponHint = document.getElementById("couponHint");
 
-  // pré-preencher nome e telemóvel se tiver sessão
+  // pré-preencher nome e telemóvel + mostrar prémio disponível
   window.InovaAuth.onChange(function (acc) {
     if (acc && acc.name && !document.getElementById("bName").value) document.getElementById("bName").value = acc.name;
     if (acc && acc.phone && !document.getElementById("bPhone").value) document.getElementById("bPhone").value = acc.phone;
+    var reward = acc ? window.InovaAuth.activeReward() : null;
+    document.getElementById("rewardBanner").style.display = reward ? "block" : "none";
+  });
+  document.getElementById("useReward").addEventListener("change", function () {
+    var sel = document.getElementById("bService");
+    if (this.checked) {
+      var opt = document.createElement("option");
+      opt.value = "Threading de Sobrancelhas (PRÉMIO — 10 selos)"; opt.textContent = opt.value; opt.id = "rewardOpt";
+      sel.insertBefore(opt, sel.firstChild); sel.value = opt.value; sel.disabled = true;
+    } else {
+      var o = document.getElementById("rewardOpt"); if (o) o.remove();
+      sel.disabled = false; sel.selectedIndex = 0;
+    }
   });
 
   couponInput.addEventListener("input", function () {
@@ -148,6 +169,8 @@
       msg.textContent = "Por favor preencha o nome, o telemóvel e o dia preferido.";
       return;
     }
+    var usarPremio = document.getElementById("useReward").checked;
+    var reward = usarPremio ? window.InovaAuth.activeReward() : null;
     var d = date.split("-");
     var dateFmt = d[2] + "/" + d[1] + "/" + d[0];
     var lines = [
@@ -160,16 +183,26 @@
       "• Dia: " + dateFmt,
       "• Hora: " + time
     ];
+    if (reward) {
+      lines.push("• 🎁 PRÉMIO DE FIDELIDADE: Sobrancelha GRÁTIS (completou 10 selos)");
+      lines.push("• Voucher: " + reward.code);
+    }
     if (coupon) lines.push("• Cupom: " + coupon);
     if (notes) lines.push("• Obs.: " + notes);
     var url = "https://wa.me/351919277205?text=" + encodeURIComponent(lines.join("\n"));
 
     window.InovaAuth.saveBooking({
-      nome: name, telefone: phone, servico: service, dia: date, hora: time, observacoes: notes, cupom: coupon
+      nome: name, telefone: phone, servico: service, dia: date, hora: time, observacoes: notes, cupom: coupon,
+      gratuito: !!reward, motivo: reward ? "Prémio de fidelidade — 10 selos completos" : "", voucher: reward ? reward.code : ""
     }).then(function (r) {
-      msg.className = "form-msg ok";
-      msg.textContent = (r && r.ok) ? "✅ Marcação registada! A abrir o WhatsApp para confirmar…" : "A abrir o WhatsApp com o seu pedido…";
-      window.open(url, "_blank", "noopener");
+      var after = reward ? window.InovaAuth.consumeReward(reward.code, { dia: date, hora: time }) : Promise.resolve();
+      after.then(function () {
+        msg.className = "form-msg ok";
+        msg.textContent = reward
+          ? "🎁 Marcação com PRÉMIO registada! A abrir o WhatsApp para confirmar…"
+          : ((r && r.ok) ? "✅ Marcação registada! A abrir o WhatsApp para confirmar…" : "A abrir o WhatsApp com o seu pedido…");
+        window.open(url, "_blank", "noopener");
+      });
     });
   });
 })();

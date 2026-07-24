@@ -1025,6 +1025,8 @@ section { padding: 4.5rem 0; }
   box-shadow: var(--shadow);
 }
 .booking-card.done { opacity: .6; border-left-color: var(--gold-soft); }
+.booking-card.free { border-left-color: #1fae5a; }
+.badge.free-badge { background: rgba(31, 174, 90, .18); color: #1c7d46; }
 .booking-card .bk-head {
   display: flex;
   justify-content: space-between;
@@ -1249,6 +1251,32 @@ section { padding: 4.5rem 0; }
   outline: none;
 }
 .stamp-form input::placeholder { color: rgba(255, 253, 250, .4); }
+.lc-warn {
+  margin-top: .7rem;
+  font-size: .84rem;
+  background: rgba(224, 168, 90, .18);
+  border: 1px solid rgba(201, 171, 124, .5);
+  color: #f0d4a8;
+  border-radius: 8px;
+  padding: .55rem .85rem;
+}
+.reward-card {
+  margin-top: 1rem;
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--gold-soft);
+  background: linear-gradient(135deg, rgba(176,141,87,.22), rgba(201,171,124,.28));
+  color: var(--white);
+}
+.reward-card.won { background: linear-gradient(135deg, #1c7d46, #23995a); border-color: #2fb069; }
+.reward-card.used { opacity: .6; }
+.reward-card .rw-label { font-size: .74rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-soft); }
+.reward-card.won .rw-label { color: #cff5df; }
+.reward-card .rw-title { font-family: var(--font-display); font-size: 1.5rem; margin: .15rem 0 .3rem; }
+.reward-card .rw-code { display: inline-block; margin-top: .5rem; font-family: monospace; letter-spacing: .1em; background: rgba(255,253,250,.15); border: 1px dashed rgba(255,255,255,.4); border-radius: 8px; padding: .4rem .8rem; }
+.reward-card .rw-note { font-size: .82rem; opacity: .9; margin-top: .5rem; }
+.reward-card .btn { margin-top: .8rem; }
+
 .lc-msg { margin-top: .8rem; font-size: .88rem; display: none; padding: .6rem .9rem; border-radius: 8px; }
 .lc-msg.ok { display: block; background: rgba(37, 211, 102, .15); color: #7ce8a8; }
 .lc-msg.err { display: block; background: rgba(220, 70, 70, .18); color: #ff9c9c; }

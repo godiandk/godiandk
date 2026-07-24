@@ -259,10 +259,82 @@
     currentAcc = acc;
     if (backend === "firebase") {
       return fbDb.collection("clientes").doc(acc.uid).set(
-        { stamps: acc.stamps || [], cycle: acc.cycle || 0, rewards: acc.rewards || [] }, { merge: true }
+        { stamps: acc.stamps || [], cycle: acc.cycle || 0, rewards: acc.rewards || [], stampYear: acc.stampYear || currentYear() }, { merge: true }
       ).then(function () { notify(); }).catch(function () {});
     }
     saveLocal(acc); notify(); return Promise.resolve();
+  }
+
+  /* ---------------- Caderneta de selos (validade anual) ---------------- */
+  function currentYear() { return new Date().getFullYear(); }
+
+  // A caderneta é válida de janeiro a dezembro. Os selos não completados
+  // expiram a 31/12 — no ano seguinte, recomeça do zero.
+  function checkStampReset(acc) {
+    if (!acc) return false;
+    var y = currentYear();
+    if (acc.stampYear && acc.stampYear !== y && (acc.stamps || []).length > 0) {
+      acc.stamps = []; acc.stampYear = y; return true;
+    }
+    if (!acc.stampYear) acc.stampYear = y;
+    return false;
+  }
+
+  function addStamp(code) {
+    var acc = current();
+    if (!acc) return Promise.resolve({ error: "Inicie sessão para juntar selos." });
+    if (!window.InovaCoupon) return Promise.resolve({ error: "Sistema de selos indisponível." });
+    var r = window.InovaCoupon.parse(code);
+    if (!r.valid) return Promise.resolve({ error: r.reason });
+    if (r.type !== "selo") return Promise.resolve({ error: "Este código não é um selo de fidelidade." });
+    if (r.expired) return Promise.resolve({ error: "Este selo já expirou." });
+    if (r.used || (acc.stamps || []).indexOf(r.code) >= 0) return Promise.resolve({ error: "Este selo já foi utilizado." });
+    checkStampReset(acc);
+    window.InovaCoupon.markUsed(r.code);
+    acc.stamps = acc.stamps || [];
+    acc.stamps.push(r.code);
+    acc.stampYear = currentYear();
+    var completed = false, reward = null;
+    if (acc.stamps.length >= 10) {
+      acc.cycle = (acc.cycle || 0) + 1;
+      acc.stamps = [];
+      var rc = window.InovaCoupon.rewardCoupon(acc.uid || acc.phone, acc.cycle);
+      reward = {
+        code: rc.code, expiry: rc.expiry, earned: new Date().toISOString(),
+        status: "por_ativar", tipo: "Threading de Sobrancelhas GRÁTIS", cycle: acc.cycle
+      };
+      acc.rewards = acc.rewards || [];
+      acc.rewards.push(reward);
+      completed = true;
+    }
+    return save(acc).then(function () { return { ok: true, completed: completed, reward: reward, count: acc.stamps.length }; });
+  }
+
+  function activateReward(code) {
+    var acc = current();
+    if (!acc) return Promise.resolve({ error: "Sessão não iniciada." });
+    var found = false;
+    (acc.rewards || []).forEach(function (rw) { if (rw.code === code && rw.status === "por_ativar") { rw.status = "ativo"; found = true; } });
+    if (!found) return Promise.resolve({ error: "Prémio não encontrado ou já ativado." });
+    return save(acc).then(function () { return { ok: true }; });
+  }
+
+  function activeReward() {
+    var acc = current();
+    if (!acc) return null;
+    var list = (acc.rewards || []).filter(function (rw) { return rw.status === "ativo"; });
+    return list.length ? list[0] : null;
+  }
+
+  function consumeReward(code, marcacaoInfo) {
+    var acc = current();
+    if (!acc) return Promise.resolve({ error: "Sessão não iniciada." });
+    var done = false;
+    (acc.rewards || []).forEach(function (rw) {
+      if (rw.code === code && rw.status === "ativo") { rw.status = "usado"; rw.usadoEm = new Date().toISOString(); rw.marcacao = marcacaoInfo || null; done = true; }
+    });
+    if (!done) return Promise.resolve({ error: "Prémio não disponível." });
+    return save(acc).then(function () { return { ok: true }; });
   }
 
   function update(changes) {
@@ -386,6 +458,9 @@
       hora: data.hora || "",
       observacoes: (data.observacoes || "").trim(),
       cupom: (data.cupom || "").trim(),
+      gratuito: !!data.gratuito,
+      motivo: data.motivo || "",
+      voucher: data.voucher || "",
       clienteUid: acc ? (acc.uid || acc.phone || null) : null,
       estado: "pendente"
     };
@@ -568,6 +643,11 @@
     defaultAvatar: defaultAvatar,
     fileToAvatar: fileToAvatar,
     charList: charList,
+    checkStampReset: checkStampReset,
+    addStamp: addStamp,
+    activateReward: activateReward,
+    activeReward: activeReward,
+    consumeReward: consumeReward,
     saveBooking: saveBooking,
     listBookings: listBookings,
     updateBooking: updateBooking,
