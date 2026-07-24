@@ -273,6 +273,60 @@
 
   /* ---- marcações ---- */
   function fmtDia(dia) { if (!dia) return "—"; var d = dia.split("-"); return d.length === 3 ? d[2] + "/" + d[1] + "/" + d[0] : dia; }
+
+  /* Tabela de preços por serviço (para ajudar a Thayana a saber quanto cobrar). */
+  var PRICE = {
+    "Threading de Sobrancelhas": { base: 14 },
+    "Brow Lamination": { base: 35 },
+    "Alisamento de Sobrancelhas": { base: 35 },
+    "Coloração de Sobrancelhas (Henna / Tintura / Descoloração)": { from: 24 },
+    "Lifting de Pestanas": { base: 31 },
+    "Lifting + Tintura de Pestanas": { base: 49.5 },
+    "Permanente de Pestanas": { base: 31 },
+    "Tintura de Pestanas": { base: 24 },
+    "Micropigmentação de Sobrancelhas": { base: 225 },
+    "Hidraglos de Lábios": { from: 65 },
+    "Threading (rosto)": { from: 15 },
+    "Depilação a Laser": { consulta: true },
+    "Outro (indico na mensagem)": { consulta: true }
+  };
+  function eur(v) { return v.toFixed(2).replace(".", ",") + "€"; }
+  function priceInfo(servico) {
+    if (!servico) return { consulta: true };
+    if (PRICE[servico]) return PRICE[servico];
+    for (var k in PRICE) { if (servico.indexOf(k) === 0) return PRICE[k]; }
+    return { consulta: true };
+  }
+  function chargeBlock(m) {
+    if (m.gratuito) {
+      return '<div class="bk-charge free"><div class="bk-charge-row final"><span>💰 Valor a cobrar</span><span>GRÁTIS 🎁</span></div>' +
+             '<div class="bk-charge-note">Prémio de fidelidade — não cobrar nada.</div></div>';
+    }
+    var info = priceInfo(m.servico);
+    if (info.consulta) {
+      return '<div class="bk-charge"><div class="bk-charge-row final"><span>💰 Valor a cobrar</span><span>sob consulta</span></div>' +
+             '<div class="bk-charge-note">Depende da zona/opção — confirme o valor na hora.</div></div>';
+    }
+    var isFrom = info.base == null;
+    var base = isFrom ? info.from : info.base;
+    var rows = '<div class="bk-charge-row"><span>Valor' + (isFrom ? " (a partir de)" : "") + '</span><span>' + eur(base) + '</span></div>';
+    var fin = base, note = "";
+    if (m.cupom && window.InovaCoupon) {
+      var r = window.InovaCoupon.parse(m.cupom);
+      if (r.valid && !r.expired) {
+        var desc = base * r.pct / 100;
+        fin = base - desc;
+        rows += '<div class="bk-charge-row desc"><span>Desconto cupom (' + r.pct + '%)</span><span>−' + eur(desc) + '</span></div>';
+      } else if (r.valid && r.expired) {
+        note = '<div class="bk-charge-note warn">⚠️ Cupom expirado — não aplicar desconto.</div>';
+      } else {
+        note = '<div class="bk-charge-note warn">⚠️ Cupom inválido — cobrar o valor normal.</div>';
+      }
+    }
+    rows += '<div class="bk-charge-row final"><span>💰 Valor a cobrar' + (isFrom ? " (mín.)" : "") + '</span><span>' + eur(fin) + '</span></div>';
+    return '<div class="bk-charge">' + rows + note + '</div>';
+  }
+
   document.getElementById("marcRefresh").addEventListener("click", renderMarc);
   document.getElementById("marcFilter").addEventListener("change", renderMarc);
   function renderMarc() {
@@ -304,6 +358,7 @@
           (m.gratuito ? '<div style="color:#1c7d46;font-weight:500">🎁 Prémio de fidelidade — ' + (m.motivo || "10 selos completos") + (m.voucher ? " · Voucher " + m.voucher : "") + '</div>' : "") +
           (m.cupom ? '<div>🎟️ Cupom: ' + m.cupom + '</div>' : "") +
           (m.observacoes ? '<div>📝 ' + m.observacoes + '</div>' : "") +
+          chargeBlock(m) +
           '</div>' +
           '<div class="bk-actions">' +
           '<button type="button" class="btn btn-outline" data-done="' + m.id + '" style="padding:.4rem 1rem;font-size:.7rem">' + (done ? "Reabrir" : "Marcar concluída") + '</button>' +
