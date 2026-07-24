@@ -116,11 +116,13 @@
             <div class="avatar-picker">
               <img class="ap-preview" id="sAvatarPreview" alt="Pré-visualização do avatar">
               <div class="ap-actions">
-                <label class="ap-btn" for="sPhotoFile">Escolher foto</label>
+                <label class="ap-btn" for="sPhotoFile">Enviar foto</label>
                 <input type="file" id="sPhotoFile" accept="image/*">
-                <span class="ap-hint">Se não escolher, usamos um ícone</span>
+                <button type="button" class="ap-btn" id="sCharBtn">Escolher personagem</button>
+                <span class="ap-hint">Ou usamos um ícone</span>
               </div>
             </div>
+            <div class="char-grid" id="sCharGrid"></div>
           </div>
           <div class="form-field">
             <label>Sexo*</label>
@@ -160,9 +162,11 @@
         <div class="ap-actions">
           <label class="ap-btn" for="setPhotoFile">Trocar foto</label>
           <input type="file" id="setPhotoFile" accept="image/*">
-          <button type="button" class="ap-btn" id="setPhotoRemove" style="border-color:#a33;color:#a33">Remover foto</button>
+          <button type="button" class="ap-btn" id="setCharBtn">Escolher personagem</button>
+          <button type="button" class="ap-btn" id="setPhotoRemove" style="border-color:#a33;color:#a33">Remover</button>
         </div>
       </div>
+      <div class="char-grid" id="setCharGrid"></div>
       <div class="form-grid" style="grid-template-columns:1fr;margin-top:1rem">
         <div class="form-field"><label for="setName">Nome</label><input id="setName" type="text"></div>
         <div class="form-field"><label for="setPhone">Telemóvel</label><input id="setPhone" type="tel"></div>
@@ -195,6 +199,7 @@
   <button type="button" data-tab="conta"><span class="tb-icon">👤</span>Conta</button>
 </nav>
 
+<script>window.INOVA_PREFIX = "../../";</script>
 <script src="../../coupon.js"></script>
 <script src="../../auth.js"></script>
 <script>
@@ -285,7 +290,8 @@
         ? '<a class="admin-banner" href="../../painel/">🛠️ Painel de administração</a>' : "";
 
       // configurações
-      setPhoto = undefined;
+      setPhoto = undefined; setChar = undefined;
+      setGrid.querySelectorAll("img").forEach(function (im) { im.classList.toggle("picked", im.dataset.path === acc.avatarChar); });
       document.getElementById("setAvatar").src = window.InovaAuth.avatarUrl(acc);
       document.getElementById("setName").value = acc.name || "";
       document.getElementById("setPhone").value = acc.phone || "";
@@ -309,12 +315,12 @@
   });
   function msg(el, text) { el.className = "form-msg err"; el.textContent = text; }
 
-  /* Foto de perfil e sexo no registo */
-  var sPhoto = null;
+  /* Foto de perfil / personagem e sexo no registo */
+  var sPhoto = null, sChar = null;
   function updateAvatarPreview() {
     var checked = document.querySelector('input[name="sGender"]:checked');
-    var gender = checked ? checked.value : "M";
-    document.getElementById("sAvatarPreview").src = sPhoto || window.InovaAuth.defaultAvatar(gender);
+    var gender = checked ? checked.value : "";
+    document.getElementById("sAvatarPreview").src = sPhoto || (sChar ? ((window.INOVA_PREFIX || "") + sChar) : window.InovaAuth.defaultAvatar(gender, document.getElementById("sName").value));
   }
   document.querySelectorAll('input[name="sGender"]').forEach(function (r) {
     r.addEventListener("change", function () {
@@ -327,10 +333,22 @@
     var f = e.target.files[0];
     if (!f) return;
     window.InovaAuth.fileToAvatar(f).then(function (dataUrl) {
-      sPhoto = dataUrl;
+      sPhoto = dataUrl; sChar = null; markPickedChar();
       updateAvatarPreview();
     }).catch(function (err) { msg(document.getElementById("signupMsg"), err.message); });
   });
+  var sGrid = document.getElementById("sCharGrid");
+  window.InovaAuth.charList().forEach(function (c) {
+    var img = document.createElement("img");
+    img.src = c.url; img.alt = "Avatar"; img.dataset.path = c.path;
+    img.addEventListener("click", function () {
+      sChar = c.path; sPhoto = null; document.getElementById("sPhotoFile").value = "";
+      markPickedChar(); updateAvatarPreview();
+    });
+    sGrid.appendChild(img);
+  });
+  function markPickedChar() { sGrid.querySelectorAll("img").forEach(function (im) { im.classList.toggle("picked", im.dataset.path === sChar); }); }
+  document.getElementById("sCharBtn").addEventListener("click", function () { sGrid.classList.toggle("open"); });
   updateAvatarPreview();
 
   document.getElementById("loginForm").addEventListener("submit", function (e) {
@@ -358,7 +376,7 @@
       email: document.getElementById("sEmail").value,
       birth: document.getElementById("sBirth").value,
       gender: genderChecked ? genderChecked.value : null,
-      photo: sPhoto,
+      photo: sPhoto, avatarChar: sChar,
       pass: document.getElementById("sPass").value,
       pass2: document.getElementById("sPass2").value
     }).then(function (r) { sb.disabled = false; if (r.error) return msg(document.getElementById("signupMsg"), r.error); });
@@ -372,23 +390,35 @@
   document.getElementById("appBarAvatar").addEventListener("click", function () { show("conta"); });
 
   /* configurações da conta */
-  var setPhoto;
+  var setPhoto, setChar;
+  var setGrid = document.getElementById("setCharGrid");
+  window.InovaAuth.charList().forEach(function (c) {
+    var img = document.createElement("img");
+    img.src = c.url; img.alt = "Avatar"; img.dataset.path = c.path;
+    img.addEventListener("click", function () {
+      setChar = c.path; setPhoto = null; document.getElementById("setPhotoFile").value = "";
+      markSetChar(); document.getElementById("setAvatar").src = c.url;
+    });
+    setGrid.appendChild(img);
+  });
+  function markSetChar() { setGrid.querySelectorAll("img").forEach(function (im) { im.classList.toggle("picked", im.dataset.path === setChar); }); }
+  document.getElementById("setCharBtn").addEventListener("click", function () { setGrid.classList.toggle("open"); });
   document.querySelectorAll('input[name="setGender"]').forEach(function (r) {
     r.addEventListener("change", function () {
       document.getElementById("setGenderM").classList.toggle("picked", r.value === "M" && r.checked);
       document.getElementById("setGenderF").classList.toggle("picked", r.value === "F" && r.checked);
       var a0 = window.InovaAuth.current();
-      if ((setPhoto === undefined || setPhoto === null) && (!a0 || !a0.photo))
+      if ((setPhoto === undefined || setPhoto === null) && !setChar && (!a0 || (!a0.photo && !a0.avatarChar)))
         document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar(r.value, "");
     });
   });
   document.getElementById("setPhotoFile").addEventListener("change", function (e) {
     var f = e.target.files[0]; if (!f) return;
-    window.InovaAuth.fileToAvatar(f).then(function (d) { setPhoto = d; document.getElementById("setAvatar").src = d; })
+    window.InovaAuth.fileToAvatar(f).then(function (d) { setPhoto = d; setChar = null; markSetChar(); document.getElementById("setAvatar").src = d; })
       .catch(function (err) { msg(document.getElementById("setMsg"), err.message); });
   });
   document.getElementById("setPhotoRemove").addEventListener("click", function () {
-    setPhoto = null;
+    setPhoto = null; setChar = null; markSetChar();
     var g = document.querySelector('input[name="setGender"]:checked');
     document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar(g ? g.value : "", "");
   });
@@ -396,7 +426,10 @@
     var sm = document.getElementById("setMsg");
     var g = document.querySelector('input[name="setGender"]:checked');
     var changes = { name: document.getElementById("setName").value.trim(), phone: document.getElementById("setPhone").value.trim(), gender: g ? g.value : "" };
+    if (setChar !== undefined) changes.avatarChar = setChar;
     if (setPhoto !== undefined) changes.photo = setPhoto;
+    if (setChar) changes.photo = null;
+    if (setPhoto) changes.avatarChar = null;
     if (!changes.name) { msg(sm, "O nome não pode ficar vazio."); return; }
     window.InovaAuth.update(changes).then(function (r) {
       if (r.error) return msg(sm, r.error);

@@ -1352,6 +1352,27 @@ section { padding: 4.5rem 0; }
 .avatar-picker .ap-btn:hover { background: var(--gold); color: var(--white); }
 .avatar-picker .ap-hint { font-size: .78rem; color: var(--ink-soft); font-style: italic; }
 
+/* Grelha de personagens */
+.char-grid {
+  display: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .6rem;
+  margin-top: .9rem;
+}
+.char-grid.open { display: grid; }
+.char-grid img {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--gold-faint);
+  cursor: pointer;
+  transition: transform .15s, border-color .15s;
+}
+.char-grid img:hover { transform: scale(1.06); }
+.char-grid img.picked { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(176, 141, 87, .25); }
+@media (max-width: 420px) { .char-grid { grid-template-columns: repeat(4, 1fr); } }
+
 /* Seletor de sexo no registo */
 .gender-picker { display: flex; gap: .7rem; }
 .gender-picker label {
