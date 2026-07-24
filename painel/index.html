@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel — Inova Beauty</title>
-<meta name="description" content="Área reservada Inova Beauty: geração e validação de cupons de desconto.">
+<meta name="description" content="Área reservada Inova Beauty: marcações, geração e validação de cupons.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -58,35 +58,56 @@
   <div class="container">
     
     <span class="eyebrow-label">Área reservada</span>
-    <h1>Painel de cupons</h1>
-    <p class="lead">Gere cupons de desconto e de aniversário, e valide os cupons apresentados pelas clientes.</p>
+    <h1>Painel do estúdio</h1>
+    <p class="lead">Marcações das clientes, geração e validação de cupons e selos.</p>
   </div>
 </section>
 <section>
-  <div class="container" style="max-width:860px">
+  <div class="container" style="max-width:900px">
 
-    <div class="form-card" id="pinGate">
-      <h2 style="margin-bottom:1rem">Acesso reservado</h2>
+    <div class="form-card" id="loginGate">
+      <h2 style="margin-bottom:.4rem">Acesso reservado</h2>
+      <p class="form-hint" style="margin-bottom:1rem">Entre com o email e senha de administradora.</p>
       <div class="form-grid">
-        <div class="form-field full">
-          <label for="pinInput">PIN de acesso</label>
-          <input id="pinInput" type="password" inputmode="numeric" placeholder="PIN (inicial: 1234)">
-          <span class="form-hint">Pode alterar o PIN depois de entrar. Nota: esta proteção é básica (o site não tem servidor).</span>
-        </div>
+        <div class="form-field"><label for="aEmail">Email</label><input id="aEmail" type="email" autocomplete="email" placeholder="o.seu@email.com"></div>
+        <div class="form-field"><label for="aPass">Senha</label><input id="aPass" type="password" autocomplete="current-password"></div>
       </div>
-      <div class="form-msg" id="pinMsg"></div>
-      <div class="center-actions"><button type="button" class="btn btn-gold" id="pinBtn">Entrar</button></div>
+      <div class="form-msg" id="loginMsg"></div>
+      <div class="center-actions"><button type="button" class="btn btn-gold" id="loginBtn">Entrar</button></div>
+      <p class="text-center mt-2"><a href="#" id="forgotLink" style="font-size:.85rem;color:var(--gold)">Esqueci a senha</a></p>
     </div>
 
     <div id="panelArea" style="display:none">
       <div class="panel-tabs">
-        <button type="button" class="panel-tab active" data-tab="gen">🎟️ Gerar cupom</button>
+        <button type="button" class="panel-tab active" data-tab="marc">📅 Marcações</button>
+        <button type="button" class="panel-tab" data-tab="gen">🎟️ Gerar cupom</button>
         <button type="button" class="panel-tab" data-tab="val">✅ Validar cupom</button>
         <button type="button" class="panel-tab" data-tab="hist">📒 Histórico</button>
-        <button type="button" class="panel-tab" data-tab="conf">⚙️ Definições</button>
+        <button type="button" class="panel-tab" data-tab="conf">⚙️ Conta</button>
       </div>
 
-      <div class="panel-section active" id="tab-gen">
+      <div class="panel-section active" id="tab-marc">
+        <div class="form-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem">
+            <h3>Marcações das clientes</h3>
+            <div style="display:flex;gap:.5rem;align-items:center">
+              <select id="marcFilter" style="padding:.5rem .7rem;border-radius:8px;border:1px solid var(--gold-faint);background:var(--cream);font-family:var(--font-body)">
+                <option value="futuras">Próximas</option>
+                <option value="hoje">Hoje</option>
+                <option value="todas">Todas</option>
+                <option value="pendentes">Pendentes</option>
+                <option value="concluidas">Concluídas</option>
+              </select>
+              <button type="button" class="btn btn-outline" id="marcRefresh" style="padding:.5rem 1rem;font-size:.72rem">↻ Atualizar</button>
+            </div>
+          </div>
+          <p class="form-hint mt-2">As marcações feitas na Marcação Online (por clientes com sessão iniciada) aparecem aqui automaticamente. Horários de 30 em 30 minutos.</p>
+          <div class="form-msg" id="marcMsg"></div>
+          <div id="marcList" class="mt-2"></div>
+        </div>
+      </div>
+
+      <div class="panel-section" id="tab-gen">
         <div class="form-card">
           <h3 style="margin-bottom:1rem">Gerar novo cupom</h3>
           <div class="form-grid">
@@ -103,10 +124,7 @@
               <input id="gPct" type="number" min="1" max="100" value="10">
               <span class="form-hint">A margem que decide oferecer (1–100%).</span>
             </div>
-            <div class="form-field full">
-              <label for="gExp">Válido até</label>
-              <input id="gExp" type="date">
-            </div>
+            <div class="form-field full"><label for="gExp">Válido até</label><input id="gExp" type="date"></div>
           </div>
           <div class="form-msg" id="genMsg"></div>
           <div class="center-actions"><button type="button" class="btn btn-gold" id="genBtn">Gerar cupom</button></div>
@@ -117,18 +135,13 @@
       <div class="panel-section" id="tab-val">
         <div class="form-card">
           <h3 style="margin-bottom:1rem">Validar cupom da cliente</h3>
-          <div class="form-grid">
-            <div class="form-field full">
-              <label for="vCode">Código do cupom</label>
-              <input id="vCode" type="text" placeholder="INOVA-…">
-            </div>
-          </div>
+          <div class="form-grid"><div class="form-field full"><label for="vCode">Código do cupom</label><input id="vCode" type="text" placeholder="INOVA-…"></div></div>
           <div class="form-msg" id="valMsg"></div>
           <div class="center-actions">
             <button type="button" class="btn btn-outline" id="valBtn">Verificar</button>
             <button type="button" class="btn btn-gold" id="useBtn" style="display:none">Marcar como usado</button>
           </div>
-          <p class="form-hint text-center mt-2">Um cupom marcado como usado neste dispositivo nunca mais valida — garante a utilização única.</p>
+          <p class="form-hint text-center mt-2">Um cupom marcado como usado nunca mais valida — garante a utilização única.</p>
         </div>
       </div>
 
@@ -143,46 +156,55 @@
 
       <div class="panel-section" id="tab-conf">
         <div class="form-card">
-          <h3 style="margin-bottom:1rem">Alterar PIN</h3>
-          <div class="form-grid">
-            <div class="form-field">
-              <label for="newPin">Novo PIN</label>
-              <input id="newPin" type="password" inputmode="numeric" placeholder="4+ dígitos">
-            </div>
+          <h3 style="margin-bottom:.6rem">Conta de administradora</h3>
+          <p class="form-hint" id="confWho"></p>
+          <div class="center-actions" style="justify-content:flex-start">
+            <button type="button" class="btn btn-outline" id="logoutBtn">Sair</button>
           </div>
-          <div class="form-msg" id="confMsg"></div>
-          <div class="center-actions"><button type="button" class="btn btn-outline" id="pinSaveBtn">Guardar PIN</button></div>
-          <p class="form-hint mt-2">⚠️ Importante: os registos de cupons usados/gerados e o PIN ficam guardados neste dispositivo (navegador). Use sempre o mesmo dispositivo do estúdio para validar cupons.</p>
+          <p class="form-hint mt-2">⚠️ O histórico de cupons usados/gerados fica guardado neste dispositivo. As marcações ficam na base de dados (nuvem) e aparecem em qualquer dispositivo onde faça login.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
+<script>window.INOVA_PREFIX = "../";</script>
 <script src="../coupon.js"></script>
+<script src="../auth.js"></script>
 <script>
 (function () {
-  var LS_PIN = "inova_admin_pin";
-  function getPin() { return localStorage.getItem(LS_PIN) || "1234"; }
-
-  var gate = document.getElementById("pinGate");
+  var gate = document.getElementById("loginGate");
   var area = document.getElementById("panelArea");
 
-  document.getElementById("pinBtn").addEventListener("click", function () {
-    var v = document.getElementById("pinInput").value;
-    var msg = document.getElementById("pinMsg");
-    if (v === getPin()) {
-      gate.style.display = "none";
-      area.style.display = "block";
-      renderLogs();
+  function lmsg(el, text, ok) { el.className = "form-msg " + (ok ? "ok" : "err"); el.textContent = text; }
+
+  /* ---- gate por login de admin ---- */
+  window.InovaAuth.onChange(function (acc) {
+    if (acc && window.InovaAuth.isAdmin(acc)) {
+      gate.style.display = "none"; area.style.display = "block";
+      document.getElementById("confWho").textContent = "Sessão: " + acc.name + " (" + acc.email + ")";
+      renderMarc();
     } else {
-      msg.className = "form-msg err";
-      msg.textContent = "PIN incorreto.";
+      gate.style.display = "block"; area.style.display = "none";
+      if (acc && !window.InovaAuth.isAdmin(acc)) lmsg(document.getElementById("loginMsg"), "Esta conta não tem acesso de administradora.", false);
     }
   });
-  document.getElementById("pinInput").addEventListener("keydown", function (e) {
-    if (e.key === "Enter") document.getElementById("pinBtn").click();
+  document.getElementById("loginBtn").addEventListener("click", function () {
+    window.InovaAuth.login(document.getElementById("aEmail").value, document.getElementById("aPass").value)
+      .then(function (r) { if (r.error) lmsg(document.getElementById("loginMsg"), r.error, false); });
   });
+  document.getElementById("aPass").addEventListener("keydown", function (e) { if (e.key === "Enter") document.getElementById("loginBtn").click(); });
+  document.getElementById("forgotLink").addEventListener("click", function (e) {
+    e.preventDefault();
+    var em = document.getElementById("aEmail").value.trim();
+    if (!em) return lmsg(document.getElementById("loginMsg"), "Escreva o email acima e clique novamente.", false);
+    window.InovaAuth.resetPassword(em).then(function (r) {
+      if (r.error) return lmsg(document.getElementById("loginMsg"), r.error, false);
+      lmsg(document.getElementById("loginMsg"), "Link de recuperação enviado para " + em + ".", true);
+    });
+  });
+  document.getElementById("logoutBtn").addEventListener("click", function () { window.InovaAuth.logout(); });
 
+  /* ---- tabs ---- */
   document.querySelectorAll(".panel-tab").forEach(function (t) {
     t.addEventListener("click", function () {
       document.querySelectorAll(".panel-tab").forEach(function (x) { x.classList.remove("active"); });
@@ -190,90 +212,114 @@
       t.classList.add("active");
       document.getElementById("tab-" + t.getAttribute("data-tab")).classList.add("active");
       if (t.getAttribute("data-tab") === "hist") renderLogs();
+      if (t.getAttribute("data-tab") === "marc") renderMarc();
     });
   });
 
-  // validade por omissão: +30 dias
+  /* ---- marcações ---- */
+  function fmtDia(dia) { if (!dia) return "—"; var d = dia.split("-"); return d.length === 3 ? d[2] + "/" + d[1] + "/" + d[0] : dia; }
+  document.getElementById("marcRefresh").addEventListener("click", renderMarc);
+  document.getElementById("marcFilter").addEventListener("change", renderMarc);
+  function renderMarc() {
+    var box = document.getElementById("marcList");
+    box.innerHTML = '<p class="form-hint">A carregar…</p>';
+    window.InovaAuth.listBookings().then(function (list) {
+      var filt = document.getElementById("marcFilter").value;
+      var today = new Date(); today.setHours(0,0,0,0);
+      var todayStr = today.toISOString().slice(0,10);
+      list = list.filter(function (m) {
+        if (filt === "todas") return true;
+        if (filt === "hoje") return m.dia === todayStr;
+        if (filt === "pendentes") return (m.estado || "pendente") !== "concluida";
+        if (filt === "concluidas") return m.estado === "concluida";
+        return (m.dia || "9999") >= todayStr; // futuras
+      });
+      if (!list.length) { box.innerHTML = '<p class="form-hint">Sem marcações para mostrar.</p>'; return; }
+      box.innerHTML = list.map(function (m) {
+        var done = m.estado === "concluida";
+        var wa = m.telefone ? '<a class="link-gold" style="color:var(--gold)" href="https://wa.me/' + m.telefone.replace(/\D/g, "") + '" target="_blank" rel="noopener">' + m.telefone + '</a>' : "—";
+        return '<div class="booking-card' + (done ? " done" : "") + '">' +
+          '<div class="bk-head"><span class="bk-when">📅 ' + fmtDia(m.dia) + ' · 🕐 ' + (m.hora || "—") + '</span>' +
+          '<span class="badge ' + (done ? "used" : "ok") + '">' + (done ? "concluída" : "pendente") + '</span></div>' +
+          '<div class="bk-body">' +
+          '<div><strong>' + (m.nome || "—") + '</strong></div>' +
+          '<div>💅 ' + (m.servico || "—") + '</div>' +
+          '<div>📞 ' + wa + '</div>' +
+          (m.cupom ? '<div>🎟️ Cupom: ' + m.cupom + '</div>' : "") +
+          (m.observacoes ? '<div>📝 ' + m.observacoes + '</div>' : "") +
+          '</div>' +
+          '<div class="bk-actions">' +
+          '<button type="button" class="btn btn-outline" data-done="' + m.id + '" style="padding:.4rem 1rem;font-size:.7rem">' + (done ? "Reabrir" : "Marcar concluída") + '</button>' +
+          '<button type="button" class="btn btn-outline" data-del="' + m.id + '" style="padding:.4rem 1rem;font-size:.7rem;border-color:#a33;color:#a33">Apagar</button>' +
+          '</div></div>';
+      }).join("");
+      box.querySelectorAll("[data-done]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var id = b.getAttribute("data-done");
+          var m = list.filter(function (x) { return x.id === id; })[0];
+          window.InovaAuth.updateBooking(id, { estado: m && m.estado === "concluida" ? "pendente" : "concluida" }).then(renderMarc);
+        });
+      });
+      box.querySelectorAll("[data-del]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          if (confirm("Apagar esta marcação?")) window.InovaAuth.deleteBooking(b.getAttribute("data-del")).then(renderMarc);
+        });
+      });
+    }).catch(function (e) { box.innerHTML = '<p class="form-msg err">Erro ao carregar marcações: ' + (e.message || e) + '</p>'; });
+  }
+
+  /* ---- cupons ---- */
   var d = new Date(); d.setDate(d.getDate() + 30);
   document.getElementById("gExp").value = d.toISOString().slice(0, 10);
-
   document.getElementById("gType").addEventListener("change", function () {
     var isSelo = this.value === "selo";
     document.getElementById("gPct").disabled = isSelo;
     document.getElementById("gPct").closest(".form-field").style.opacity = isSelo ? ".45" : "1";
   });
-
   document.getElementById("genBtn").addEventListener("click", function () {
-    var msg = document.getElementById("genMsg");
-    msg.className = "form-msg";
+    var msg = document.getElementById("genMsg"); msg.className = "form-msg";
     var type = document.getElementById("gType").value;
-    var r;
-    if (type === "selo") {
-      r = window.InovaCoupon.generateStamp(document.getElementById("gExp").value);
-    } else {
-      r = window.InovaCoupon.generate(type, document.getElementById("gPct").value, document.getElementById("gExp").value);
-    }
-    if (r.error) {
-      msg.className = "form-msg err";
-      msg.textContent = r.error;
-      return;
-    }
+    var r = type === "selo" ? window.InovaCoupon.generateStamp(document.getElementById("gExp").value)
+                            : window.InovaCoupon.generate(type, document.getElementById("gPct").value, document.getElementById("gExp").value);
+    if (r.error) { msg.className = "form-msg err"; msg.textContent = r.error; return; }
     var exp = r.expiry.split("-");
     if (type === "selo") {
       document.getElementById("genResult").innerHTML =
-        '<div class="coupon-card">' +
-        '<div class="c-label">✍️ Selo de fidelidade — assinatura digital</div>' +
-        '<div class="c-pct">+1 selo</div>' +
-        '<div>Entregue este código à cliente no fim do procedimento. Ela insere-o na conta dela e ganha 1 selo (10 selos = Threading grátis):</div>' +
-        '<span class="c-code">' + r.code + '</span>' +
-        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · utilizável 1 única vez · gere 1 código novo por cada procedimento</div>' +
-        '</div>';
+        '<div class="coupon-card"><div class="c-label">✍️ Selo de fidelidade</div><div class="c-pct">+1 selo</div>' +
+        '<div>Entregue este código à cliente (10 selos = Threading grátis):</div><span class="c-code">' + r.code + '</span>' +
+        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · uso único · 1 código por procedimento</div></div>';
     } else {
       document.getElementById("genResult").innerHTML =
-        '<div class="coupon-card">' +
-        '<div class="c-label">' + (r.type === "aniversario" ? "🎂 Cupom de aniversário" : "🎟️ Cupom de desconto") + '</div>' +
-        '<div class="c-pct">' + r.pct + '% de desconto</div>' +
-        '<div>Envie este código à cliente:</div>' +
-        '<span class="c-code">' + r.code + '</span>' +
-        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · utilizável 1 única vez</div>' +
-        '</div>';
+        '<div class="coupon-card"><div class="c-label">' + (r.type === "aniversario" ? "🎂 Cupom de aniversário" : "🎟️ Cupom de desconto") + '</div>' +
+        '<div class="c-pct">' + r.pct + '% de desconto</div><div>Envie este código à cliente:</div><span class="c-code">' + r.code + '</span>' +
+        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · uso único</div></div>';
     }
   });
 
   var lastChecked = null;
   document.getElementById("valBtn").addEventListener("click", function () {
-    var msg = document.getElementById("valMsg");
-    var useBtn = document.getElementById("useBtn");
-    useBtn.style.display = "none";
-    lastChecked = null;
+    var msg = document.getElementById("valMsg"); var useBtn = document.getElementById("useBtn");
+    useBtn.style.display = "none"; lastChecked = null;
     var r = window.InovaCoupon.parse(document.getElementById("vCode").value);
     if (!r.valid) { msg.className = "form-msg err"; msg.textContent = "❌ " + r.reason; return; }
-    if (r.expired) { msg.className = "form-msg err"; msg.textContent = "❌ Cupom expirado em " + r.expiry.toLocaleDateString("pt-PT") + "."; return; }
-    if (r.used) { msg.className = "form-msg err"; msg.textContent = "❌ Este cupom JÁ FOI UTILIZADO — não é válido novamente."; return; }
+    if (r.expired) { msg.className = "form-msg err"; msg.textContent = "❌ Cupom expirado."; return; }
+    if (r.used) { msg.className = "form-msg err"; msg.textContent = "❌ Este cupom JÁ FOI UTILIZADO."; return; }
     msg.className = "form-msg ok";
-    msg.textContent = "✅ Cupom VÁLIDO: " + r.pct + "% de desconto" +
-      (r.type === "aniversario" ? " (aniversário)" : "") +
-      " · expira a " + r.expiry.toLocaleDateString("pt-PT") + ".";
-    lastChecked = r.code;
-    useBtn.style.display = "inline-flex";
+    msg.textContent = "✅ Cupom VÁLIDO: " + r.pct + "% de desconto" + (r.type === "aniversario" ? " (aniversário)" : "") + ".";
+    lastChecked = r.code; useBtn.style.display = "inline-flex";
   });
-
   document.getElementById("useBtn").addEventListener("click", function () {
     var msg = document.getElementById("valMsg");
     if (lastChecked && window.InovaCoupon.markUsed(lastChecked)) {
-      msg.className = "form-msg ok";
-      msg.textContent = "✅ Cupom aplicado e marcado como usado. Não poderá ser reutilizado.";
-      document.getElementById("useBtn").style.display = "none";
-      renderLogs();
+      msg.className = "form-msg ok"; msg.textContent = "✅ Cupom aplicado e marcado como usado.";
+      document.getElementById("useBtn").style.display = "none"; renderLogs();
     }
   });
 
   function table(rows, headers) {
     if (!rows.length) return '<p class="form-hint">Sem registos.</p>';
-    var h = "<tr>" + headers.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr>";
-    return "<table>" + h + rows.join("") + "</table>";
+    return "<table><tr>" + headers.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr>" + rows.join("") + "</table>";
   }
-
   function renderLogs() {
     var gen = window.InovaCoupon.generatedList().map(function (g) {
       var used = window.InovaCoupon.isUsed(g.code);
@@ -286,15 +332,6 @@
     });
     document.getElementById("usedLog").innerHTML = table(used, ["Código", "Usado em"]);
   }
-
-  document.getElementById("pinSaveBtn").addEventListener("click", function () {
-    var v = document.getElementById("newPin").value.trim();
-    var msg = document.getElementById("confMsg");
-    if (v.length < 4) { msg.className = "form-msg err"; msg.textContent = "O PIN deve ter pelo menos 4 dígitos."; return; }
-    localStorage.setItem(LS_PIN, v);
-    msg.className = "form-msg ok";
-    msg.textContent = "PIN atualizado com sucesso.";
-  });
 })();
 </script>
 <footer class="site-footer">
