@@ -72,6 +72,10 @@
             <input id="bName" type="text" required placeholder="O seu nome">
           </div>
           <div class="form-field">
+            <label for="bPhone">Telemóvel*</label>
+            <input id="bPhone" type="tel" required placeholder="9XX XXX XXX">
+          </div>
+          <div class="form-field full">
             <label for="bService">Serviço*</label>
             <select id="bService" required><option>Threading de Sobrancelhas</option><option>Brow Lamination</option><option>Alisamento de Sobrancelhas</option><option>Coloração de Sobrancelhas (Henna / Tintura / Descoloração)</option><option>Lifting de Pestanas</option><option>Lifting + Tintura de Pestanas</option><option>Permanente de Pestanas</option><option>Tintura de Pestanas</option><option>Micropigmentação de Sobrancelhas</option><option>Hidraglos de Lábios</option><option>Threading (rosto)</option><option>Depilação a Laser</option><option>Outro (indico na mensagem)</option></select>
           </div>
@@ -112,9 +116,10 @@
   var couponInput = document.getElementById("bCoupon");
   var couponHint = document.getElementById("couponHint");
 
-  // pré-preencher o nome se tiver sessão
+  // pré-preencher nome e telemóvel se tiver sessão
   window.InovaAuth.onChange(function (acc) {
     if (acc && acc.name && !document.getElementById("bName").value) document.getElementById("bName").value = acc.name;
+    if (acc && acc.phone && !document.getElementById("bPhone").value) document.getElementById("bPhone").value = acc.phone;
   });
 
   couponInput.addEventListener("input", function () {
@@ -132,14 +137,15 @@
     e.preventDefault();
     msg.className = "form-msg";
     var name = document.getElementById("bName").value.trim();
+    var phone = document.getElementById("bPhone").value.trim();
     var service = document.getElementById("bService").value;
     var date = document.getElementById("bDate").value;
     var time = document.getElementById("bTime").value;
     var notes = document.getElementById("bNotes").value.trim();
     var coupon = couponInput.value.trim().toUpperCase();
-    if (!name || !date) {
+    if (!name || !phone || !date) {
       msg.className = "form-msg err";
-      msg.textContent = "Por favor preencha o nome e o dia preferido.";
+      msg.textContent = "Por favor preencha o nome, o telemóvel e o dia preferido.";
       return;
     }
     var d = date.split("-");
@@ -149,6 +155,7 @@
       "",
       "📋 Pedido de marcação:",
       "• Nome: " + name,
+      "• Telemóvel: " + phone,
       "• Serviço: " + service,
       "• Dia: " + dateFmt,
       "• Hora: " + time
@@ -157,16 +164,11 @@
     if (notes) lines.push("• Obs.: " + notes);
     var url = "https://wa.me/351919277205?text=" + encodeURIComponent(lines.join("\n"));
 
-    // guardar a marcação (se tiver sessão)
     window.InovaAuth.saveBooking({
-      nome: name, servico: service, dia: date, hora: time, observacoes: notes, cupom: coupon
+      nome: name, telefone: phone, servico: service, dia: date, hora: time, observacoes: notes, cupom: coupon
     }).then(function (r) {
       msg.className = "form-msg ok";
-      if (r && r.ok) {
-        msg.textContent = "✅ Marcação registada! A abrir o WhatsApp para confirmar…";
-      } else {
-        msg.textContent = "A abrir o WhatsApp com o seu pedido… (crie conta para a marcação ficar registada)";
-      }
+      msg.textContent = (r && r.ok) ? "✅ Marcação registada! A abrir o WhatsApp para confirmar…" : "A abrir o WhatsApp com o seu pedido…";
       window.open(url, "_blank", "noopener");
     });
   });

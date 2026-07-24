@@ -322,7 +322,7 @@
       estado: "pendente"
     };
     if (backend === "firebase") {
-      if (!fbAuth.currentUser) return Promise.resolve({ error: "Inicie sessão para guardar a marcação." });
+      // guarda mesmo sem sessão (a regra do Firestore permite criar marcações)
       rec.criadoEm = firebase.firestore.FieldValue.serverTimestamp();
       return fbDb.collection("marcacoes").add(rec).then(function () { return { ok: true }; })
         .catch(function (e) { return { error: fbErr(e) }; });

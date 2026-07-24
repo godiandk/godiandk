@@ -54,6 +54,7 @@
     <form id="bookForm" novalidate>
       <div class="form-grid" style="grid-template-columns:1fr">
         <div class="form-field"><label for="bName">Nome*</label><input id="bName" type="text" required></div>
+        <div class="form-field"><label for="bPhone">Telemóvel*</label><input id="bPhone" type="tel" required placeholder="9XX XXX XXX"></div>
         <div class="form-field"><label for="bService">Serviço*</label><select id="bService"><option>Threading de Sobrancelhas</option><option>Brow Lamination</option><option>Alisamento de Sobrancelhas</option><option>Coloração de Sobrancelhas (Henna / Tintura / Descoloração)</option><option>Lifting de Pestanas</option><option>Lifting + Tintura de Pestanas</option><option>Permanente de Pestanas</option><option>Tintura de Pestanas</option><option>Micropigmentação de Sobrancelhas</option><option>Hidraglos de Lábios</option><option>Threading (rosto)</option><option>Depilação a Laser</option><option>Outro (indico na mensagem)</option></select></div>
         <div class="form-field"><label for="bDate">Dia preferido*</label><input id="bDate" type="date" required></div>
         <div class="form-field"><label for="bTime">Hora preferida*</label>
@@ -281,6 +282,7 @@
           '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · 1 única vez</div></div>';
       } else { bd.innerHTML = ""; }
       if (acc.name) document.getElementById("bName").value = acc.name;
+      if (acc.phone && !document.getElementById("bPhone").value) document.getElementById("bPhone").value = acc.phone;
 
       // avatar no topo
       document.getElementById("appBarAvatar").src = window.InovaAuth.avatarUrl(acc);
@@ -489,13 +491,15 @@
     e.preventDefault();
     var bm = document.getElementById("bookMsg");
     var name = document.getElementById("bName").value.trim();
+    var phone = document.getElementById("bPhone").value.trim();
     var date = document.getElementById("bDate").value;
-    if (!name || !date) { bm.className = "form-msg err"; bm.textContent = "Preencha o nome e o dia."; return; }
+    if (!name || !phone || !date) { bm.className = "form-msg err"; bm.textContent = "Preencha o nome, o telemóvel e o dia."; return; }
     var d = date.split("-");
     var lines = [
       "Olá Inova beauty. Desejo marcar um horário para micropigmentação, pode ajudar?", "",
       "📋 Pedido de marcação (via APP):",
       "• Nome: " + name,
+      "• Telemóvel: " + phone,
       "• Serviço: " + document.getElementById("bService").value,
       "• Dia: " + d[2] + "/" + d[1] + "/" + d[0],
       "• Hora: " + document.getElementById("bTime").value
@@ -504,7 +508,7 @@
     if (cp) lines.push("• Cupom: " + cp);
     var waUrl = "https://wa.me/351919277205?text=" + encodeURIComponent(lines.join("\n"));
     window.InovaAuth.saveBooking({
-      nome: name, servico: document.getElementById("bService").value,
+      nome: name, telefone: phone, servico: document.getElementById("bService").value,
       dia: date, hora: document.getElementById("bTime").value,
       observacoes: "", cupom: cp
     }).then(function (r) {
