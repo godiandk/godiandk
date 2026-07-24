@@ -162,11 +162,12 @@
           <p class="lc-sub">Cada procedimento vale 1 selo. Ao 10.º selo, ganha um <strong>Threading de Sobrancelhas GRÁTIS</strong>.</p>
           <div class="stamp-grid" id="stampGrid"></div>
           <p class="lc-sub" id="stampCount"></p>
+          <div class="lc-warn" id="stampWarn" style="display:none"></div>
           <div class="stamp-form">
             <input id="stampInput" type="text" placeholder="Código do selo (INOVA-S…)">
             <button type="button" class="btn btn-gold" id="stampBtn" style="padding:.7rem 1.4rem">Adicionar selo</button>
           </div>
-          <p class="lc-sub" style="margin-top:.7rem">Recebe o código da Thayana no fim de cada procedimento — é a assinatura digital dela a autenticar o seu selo. ✍️</p>
+          <p class="lc-sub" style="margin-top:.7rem">📅 A caderneta é válida de <strong>janeiro a dezembro</strong>. Os selos que não completar até 31/12 recomeçam do zero no ano novo. Recebe o código da Thayana no fim de cada procedimento. ✍️</p>
           <div class="lc-msg" id="stampMsg"></div>
           <div id="rewardsArea" class="mt-2"></div>
         </div>
@@ -301,42 +302,18 @@
       " · Aniversário: " + String(b.getDate()).padStart(2, "0") + "/" + String(b.getMonth() + 1).padStart(2, "0");
 
     var bdayArea = document.getElementById("bdayArea");
-    var now = new Date();
-    if (b.getMonth() === now.getMonth()) {
-      var c = window.InovaCoupon.birthdayCoupon(acc.phone, now);
+    if (window.InovaCoupon.birthdayActive(acc.birth)) {
+      var c = window.InovaCoupon.birthdayCoupon(acc.phone, acc.birth);
       var exp = c.expiry.split("-");
       bdayArea.innerHTML =
-        '<div class="coupon-card"><div class="c-label">🎂 Feliz aniversário! O seu presente</div>' +
+        '<div class="coupon-card"><div class="c-label">🎉🎂 Parabéns, ' + acc.name.split(" ")[0] + '!</div>' +
         '<div class="c-pct">' + c.pct + '% de desconto</div>' +
-        '<div>Apresente este código na sua próxima visita:</div>' +
+        '<div>Desejamos um feliz aniversário! 💛 Este é o nosso presente para si — apresente o código na sua visita:</div>' +
         '<span class="c-code">' + c.code + '</span>' +
-        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · utilizável 1 única vez</div></div>';
+        '<div class="c-exp">Válido só esta semana, até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · 1 única vez</div></div>';
     } else { bdayArea.innerHTML = ""; }
 
-    var grid = document.getElementById("stampGrid");
-    grid.innerHTML = "";
-    var n = (acc.stamps || []).length;
-    for (var i = 0; i < 10; i++) {
-      var s = document.createElement("div");
-      s.className = "stamp" + (i < n ? " filled" : "");
-      s.textContent = i < n ? "✦" : (i + 1);
-      grid.appendChild(s);
-    }
-    document.getElementById("stampCount").textContent =
-      n === 0 ? "Ainda sem selos — comece na próxima visita!" :
-      "Tem " + n + " de 10 selos. Faltam " + (10 - n) + " para o prémio!";
-
-    var rw = document.getElementById("rewardsArea");
-    rw.innerHTML = "";
-    (acc.rewards || []).forEach(function (r) {
-      var exp = r.expiry.split("-");
-      rw.innerHTML +=
-        '<div class="coupon-card" style="margin-top:1rem"><div class="c-label">🏆 Prémio de fidelidade</div>' +
-        '<div class="c-pct">Threading GRÁTIS</div>' +
-        '<div>Apresente este código no estúdio (desconto de 100% no Threading de Sobrancelhas):</div>' +
-        '<span class="c-code">' + r.code + '</span>' +
-        '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · utilizável 1 única vez</div></div>';
-    });
+    renderStamps(acc);
 
     // configurações
     setPhoto = undefined; setChar = undefined;
@@ -395,37 +372,81 @@
     });
   });
 
+  /* Renderização da caderneta (selos, aviso anual e prémios) */
+  function renderStamps(acc) {
+    window.InovaAuth.checkStampReset(acc);
+    var grid = document.getElementById("stampGrid");
+    grid.innerHTML = "";
+    var n = (acc.stamps || []).length;
+    for (var i = 0; i < 10; i++) {
+      var s = document.createElement("div");
+      s.className = "stamp" + (i < n ? " filled" : "");
+      s.textContent = i < n ? "✦" : (i + 1);
+      grid.appendChild(s);
+    }
+    document.getElementById("stampCount").textContent =
+      n === 0 ? "Ainda sem selos este ano — comece na próxima visita!" :
+      "Tem " + n + " de 10 selos. Faltam " + (10 - n) + " para o prémio!";
+
+    var warn = document.getElementById("stampWarn");
+    var mes = new Date().getMonth() + 1;
+    if (n > 0 && n < 10 && mes >= 10) {
+      warn.style.display = "block";
+      warn.innerHTML = "⏳ Atenção: a caderneta acaba a 31/12. Faltam <strong>" + (10 - n) + " selos</strong> — complete antes do fim do ano para não perder o prémio!";
+    } else { warn.style.display = "none"; }
+
+    var rw = document.getElementById("rewardsArea");
+    rw.innerHTML = "";
+    (acc.rewards || []).forEach(function (r) {
+      if (r.status === "por_ativar") {
+        rw.innerHTML +=
+          '<div class="reward-card won"><div class="rw-label">🎉 Completou 10 selos!</div>' +
+          '<div class="rw-title">Ganhou uma Sobrancelha Grátis</div>' +
+          '<div class="rw-note">Ative o seu prémio para poder usá-lo numa marcação. É único e só seu. 💛</div>' +
+          '<button type="button" class="btn btn-gold" data-activate="' + r.code + '">Ativar o meu prémio</button></div>';
+      } else if (r.status === "ativo") {
+        rw.innerHTML +=
+          '<div class="reward-card"><div class="rw-label">🎁 Prémio ativo</div>' +
+          '<div class="rw-title">Sobrancelha Grátis</div>' +
+          '<div>Threading de Sobrancelhas — 100% grátis, por ter completado 10 selos.</div>' +
+          '<span class="rw-code">' + r.code + '</span>' +
+          '<div class="rw-note">Use na sua próxima marcação: escolha "usar o meu prémio" ao marcar.</div>' +
+          '<a class="btn btn-gold" href="' + (window.INOVA_PANEL_PREFIX || "../") + 'agendar/">Marcar com o prémio</a></div>';
+      } else if (r.status === "usado") {
+        var quando = r.usadoEm ? new Date(r.usadoEm).toLocaleDateString("pt-PT") : "";
+        rw.innerHTML +=
+          '<div class="reward-card used"><div class="rw-label">✅ Prémio usado</div>' +
+          '<div class="rw-title">Sobrancelha Grátis</div>' +
+          '<div class="rw-note">Utilizado' + (quando ? " em " + quando : "") + ' — obrigada pela fidelidade! 💛</div></div>';
+      } else {
+        // prémios antigos (sem status) — tratar como ativo
+        rw.innerHTML +=
+          '<div class="reward-card"><div class="rw-label">🎁 Prémio de fidelidade</div>' +
+          '<div class="rw-title">Sobrancelha Grátis</div><span class="rw-code">' + r.code + '</span></div>';
+      }
+    });
+    rw.querySelectorAll("[data-activate]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        window.InovaAuth.activateReward(b.getAttribute("data-activate")).then(function (res) {
+          if (res.error) return;
+          renderProfile();
+        });
+      });
+    });
+  }
+
   document.getElementById("stampBtn").addEventListener("click", function () {
-    var acc = window.InovaAuth.current();
-    if (!acc) return;
     var lcMsg = document.getElementById("stampMsg");
     var code = document.getElementById("stampInput").value.trim().toUpperCase();
-    var r = window.InovaCoupon.parse(code);
-    lcMsg.className = "lc-msg";
-    if (!r.valid) { lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ " + r.reason; return; }
-    if (r.type !== "selo") { lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ Este código não é um selo de fidelidade."; return; }
-    if (r.expired) { lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ Este selo já expirou."; return; }
-    if (r.used || (acc.stamps || []).indexOf(r.code) >= 0) {
-      lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ Este selo já foi utilizado."; return;
-    }
-    window.InovaCoupon.markUsed(r.code);
-    acc.stamps = acc.stamps || [];
-    acc.stamps.push(r.code);
-    document.getElementById("stampInput").value = "";
-    if (acc.stamps.length >= 10) {
-      acc.cycle = (acc.cycle || 0) + 1;
-      acc.stamps = [];
-      var reward = window.InovaCoupon.rewardCoupon(acc.phone, acc.cycle);
-      acc.rewards = acc.rewards || [];
-      acc.rewards.push({ code: reward.code, expiry: reward.expiry, earned: new Date().toISOString() });
+    window.InovaAuth.addStamp(code).then(function (res) {
+      if (res.error) { lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ " + res.error; return; }
+      document.getElementById("stampInput").value = "";
       lcMsg.className = "lc-msg ok";
-      lcMsg.textContent = "🎉 PARABÉNS! Completou 10 selos — ganhou um Threading de Sobrancelhas GRÁTIS! O seu cupom está abaixo.";
-    } else {
-      lcMsg.className = "lc-msg ok";
-      lcMsg.textContent = "✅ Selo adicionado! Tem agora " + acc.stamps.length + " de 10.";
-    }
-    window.InovaAuth.save(acc);
-    renderProfile();
+      lcMsg.textContent = res.completed
+        ? "🎉 PARABÉNS! Completou 10 selos — ganhou uma Sobrancelha Grátis! Ative o prémio abaixo."
+        : "✅ Selo adicionado! Tem agora " + res.count + " de 10.";
+      renderProfile();
+    });
   });
 
   document.getElementById("logoutBtn").addEventListener("click", function () {

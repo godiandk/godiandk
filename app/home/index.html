@@ -43,6 +43,7 @@
     </div>
     <span class="bc-arrow">→</span>
   </button>
+  <div id="homeBday" style="margin-top:1rem"></div>
   <div id="homeStamps" style="margin-top:1rem"></div>
   <div class="qa-grid">
     <div class="qa-card" data-goto="cartao"><span class="qa-icon">💛</span>Cartão de selos</div>
@@ -58,6 +59,14 @@
 <main class="app-screen" id="scr-marcar">
   <h1>Marcar horário</h1>
   <p class="as-sub">Escolha o serviço, o dia e a hora — a marcação fica registada e confirmamos em minutos.</p>
+  <div class="reward-card won" id="rewardBanner" style="display:none">
+    <div class="rw-label">🎁 Tem um prémio para usar!</div>
+    <div class="rw-title">Sobrancelha Grátis</div>
+    <div class="rw-note">Ganhou por completar 10 selos. Marque este serviço e não paga nada.</div>
+    <label style="display:flex;align-items:center;gap:.5rem;margin-top:.7rem;cursor:pointer;font-size:.95rem">
+      <input type="checkbox" id="useReward" style="accent-color:#fff;width:18px;height:18px"> Usar o meu prémio nesta marcação
+    </label>
+  </div>
   <div class="form-card" style="padding:1.3rem 1.1rem">
     <form id="bookForm" novalidate>
       <div class="form-grid" style="grid-template-columns:1fr">
@@ -89,11 +98,12 @@
       <h3>💛 Os meus selos</h3>
       <div class="stamp-grid" id="stampGrid"></div>
       <p class="lc-sub" id="stampCount"></p>
+      <div class="lc-warn" id="stampWarn" style="display:none"></div>
       <div class="stamp-form">
         <input id="stampInput" type="text" placeholder="Código do selo (INOVA-S…)">
         <button type="button" class="btn btn-gold" id="stampBtn" style="padding:.7rem 1.2rem">Adicionar</button>
       </div>
-      <p class="lc-sub" style="margin-top:.7rem">O código é entregue pela Thayana no fim de cada procedimento — é a assinatura digital dela. ✍️</p>
+      <p class="lc-sub" style="margin-top:.7rem">📅 Caderneta válida de <strong>janeiro a dezembro</strong>. Os selos não completados recomeçam a 1 de janeiro. O código é entregue pela Thayana no fim de cada procedimento. ✍️</p>
       <div class="lc-msg" id="stampMsg"></div>
       <div id="rewardsArea" class="mt-2"></div>
     </div>
@@ -270,6 +280,15 @@
     var acc = window.InovaAuth.current();
     document.getElementById("homeGreet").textContent = acc ? "Olá, " + acc.name.split(" ")[0] + "! 💛" : "Olá! 👋";
 
+    /* banner de aniversário na home */
+    var hb = document.getElementById("homeBday");
+    if (acc && window.InovaCoupon.birthdayActive(acc.birth)) {
+      hb.innerHTML = '<div class="reward-card won" style="cursor:pointer" data-goto="conta"><div class="rw-label">🎉 Feliz aniversário!</div>' +
+        '<div class="rw-title">Parabéns, ' + acc.name.split(" ")[0] + '! 🎂</div>' +
+        '<div class="rw-note">Tem um presente de 10% à sua espera na conta. Toque para ver. 💛</div></div>';
+      hb.querySelector("[data-goto]").addEventListener("click", function () { show("conta"); });
+    } else { hb.innerHTML = ""; }
+
     /* resumo dos selos no início */
     var hs = document.getElementById("homeStamps");
     if (acc) {
@@ -285,27 +304,7 @@
     /* cartão */
     document.getElementById("cardNeedLogin").style.display = acc ? "none" : "block";
     document.getElementById("cardArea").style.display = acc ? "block" : "none";
-    if (acc) {
-      var grid = document.getElementById("stampGrid");
-      grid.innerHTML = "";
-      var ns = (acc.stamps || []).length;
-      for (var i = 0; i < 10; i++) {
-        var s = document.createElement("div");
-        s.className = "stamp" + (i < ns ? " filled" : "");
-        s.textContent = i < ns ? "✦" : (i + 1);
-        grid.appendChild(s);
-      }
-      document.getElementById("stampCount").textContent =
-        ns === 0 ? "Ainda sem selos — começa na próxima visita!" : "Tem " + ns + " de 10 selos. Faltam " + (10 - ns) + "!";
-      var rw = document.getElementById("rewardsArea");
-      rw.innerHTML = "";
-      (acc.rewards || []).forEach(function (r) {
-        var exp = r.expiry.split("-");
-        rw.innerHTML += '<div class="coupon-card" style="margin-top:1rem"><div class="c-label">🏆 Prémio de fidelidade</div>' +
-          '<div class="c-pct">Threading GRÁTIS</div><span class="c-code">' + r.code + '</span>' +
-          '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · 1 única vez</div></div>';
-      });
-    }
+    if (acc) renderStamps(acc);
 
     /* conta */
     document.getElementById("authArea").style.display = acc ? "none" : "block";
@@ -317,13 +316,14 @@
       document.getElementById("profileInfo").textContent = "Telemóvel: " + acc.phone + " · Email: " + acc.email +
         " · Aniversário: " + String(b.getDate()).padStart(2, "0") + "/" + String(b.getMonth() + 1).padStart(2, "0");
       var bd = document.getElementById("bdayArea");
-      var now = new Date();
-      if (b.getMonth() === now.getMonth()) {
-        var c = window.InovaCoupon.birthdayCoupon(acc.phone, now);
+      if (window.InovaCoupon.birthdayActive(acc.birth)) {
+        var c = window.InovaCoupon.birthdayCoupon(acc.phone, acc.birth);
         var exp = c.expiry.split("-");
-        bd.innerHTML = '<div class="coupon-card"><div class="c-label">🎂 O seu presente de aniversário</div>' +
-          '<div class="c-pct">' + c.pct + '% de desconto</div><span class="c-code">' + c.code + '</span>' +
-          '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · 1 única vez</div></div>';
+        bd.innerHTML = '<div class="coupon-card"><div class="c-label">🎉🎂 Parabéns, ' + acc.name.split(" ")[0] + '!</div>' +
+          '<div class="c-pct">' + c.pct + '% de desconto</div>' +
+          '<div>Feliz aniversário! 💛 O nosso presente para si:</div>' +
+          '<span class="c-code">' + c.code + '</span>' +
+          '<div class="c-exp">Válido só esta semana, até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · 1 única vez</div></div>';
       } else { bd.innerHTML = ""; }
       if (acc.name) document.getElementById("bName").value = acc.name;
       if (acc.phone && !document.getElementById("bPhone").value) document.getElementById("bPhone").value = acc.phone;
@@ -348,6 +348,8 @@
     } else {
       document.getElementById("appBarAvatar").src = window.InovaAuth.avatarUrl(null);
     }
+    var rb = document.getElementById("rewardBanner");
+    if (rb) rb.style.display = (acc && window.InovaAuth.activeReward()) ? "block" : "none";
     if (document.getElementById("scr-comunidade").classList.contains("active")) renderFeed();
   }
 
@@ -492,34 +494,67 @@
     });
   });
 
-  /* selos */
-  document.getElementById("stampBtn").addEventListener("click", function () {
-    var acc = window.InovaAuth.current();
-    if (!acc) return;
-    var lcMsg = document.getElementById("stampMsg");
-    var r = window.InovaCoupon.parse(document.getElementById("stampInput").value);
-    lcMsg.className = "lc-msg err";
-    if (!r.valid) { lcMsg.textContent = "❌ " + r.reason; return; }
-    if (r.type !== "selo") { lcMsg.textContent = "❌ Este código não é um selo."; return; }
-    if (r.expired) { lcMsg.textContent = "❌ Selo expirado."; return; }
-    if (r.used || (acc.stamps || []).indexOf(r.code) >= 0) { lcMsg.textContent = "❌ Este selo já foi utilizado."; return; }
-    window.InovaCoupon.markUsed(r.code);
-    acc.stamps = acc.stamps || [];
-    acc.stamps.push(r.code);
-    document.getElementById("stampInput").value = "";
-    lcMsg.className = "lc-msg ok";
-    if (acc.stamps.length >= 10) {
-      acc.cycle = (acc.cycle || 0) + 1;
-      acc.stamps = [];
-      var reward = window.InovaCoupon.rewardCoupon(acc.phone, acc.cycle);
-      acc.rewards = acc.rewards || [];
-      acc.rewards.push({ code: reward.code, expiry: reward.expiry, earned: new Date().toISOString() });
-      lcMsg.textContent = "🎉 10 selos! Ganhou um Threading de Sobrancelhas GRÁTIS — cupom abaixo.";
-    } else {
-      lcMsg.textContent = "✅ Selo adicionado! " + acc.stamps.length + " de 10.";
+  /* caderneta: render + adicionar selo */
+  function renderStamps(acc) {
+    window.InovaAuth.checkStampReset(acc);
+    var grid = document.getElementById("stampGrid");
+    grid.innerHTML = "";
+    var ns = (acc.stamps || []).length;
+    for (var i = 0; i < 10; i++) {
+      var s = document.createElement("div");
+      s.className = "stamp" + (i < ns ? " filled" : "");
+      s.textContent = i < ns ? "✦" : (i + 1);
+      grid.appendChild(s);
     }
-    window.InovaAuth.save(acc);
-    render();
+    document.getElementById("stampCount").textContent =
+      ns === 0 ? "Ainda sem selos este ano — começa na próxima visita!" : "Tem " + ns + " de 10 selos. Faltam " + (10 - ns) + "!";
+    var warn = document.getElementById("stampWarn");
+    var mes = new Date().getMonth() + 1;
+    if (ns > 0 && ns < 10 && mes >= 10) {
+      warn.style.display = "block";
+      warn.innerHTML = "⏳ A caderneta acaba a 31/12. Faltam <strong>" + (10 - ns) + " selos</strong> — complete antes do fim do ano!";
+    } else { warn.style.display = "none"; }
+    var rw = document.getElementById("rewardsArea");
+    rw.innerHTML = "";
+    (acc.rewards || []).forEach(function (r) {
+      if (r.status === "por_ativar") {
+        rw.innerHTML += '<div class="reward-card won"><div class="rw-label">🎉 Completou 10 selos!</div>' +
+          '<div class="rw-title">Ganhou uma Sobrancelha Grátis</div>' +
+          '<div class="rw-note">Ative o prémio para usar numa marcação. É único e só seu. 💛</div>' +
+          '<button type="button" class="btn btn-gold" data-activate="' + r.code + '">Ativar o meu prémio</button></div>';
+      } else if (r.status === "ativo") {
+        rw.innerHTML += '<div class="reward-card"><div class="rw-label">🎁 Prémio ativo</div>' +
+          '<div class="rw-title">Sobrancelha Grátis</div>' +
+          '<div>Threading de Sobrancelhas — 100% grátis, por ter completado 10 selos.</div>' +
+          '<span class="rw-code">' + r.code + '</span>' +
+          '<div class="rw-note">Vá a "Marcar" e escolha usar o prémio.</div>' +
+          '<button type="button" class="btn btn-gold" data-usarpremio="1">Marcar com o prémio</button></div>';
+      } else if (r.status === "usado") {
+        var quando = r.usadoEm ? new Date(r.usadoEm).toLocaleDateString("pt-PT") : "";
+        rw.innerHTML += '<div class="reward-card used"><div class="rw-label">✅ Prémio usado</div>' +
+          '<div class="rw-title">Sobrancelha Grátis</div>' +
+          '<div class="rw-note">Utilizado' + (quando ? " em " + quando : "") + ' — obrigada! 💛</div></div>';
+      } else {
+        rw.innerHTML += '<div class="reward-card"><div class="rw-label">🎁 Prémio</div><div class="rw-title">Sobrancelha Grátis</div><span class="rw-code">' + r.code + '</span></div>';
+      }
+    });
+    rw.querySelectorAll("[data-activate]").forEach(function (b) {
+      b.addEventListener("click", function () { window.InovaAuth.activateReward(b.getAttribute("data-activate")).then(function (res) { if (!res.error) render(); }); });
+    });
+    rw.querySelectorAll("[data-usarpremio]").forEach(function (b) {
+      b.addEventListener("click", function () { show("marcar"); var chk = document.getElementById("useReward"); if (chk) { chk.checked = true; chk.dispatchEvent(new Event("change")); } });
+    });
+  }
+
+  document.getElementById("stampBtn").addEventListener("click", function () {
+    var lcMsg = document.getElementById("stampMsg");
+    window.InovaAuth.addStamp(document.getElementById("stampInput").value.trim().toUpperCase()).then(function (res) {
+      if (res.error) { lcMsg.className = "lc-msg err"; lcMsg.textContent = "❌ " + res.error; return; }
+      document.getElementById("stampInput").value = "";
+      lcMsg.className = "lc-msg ok";
+      lcMsg.textContent = res.completed ? "🎉 10 selos! Ganhou uma Sobrancelha Grátis — ative o prémio abaixo." : "✅ Selo adicionado! " + res.count + " de 10.";
+      render();
+    });
   });
 
   /* marcação */
@@ -532,6 +567,17 @@
     var r = window.InovaCoupon.parse(v);
     hint.textContent = !r.valid ? "⚠️ " + r.reason : (r.expired ? "⚠️ Cupom expirado." : "✅ Válido: " + r.pct + "% de desconto.");
   });
+  document.getElementById("useReward").addEventListener("change", function () {
+    var sel = document.getElementById("bService");
+    if (this.checked) {
+      var opt = document.createElement("option");
+      opt.value = "Threading de Sobrancelhas (PRÉMIO — 10 selos)"; opt.textContent = opt.value; opt.id = "rewardOpt";
+      sel.insertBefore(opt, sel.firstChild); sel.value = opt.value; sel.disabled = true;
+    } else {
+      var o = document.getElementById("rewardOpt"); if (o) o.remove();
+      sel.disabled = false; sel.selectedIndex = 0;
+    }
+  });
   document.getElementById("bookForm").addEventListener("submit", function (e) {
     e.preventDefault();
     var bm = document.getElementById("bookMsg");
@@ -539,27 +585,35 @@
     var phone = document.getElementById("bPhone").value.trim();
     var date = document.getElementById("bDate").value;
     if (!name || !phone || !date) { bm.className = "form-msg err"; bm.textContent = "Preencha o nome, o telemóvel e o dia."; return; }
+    var usarPremio = document.getElementById("useReward").checked;
+    var reward = usarPremio ? window.InovaAuth.activeReward() : null;
     var d = date.split("-");
+    var servico = document.getElementById("bService").value;
     var lines = [
       "Olá Inova beauty. Desejo marcar um horário para micropigmentação, pode ajudar?", "",
       "📋 Pedido de marcação (via APP):",
       "• Nome: " + name,
       "• Telemóvel: " + phone,
-      "• Serviço: " + document.getElementById("bService").value,
+      "• Serviço: " + servico,
       "• Dia: " + d[2] + "/" + d[1] + "/" + d[0],
       "• Hora: " + document.getElementById("bTime").value
     ];
+    if (reward) { lines.push("• 🎁 PRÉMIO: Sobrancelha GRÁTIS (10 selos)"); lines.push("• Voucher: " + reward.code); }
     var cp = couponInput.value.trim().toUpperCase();
     if (cp) lines.push("• Cupom: " + cp);
     var waUrl = "https://wa.me/351919277205?text=" + encodeURIComponent(lines.join("\n"));
     window.InovaAuth.saveBooking({
-      nome: name, telefone: phone, servico: document.getElementById("bService").value,
+      nome: name, telefone: phone, servico: servico,
       dia: date, hora: document.getElementById("bTime").value,
-      observacoes: "", cupom: cp
+      observacoes: "", cupom: cp,
+      gratuito: !!reward, motivo: reward ? "Prémio de fidelidade — 10 selos completos" : "", voucher: reward ? reward.code : ""
     }).then(function (r) {
-      bm.className = "form-msg ok";
-      bm.textContent = (r && r.ok) ? "✅ Marcação registada! A abrir o WhatsApp…" : "A abrir o WhatsApp…";
-      window.open(waUrl, "_blank", "noopener");
+      var after = reward ? window.InovaAuth.consumeReward(reward.code, { dia: date, hora: document.getElementById("bTime").value }) : Promise.resolve();
+      after.then(function () {
+        bm.className = "form-msg ok";
+        bm.textContent = reward ? "🎁 Marcação com PRÉMIO registada! A abrir o WhatsApp…" : ((r && r.ok) ? "✅ Marcação registada! A abrir o WhatsApp…" : "A abrir o WhatsApp…");
+        window.open(waUrl, "_blank", "noopener");
+      });
     });
   });
 

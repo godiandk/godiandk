@@ -79,16 +79,37 @@
 
   /* Cupom de aniversário determinístico: mesmo telemóvel + mesmo mês
      => mesmo código (não dá para "gerar de novo" outro cupom). */
-  function birthdayCoupon(phone, refDate) {
-    var d = refDate || new Date();
-    var ym = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
-    var lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-    var expStr = lastDay.getFullYear() + "-" +
-      String(lastDay.getMonth() + 1).padStart(2, "0") + "-" +
-      String(lastDay.getDate()).padStart(2, "0");
-    var exp = toExp(expStr);
-    var seed = "BDAY|" + String(phone).replace(/\D/g, "") + "|" + ym;
-    return { code: build("aniversario", 10, exp, seed), pct: 10, expiry: expStr };
+  function fmtDate(d) {
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+
+  /* Cupom de aniversário: aparece no DIA do aniversário e dura 1 SEMANA.
+     birthdate: "AAAA-MM-DD" da conta. Devolve também a janela de validade. */
+  function birthdayCoupon(phone, birthdate) {
+    var now = new Date(); var year = now.getFullYear();
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birthdate || "");
+    var bMonth = m ? parseInt(m[2], 10) - 1 : now.getMonth();
+    var bDay = m ? parseInt(m[3], 10) : now.getDate();
+    var bday = new Date(year, bMonth, bDay);
+    var end = new Date(year, bMonth, bDay + 7); // 1 semana
+    var expStr = fmtDate(end);
+    var seed = "BDAY|" + String(phone).replace(/\D/g, "") + "|" + year;
+    return {
+      code: build("aniversario", 10, toExp(expStr), seed),
+      pct: 10, expiry: expStr,
+      startStr: fmtDate(bday), start: bday, endDate: end
+    };
+  }
+
+  /* A janela do aniversário está ativa? (do dia do aniversário +7 dias) */
+  function birthdayActive(birthdate) {
+    var now = new Date(); now.setHours(0, 0, 0, 0);
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birthdate || "");
+    if (!m) return false;
+    var bMonth = parseInt(m[2], 10) - 1, bDay = parseInt(m[3], 10);
+    var bday = new Date(now.getFullYear(), bMonth, bDay); bday.setHours(0, 0, 0, 0);
+    var end = new Date(now.getFullYear(), bMonth, bDay + 7); end.setHours(23, 59, 59, 0);
+    return now >= bday && now <= end;
   }
 
   function parse(code) {
@@ -160,6 +181,7 @@
     generateStamp: generateStamp,
     rewardCoupon: rewardCoupon,
     birthdayCoupon: birthdayCoupon,
+    birthdayActive: birthdayActive,
     parse: parse,
     isUsed: isUsed,
     markUsed: markUsed,
