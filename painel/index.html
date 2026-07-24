@@ -83,6 +83,7 @@
         <button type="button" class="panel-tab" data-tab="gen">🎟️ Gerar cupom</button>
         <button type="button" class="panel-tab" data-tab="val">✅ Validar cupom</button>
         <button type="button" class="panel-tab" data-tab="hist">📒 Histórico</button>
+        <button type="button" class="panel-tab" data-tab="usu">👥 Utilizadores</button>
         <button type="button" class="panel-tab" data-tab="conf">⚙️ Conta</button>
       </div>
 
@@ -154,6 +155,18 @@
         </div>
       </div>
 
+      <div class="panel-section" id="tab-usu">
+        <div class="form-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem">
+            <h3>Utilizadores registados</h3>
+            <button type="button" class="btn btn-outline" id="usuRefresh" style="padding:.5rem 1rem;font-size:.72rem">↻ Atualizar</button>
+          </div>
+          <p class="form-hint mt-2">Aqui pode ver as contas registadas e dar/retirar acesso de administradora (ex.: passar admin para a Thayana).</p>
+          <div class="form-msg" id="usuMsg"></div>
+          <div id="usuList" class="mt-2 table-scroll"></div>
+        </div>
+      </div>
+
       <div class="panel-section" id="tab-conf">
         <div class="form-card">
           <h3 style="margin-bottom:.6rem">Conta de administradora</h3>
@@ -213,8 +226,50 @@
       document.getElementById("tab-" + t.getAttribute("data-tab")).classList.add("active");
       if (t.getAttribute("data-tab") === "hist") renderLogs();
       if (t.getAttribute("data-tab") === "marc") renderMarc();
+      if (t.getAttribute("data-tab") === "usu") renderUsers();
     });
   });
+
+  /* ---- utilizadores / admins ---- */
+  document.getElementById("usuRefresh").addEventListener("click", renderUsers);
+  function renderUsers() {
+    var box = document.getElementById("usuList");
+    box.innerHTML = '<p class="form-hint">A carregar…</p>';
+    window.InovaAuth.listUsers().then(function (users) {
+      if (!users.length) { box.innerHTML = '<p class="form-hint">Ainda não há contas registadas.</p>'; return; }
+      var rows = users.map(function (u) {
+        var badge = u.admin ? "<span class='badge ok'>admin</span>" : "<span class='badge'>cliente</span>";
+        var btn = "";
+        if (u.bootstrap) {
+          btn = "<span class='form-hint'>principal</span>";
+        } else if (u.admin) {
+          btn = "<button type='button' class='btn btn-outline' style='padding:.35rem .8rem;font-size:.68rem;border-color:#a33;color:#a33' data-revoke='" + u.uid + "' data-email='" + u.email + "'>Retirar admin</button>";
+        } else {
+          btn = "<button type='button' class='btn btn-gold' style='padding:.35rem .8rem;font-size:.68rem' data-grant='" + u.uid + "' data-email='" + u.email + "'>Tornar admin</button>";
+        }
+        return "<tr><td>" + (u.name || "—") + "</td><td style='font-size:.82rem'>" + (u.email || "—") + "</td><td>" + badge + "</td><td>" + btn + "</td></tr>";
+      });
+      box.innerHTML = "<table><tr><th>Nome</th><th>Email</th><th>Acesso</th><th></th></tr>" + rows.join("") + "</table>";
+      box.querySelectorAll("[data-grant]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          if (!confirm("Tornar " + b.getAttribute("data-email") + " administradora?")) return;
+          window.InovaAuth.grantAdmin(b.getAttribute("data-grant"), b.getAttribute("data-email")).then(function (r) {
+            if (r.error) return alert(r.error);
+            renderUsers();
+          });
+        });
+      });
+      box.querySelectorAll("[data-revoke]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          if (!confirm("Retirar acesso de admin a " + b.getAttribute("data-email") + "?")) return;
+          window.InovaAuth.revokeAdmin(b.getAttribute("data-revoke"), b.getAttribute("data-email")).then(function (r) {
+            if (r.error) return alert(r.error);
+            renderUsers();
+          });
+        });
+      });
+    }).catch(function (e) { box.innerHTML = '<p class="form-msg err">Erro ao carregar utilizadores: ' + (e.message || e) + '</p>'; });
+  }
 
   /* ---- marcações ---- */
   function fmtDia(dia) { if (!dia) return "—"; var d = dia.split("-"); return d.length === 3 ? d[2] + "/" + d[1] + "/" + d[0] : dia; }

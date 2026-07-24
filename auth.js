@@ -126,9 +126,13 @@
       backend = "firebase";
       fbAuth.onAuthStateChanged(function (user) {
         if (!user) { currentAcc = null; notify(); markReady(); return; }
-        fbDb.collection("clientes").doc(user.uid).get().then(function (doc) {
-          var data = doc.exists ? doc.data() : {};
+        Promise.all([
+          fbDb.collection("clientes").doc(user.uid).get(),
+          fbDb.collection("admins").doc(user.uid).get().catch(function () { return { exists: false }; })
+        ]).then(function (res) {
+          var data = res[0].exists ? res[0].data() : {};
           currentAcc = Object.assign({ uid: user.uid, email: user.email }, data);
+          currentAcc._admin = !!(res[1] && res[1].exists);
           notify(); markReady();
         }).catch(function () {
           currentAcc = { uid: user.uid, email: user.email, name: user.displayName || "" };
@@ -142,8 +146,10 @@
   function reloadCurrent() {
     if (backend !== "firebase" || !fbAuth.currentUser) return Promise.resolve();
     var u = fbAuth.currentUser;
+    var wasAdmin = currentAcc && currentAcc._admin;
     return fbDb.collection("clientes").doc(u.uid).get().then(function (doc) {
       currentAcc = Object.assign({ uid: u.uid, email: u.email }, doc.exists ? doc.data() : {});
+      currentAcc._admin = wasAdmin;
       notify();
     });
   }
@@ -297,9 +303,71 @@
 
   function isAdmin(acc) {
     acc = acc || current();
-    if (!acc || !acc.email) return false;
+    if (!acc) return false;
+    if (acc._admin) return true;
+    if (!acc.email) return false;
     var list = (window.INOVA_ADMIN_EMAILS || []).map(function (e) { return String(e).toLowerCase(); });
     return list.indexOf(acc.email.toLowerCase()) >= 0;
+  }
+  function isBootstrapAdmin(email) {
+    if (!email) return false;
+    var list = (window.INOVA_ADMIN_EMAILS || []).map(function (e) { return String(e).toLowerCase(); });
+    return list.indexOf(String(email).toLowerCase()) >= 0;
+  }
+
+  /* ---------------- Gestão de administradores ---------------- */
+  var LS_ADMINS = "inova_admins_local";
+  function localAdmins() { try { return JSON.parse(localStorage.getItem(LS_ADMINS)) || []; } catch (e) { return []; } }
+
+  function listUsers() {
+    if (backend === "firebase") {
+      return Promise.all([
+        fbDb.collection("clientes").get(),
+        fbDb.collection("admins").get().catch(function () { return { forEach: function () {} }; })
+      ]).then(function (res) {
+        var adm = {}; res[1].forEach(function (d) { adm[d.id] = true; });
+        var arr = [];
+        res[0].forEach(function (d) {
+          var u = d.data();
+          arr.push({
+            uid: d.id, name: u.name || "", email: u.email || "", phone: u.phone || "",
+            admin: !!adm[d.id] || isBootstrapAdmin(u.email),
+            bootstrap: isBootstrapAdmin(u.email)
+          });
+        });
+        arr.sort(function (a, b) { return (a.name || "").localeCompare(b.name || ""); });
+        return arr;
+      });
+    }
+    // local
+    var accs = readAccounts(); var la = localAdmins(); var arr = [];
+    for (var k in accs) {
+      var u = accs[k];
+      arr.push({ uid: u.phone, name: u.name, email: u.email, phone: u.phone,
+        admin: la.indexOf((u.email || "").toLowerCase()) >= 0 || isBootstrapAdmin(u.email),
+        bootstrap: isBootstrapAdmin(u.email) });
+    }
+    return Promise.resolve(arr);
+  }
+
+  function grantAdmin(uid, email) {
+    if (backend === "firebase") {
+      return fbDb.collection("admins").doc(uid).set({ email: email || "", grantedAt: firebase.firestore.FieldValue.serverTimestamp() })
+        .then(function () { return { ok: true }; }).catch(function (e) { return { error: fbErr(e) }; });
+    }
+    var la = localAdmins(); if (la.indexOf((email || "").toLowerCase()) < 0) la.push((email || "").toLowerCase());
+    try { localStorage.setItem(LS_ADMINS, JSON.stringify(la)); } catch (e) {}
+    return Promise.resolve({ ok: true });
+  }
+
+  function revokeAdmin(uid, email) {
+    if (backend === "firebase") {
+      return fbDb.collection("admins").doc(uid).delete()
+        .then(function () { return { ok: true }; }).catch(function (e) { return { error: fbErr(e) }; });
+    }
+    var la = localAdmins().filter(function (e) { return e !== (email || "").toLowerCase(); });
+    try { localStorage.setItem(LS_ADMINS, JSON.stringify(la)); } catch (e) {}
+    return Promise.resolve({ ok: true });
   }
 
   /* ---------------- Marcações ---------------- */
@@ -357,6 +425,118 @@
     return Promise.resolve();
   }
 
+  /* ---------------- Comunidade (feed social) ---------------- */
+  var LS_POSTS = "inova_posts_local";
+  function readPosts() { try { return JSON.parse(localStorage.getItem(LS_POSTS)) || []; } catch (e) { return []; } }
+  function writePosts(l) { try { localStorage.setItem(LS_POSTS, JSON.stringify(l)); } catch (e) {} }
+
+  function fileToPhoto(file) {
+    return new Promise(function (resolve, reject) {
+      if (!file) return reject(new Error("Sem ficheiro."));
+      if (!/^image\//.test(file.type)) return reject(new Error("O ficheiro tem de ser uma imagem."));
+      if (file.size > 12 * 1024 * 1024) return reject(new Error("Imagem demasiado grande (máx. 12MB)."));
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error("Não foi possível ler a imagem.")); };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error("Ficheiro de imagem inválido.")); };
+        img.onload = function () {
+          var MAX = 720;
+          var w = img.width, h = img.height;
+          if (w > h && w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+          else if (h >= w && h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
+          var canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", 0.68));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function createPost(data) {
+    var acc = current();
+    if (!acc) return Promise.resolve({ error: "Inicie sessão para publicar." });
+    if (!data.foto) return Promise.resolve({ error: "Escolha uma foto para publicar." });
+    var post = {
+      autorUid: acc.uid || acc.phone, autorNome: acc.name || "Cliente",
+      autorAvatar: avatarUrl(acc), foto: data.foto,
+      descricao: (data.descricao || "").trim(), servico: data.servico || "",
+      likes: []
+    };
+    if (backend === "firebase") {
+      post.criadoEm = firebase.firestore.FieldValue.serverTimestamp();
+      return fbDb.collection("publicacoes").add(post).then(function () { return { ok: true }; })
+        .catch(function (e) { return { error: fbErr(e) }; });
+    }
+    post.id = "p" + Date.now(); post.criadoEm = new Date().toISOString();
+    var l = readPosts(); l.unshift(post); writePosts(l);
+    return Promise.resolve({ ok: true });
+  }
+
+  function listPosts() {
+    if (backend === "firebase") {
+      return fbDb.collection("publicacoes").orderBy("criadoEm", "desc").limit(60).get().then(function (snap) {
+        var arr = []; snap.forEach(function (d) { arr.push(Object.assign({ id: d.id }, d.data())); });
+        return arr;
+      });
+    }
+    return Promise.resolve(readPosts());
+  }
+
+  function toggleLike(postId) {
+    var acc = current(); if (!acc) return Promise.resolve({ error: "Inicie sessão." });
+    var uid = acc.uid || acc.phone;
+    if (backend === "firebase") {
+      var ref = fbDb.collection("publicacoes").doc(postId);
+      return ref.get().then(function (doc) {
+        var likes = (doc.data() && doc.data().likes) || [];
+        var op = likes.indexOf(uid) >= 0
+          ? firebase.firestore.FieldValue.arrayRemove(uid)
+          : firebase.firestore.FieldValue.arrayUnion(uid);
+        return ref.update({ likes: op });
+      }).then(function () { return { ok: true }; }).catch(function (e) { return { error: fbErr(e) }; });
+    }
+    var l = readPosts().map(function (p) {
+      if (p.id === postId) { p.likes = p.likes || []; var i = p.likes.indexOf(uid); if (i >= 0) p.likes.splice(i, 1); else p.likes.push(uid); }
+      return p;
+    });
+    writePosts(l); return Promise.resolve({ ok: true });
+  }
+
+  function deletePost(postId) {
+    if (backend === "firebase") return fbDb.collection("publicacoes").doc(postId).delete();
+    writePosts(readPosts().filter(function (p) { return p.id !== postId; }));
+    return Promise.resolve();
+  }
+
+  function addComment(postId, texto) {
+    var acc = current(); if (!acc) return Promise.resolve({ error: "Inicie sessão." });
+    texto = (texto || "").trim(); if (!texto) return Promise.resolve({ error: "Escreva um comentário." });
+    var c = { autorUid: acc.uid || acc.phone, autorNome: acc.name || "Cliente", texto: texto };
+    if (backend === "firebase") {
+      c.criadoEm = firebase.firestore.FieldValue.serverTimestamp();
+      return fbDb.collection("publicacoes").doc(postId).collection("comentarios").add(c)
+        .then(function () { return { ok: true }; }).catch(function (e) { return { error: fbErr(e) }; });
+    }
+    c.id = "c" + Date.now(); c.criadoEm = new Date().toISOString();
+    var l = readPosts().map(function (p) { if (p.id === postId) { p.comentarios = p.comentarios || []; p.comentarios.push(c); } return p; });
+    writePosts(l); return Promise.resolve({ ok: true });
+  }
+
+  function listComments(postId) {
+    if (backend === "firebase") {
+      return fbDb.collection("publicacoes").doc(postId).collection("comentarios").orderBy("criadoEm", "asc").get().then(function (snap) {
+        var arr = []; snap.forEach(function (d) { arr.push(Object.assign({ id: d.id }, d.data())); });
+        return arr;
+      });
+    }
+    var p = readPosts().filter(function (x) { return x.id === postId; })[0];
+    return Promise.resolve((p && p.comentarios) || []);
+  }
+
   function onChange(cb) {
     changeCbs.push(cb);
     // dispara já com o estado atual (após ready)
@@ -391,6 +571,16 @@
     saveBooking: saveBooking,
     listBookings: listBookings,
     updateBooking: updateBooking,
-    deleteBooking: deleteBooking
+    deleteBooking: deleteBooking,
+    listUsers: listUsers,
+    grantAdmin: grantAdmin,
+    revokeAdmin: revokeAdmin,
+    fileToPhoto: fileToPhoto,
+    createPost: createPost,
+    listPosts: listPosts,
+    toggleLike: toggleLike,
+    deletePost: deletePost,
+    addComment: addComment,
+    listComments: listComments
   };
 })();
