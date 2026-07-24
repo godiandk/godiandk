@@ -1540,6 +1540,30 @@ body.app-shell {
   padding: 1.1rem 1.2rem;
 }
 .app-hero-mini img { width: 84px; filter: drop-shadow(0 6px 14px rgba(0,0,0,.4)); }
+
+/* Destaque de marcação na home do app */
+.book-cta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  margin-top: 1rem;
+  padding: 1.1rem 1.2rem;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+  color: var(--white);
+  background: linear-gradient(120deg, var(--gold), var(--gold-soft));
+  box-shadow: 0 10px 26px rgba(176, 141, 87, .4);
+  transition: transform .2s;
+}
+.book-cta:active { transform: scale(.98); }
+.book-cta .bc-icon { font-size: 1.8rem; line-height: 1; }
+.book-cta .bc-text { display: flex; flex-direction: column; gap: .15rem; flex: 1; }
+.book-cta .bc-text strong { font-size: 1.05rem; letter-spacing: .02em; }
+.book-cta .bc-text span { font-size: .82rem; opacity: .92; }
+.book-cta .bc-arrow { font-size: 1.4rem; }
 .app-hero-mini .ahm-title { font-family: var(--font-display); font-size: 1.15rem; }
 .app-hero-mini .ahm-sub { font-size: .8rem; color: rgba(255,253,250,.72); }
 
