@@ -105,6 +105,16 @@ section { padding: 4.5rem 0; }
 }
 .btn-dark-outline:hover { background: var(--white); color: var(--ink); }
 
+/* Botão de destaque (marcação) + microcopy de confiança e dúvidas */
+.btn-lg { padding: 1rem 2.2rem; font-size: .92rem; letter-spacing: .12em; }
+.hero-perks { margin-top: .9rem; font-size: .82rem; letter-spacing: .08em; color: var(--gold-soft); }
+.hero-doubt { margin-top: .5rem; font-size: .9rem; }
+.hero-doubt a { color: rgba(255, 253, 250, .82); border-bottom: 1px solid rgba(255, 253, 250, .3); padding-bottom: 1px; transition: color .2s; }
+.hero-doubt a:hover { color: var(--white); }
+.cta-doubt { margin-top: 1rem; font-size: .92rem; }
+.cta-doubt a { color: var(--gold); border-bottom: 1px solid var(--gold-faint); padding-bottom: 1px; }
+.cta-doubt a:hover { color: var(--gold-soft); }
+
 .btn-wa {
   background: var(--wa);
   color: #fff;
@@ -204,6 +214,8 @@ section { padding: 4.5rem 0; }
 }
 .dropdown li a:hover { background: var(--cream-2); color: var(--gold); padding-left: 1.7rem; }
 .dropdown li.dd-all a { color: var(--gold); font-weight: 500; }
+.dropdown li.dd-book a { color: var(--white); background: linear-gradient(120deg, var(--gold), var(--gold-soft)); font-weight: 600; border-radius: 8px; margin: .2rem .5rem; }
+.dropdown li.dd-book a:hover { color: var(--white); padding-left: 1.4rem; filter: brightness(1.05); }
 
 .nav-cta { margin-left: .4rem; }
 .nav-cta .btn { padding: .6rem 1.4rem; font-size: .78rem; }
@@ -791,6 +803,23 @@ section { padding: 4.5rem 0; }
 }
 .wa-float:hover { transform: scale(1.08); }
 .wa-float svg { width: 30px; height: 30px; fill: #fff; }
+.wa-float-tip {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--dark);
+  color: var(--white);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  padding: .35rem .7rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+}
+@media (max-width: 560px) { .wa-float-tip { display: none; } }
 
 /* ---------- Passo a passo (Processos) ---------- */
 .steps { list-style: none; counter-reset: step; margin-top: 1.6rem; }
