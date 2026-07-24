@@ -79,7 +79,9 @@
 
     <div id="panelArea" style="display:none">
       <div class="panel-tabs">
-        <button type="button" class="panel-tab active" data-tab="marc">📅 Marcações</button>
+        <button type="button" class="panel-tab active" data-tab="agenda">📅 Agenda</button>
+        <button type="button" class="panel-tab" data-tab="marc">📋 Marcações</button>
+        <button type="button" class="panel-tab" data-tab="fat">💰 Faturamento</button>
         <button type="button" class="panel-tab" data-tab="gen">🎟️ Gerar cupom</button>
         <button type="button" class="panel-tab" data-tab="val">✅ Validar cupom</button>
         <button type="button" class="panel-tab" data-tab="hist">📒 Histórico</button>
@@ -87,7 +89,29 @@
         <button type="button" class="panel-tab" data-tab="conf">⚙️ Conta</button>
       </div>
 
-      <div class="panel-section active" id="tab-marc">
+      <div class="panel-section active" id="tab-agenda">
+        <div class="form-card">
+          <div class="ag-toolbar">
+            <div class="ag-viewtoggle">
+              <button type="button" class="ag-vt active" data-agview="dia">Dia</button>
+              <button type="button" class="ag-vt" data-agview="semana">Semana</button>
+            </div>
+            <div class="ag-nav">
+              <button type="button" class="ag-navbtn" id="agPrev" aria-label="Anterior">‹</button>
+              <button type="button" class="btn btn-outline ag-today" id="agToday">Hoje</button>
+              <button type="button" class="ag-navbtn" id="agNext" aria-label="Seguinte">›</button>
+            </div>
+            <input type="date" id="agDate" class="ag-datepick">
+            <button type="button" class="btn btn-outline ag-today" id="agRefresh">↻</button>
+          </div>
+          <div class="ag-label" id="agLabel"></div>
+          <p class="form-hint">Toque numa marcação para ver detalhes, marcar como concluída ou apagar. Horário 09:00–19:00.</p>
+          <div class="form-msg" id="agMsg"></div>
+          <div id="agGrid" class="mt-1"></div>
+        </div>
+      </div>
+
+      <div class="panel-section" id="tab-marc">
         <div class="form-card">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem">
             <h3>Marcações das clientes</h3>
@@ -102,9 +126,37 @@
               <button type="button" class="btn btn-outline" id="marcRefresh" style="padding:.5rem 1rem;font-size:.72rem">↻ Atualizar</button>
             </div>
           </div>
-          <p class="form-hint mt-2">As marcações feitas na Marcação Online (por clientes com sessão iniciada) aparecem aqui automaticamente. Horários de 30 em 30 minutos.</p>
+          <input type="search" id="marcSearch" class="ag-search mt-2" placeholder="🔎 Procurar por nome, telemóvel ou serviço…">
+          <p class="form-hint mt-1">As marcações feitas na Marcação Online aparecem aqui automaticamente. Horários de 30 em 30 minutos.</p>
           <div class="form-msg" id="marcMsg"></div>
           <div id="marcList" class="mt-2"></div>
+        </div>
+      </div>
+
+      <div class="panel-section" id="tab-fat">
+        <div class="form-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem">
+            <h3>Faturamento</h3>
+            <div class="ag-nav" style="flex-wrap:wrap">
+              <select id="fatPeriod" class="ag-datepick">
+                <option value="hoje">Hoje</option>
+                <option value="semana">Esta semana</option>
+                <option value="mes" selected>Este mês</option>
+                <option value="ano">Este ano</option>
+                <option value="custom">Intervalo…</option>
+              </select>
+              <button type="button" class="btn btn-outline ag-today" id="fatRefresh">↻ Atualizar</button>
+            </div>
+          </div>
+          <div id="fatRange" class="ag-range" style="display:none">
+            <label>De <input type="date" id="fatFrom" class="ag-datepick"></label>
+            <label>até <input type="date" id="fatTo" class="ag-datepick"></label>
+          </div>
+          <label class="ag-check"><input type="checkbox" id="fatOnlyDone"> Contar só marcações concluídas</label>
+          <p class="form-hint">Valores calculados pelo preçário (com descontos de cupom aplicados). Serviços "sob consulta" são contados à parte, sem somar.</p>
+          <div class="form-msg" id="fatMsg"></div>
+          <div id="fatSummary" class="mt-2"></div>
+          <div id="fatByService" class="mt-2 table-scroll"></div>
         </div>
       </div>
 
@@ -329,6 +381,7 @@
 
   document.getElementById("marcRefresh").addEventListener("click", renderMarc);
   document.getElementById("marcFilter").addEventListener("change", renderMarc);
+  document.getElementById("marcSearch").addEventListener("input", renderMarc);
   function renderMarc() {
     var box = document.getElementById("marcList");
     box.innerHTML = '<p class="form-hint">A carregar…</p>';
@@ -342,6 +395,10 @@
         if (filt === "pendentes") return (m.estado || "pendente") !== "concluida";
         if (filt === "concluidas") return m.estado === "concluida";
         return (m.dia || "9999") >= todayStr; // futuras
+      });
+      var q = (document.getElementById("marcSearch").value || "").trim().toLowerCase();
+      if (q) list = list.filter(function (m) {
+        return (((m.nome || "") + " " + (m.telefone || "") + " " + (m.servico || "")).toLowerCase().indexOf(q) >= 0);
       });
       if (!list.length) { box.innerHTML = '<p class="form-hint">Sem marcações para mostrar.</p>'; return; }
       box.innerHTML = list.map(function (m) {
@@ -446,7 +503,253 @@
   }
 })();
 </script>
-<footer class="site-footer">
+<script>
+(function () {
+  var AZ = window.InovaAuth, CP = window.InovaCoupon;
+  if (!AZ) return;
+
+  var PRICE = {
+    "Threading de Sobrancelhas": { base: 14, dur: 30 },
+    "Brow Lamination": { base: 35, dur: 60 },
+    "Alisamento de Sobrancelhas": { base: 35, dur: 60 },
+    "Coloração de Sobrancelhas (Henna / Tintura / Descoloração)": { from: 24, dur: 45 },
+    "Lifting de Pestanas": { base: 31, dur: 60 },
+    "Lifting + Tintura de Pestanas": { base: 49.5, dur: 75 },
+    "Permanente de Pestanas": { base: 31, dur: 60 },
+    "Tintura de Pestanas": { base: 24, dur: 30 },
+    "Micropigmentação de Sobrancelhas": { base: 225, dur: 120 },
+    "Hidraglos de Lábios": { from: 65, dur: 45 },
+    "Threading (rosto)": { from: 15, dur: 30 },
+    "Depilação a Laser": { consulta: true, dur: 30 },
+    "Outro (indico na mensagem)": { consulta: true, dur: 30 }
+  };
+  function info(serv) {
+    if (!serv) return { consulta: true, dur: 30 };
+    if (PRICE[serv]) return PRICE[serv];
+    for (var k in PRICE) { if (serv.indexOf(k) === 0) return PRICE[k]; }
+    return { consulta: true, dur: 30 };
+  }
+  function durOf(serv) { return info(serv).dur || 30; }
+  function eur(v) { return v.toFixed(2).replace(".", ",") + "€"; }
+  function chargeValue(m) {
+    if (m.gratuito) return { value: 0, gratis: true };
+    var i = info(m.servico);
+    if (i.consulta) return { consulta: true };
+    var isFrom = i.base == null, base = isFrom ? i.from : i.base, fin = base;
+    if (m.cupom && CP) { var r = CP.parse(m.cupom); if (r.valid && !r.expired) fin = base - base * r.pct / 100; }
+    return { value: fin, isFrom: isFrom };
+  }
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+  function parseYmd(s) { var a = (s || "").split("-"); return new Date(+a[0], +a[1] - 1, +a[2]); }
+  function toMin(h) { var a = (h || "0:0").split(":"); return (+a[0]) * 60 + (+a[1] || 0); }
+  function dfmt(s) { var a = (s || "").split("-"); return a.length === 3 ? a[2] + "/" + a[1] + "/" + a[0] : s; }
+  var WD = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+  var MO = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+  function mondayOf(d) { var x = new Date(d); var g = (x.getDay() + 6) % 7; x.setDate(x.getDate() - g); x.setHours(0,0,0,0); return x; }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;" })[c]; }); }
+
+  var PALETTE = ["#b08d57","#8a6d3b","#9c7b4d","#7a5c46","#a8863f","#b5794f","#6f5a3e","#c2a06a","#94734a","#7d6444"];
+  function colorFor(serv) { var h = 0, s = serv || "x"; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return PALETTE[h % PALETTE.length]; }
+  function shortServ(s) { s = s || "Serviço"; return s.length > 26 ? s.slice(0, 25) + "…" : s; }
+
+  var START = 9 * 60, END = 19 * 60, SLOT = 30, SLOT_H = 46;
+  var view = "dia", anchor = new Date(); anchor.setHours(0,0,0,0);
+  var cache = null;
+
+  function layoutDay(items) {
+    items.sort(function (a, b) { return a.start - b.start || a.end - b.end; });
+    var active = [];
+    for (var i = 0; i < items.length; i++) {
+      active = active.filter(function (x) { return x.end > items[i].start; });
+      var used = {}; active.forEach(function (x) { used[x.col] = 1; });
+      var c = 0; while (used[c]) c++;
+      items[i].col = c; active.push(items[i]);
+    }
+    items.forEach(function (it) {
+      var maxc = 0; items.forEach(function (o) { if (o.start < it.end && o.end > it.start && o.col > maxc) maxc = o.col; });
+      it.cols = maxc + 1;
+    });
+    return items;
+  }
+  function endStr(m) { var e = toMin(m.hora) + durOf(m.servico); return pad(Math.floor(e / 60)) + ":" + pad(e % 60); }
+  function blockHtml(m, top, height, leftPct, widthPct, compact) {
+    var cv = chargeValue(m);
+    var val = cv.gratis ? "GRÁTIS" : (cv.consulta ? "s/ consulta" : (cv.isFrom ? "≥" : "") + eur(cv.value));
+    var done = m.estado === "concluida";
+    var h = '<div class="ag-block' + (done ? " done" : "") + '" data-id="' + m.id +
+      '" style="top:' + top + 'px;height:' + height + 'px;left:' + leftPct + '%;width:' + widthPct + '%;background:' + colorFor(m.servico) + '">';
+    h += '<div class="agb-time">' + (m.hora || "") + (compact ? "" : "–" + endStr(m)) + '</div>';
+    h += '<div class="agb-name">' + esc(m.nome || "Cliente") + (m.gratuito ? " 🎁" : "") + '</div>';
+    if (!compact) h += '<div class="agb-serv">' + esc(shortServ(m.servico)) + '</div>';
+    h += '<div class="agb-val">' + val + '</div></div>';
+    return h;
+  }
+  function laneFor(dayStr, compact) {
+    var items = (cache || []).filter(function (m) { return m.dia === dayStr && m.hora; }).map(function (m) {
+      var st = Math.max(toMin(m.hora), START), en = Math.min(toMin(m.hora) + durOf(m.servico), END);
+      if (en <= st) en = Math.min(st + SLOT, END);
+      return { m: m, start: st, end: en };
+    });
+    layoutDay(items);
+    var h = "";
+    items.forEach(function (it) {
+      var top = (it.start - START) / SLOT * SLOT_H;
+      var height = Math.max((it.end - it.start) / SLOT * SLOT_H - 3, 26);
+      var w = 100 / (it.cols || 1), left = (it.col || 0) * w;
+      h += blockHtml(it.m, top, height, left + 0.5, w - 1, compact);
+    });
+    return h;
+  }
+  function ruler() { var h = "", n = (END - START) / SLOT; for (var i = 0; i <= n; i++) { var min = START + i * SLOT; h += '<div class="ag-tick" style="top:' + (i * SLOT_H) + 'px">' + pad(Math.floor(min/60)) + ":" + pad(min%60) + '</div>'; } return h; }
+  function gridLines() { var h = "", n = (END - START) / SLOT; for (var i = 0; i <= n; i++) h += '<div class="ag-line" style="top:' + (i * SLOT_H) + 'px"></div>'; return h; }
+
+  function renderDay() {
+    var height = (END - START) / SLOT * SLOT_H, dayStr = ymd(anchor), lane = laneFor(dayStr, false);
+    var html = '<div class="ag-day"><div class="ag-gutter" style="height:' + (height + 12) + 'px">' + ruler() + '</div>' +
+      '<div class="ag-lane" style="height:' + height + 'px">' + gridLines() + lane + '</div></div>';
+    if (!lane) html += '<p class="form-hint mt-2">Sem marcações neste dia.</p>';
+    return html;
+  }
+  function renderWeek() {
+    var mon = mondayOf(anchor), height = (END - START) / SLOT * SLOT_H, cols = "";
+    for (var d = 0; d < 7; d++) {
+      var day = new Date(mon); day.setDate(mon.getDate() + d);
+      var ds = ymd(day), isToday = ds === ymd(new Date());
+      cols += '<div class="ag-wcol' + (isToday ? " today" : "") + '"><div class="ag-whead">' + WD[day.getDay()].slice(0,3) +
+        '<span>' + pad(day.getDate()) + '/' + pad(day.getMonth()+1) + '</span></div>' +
+        '<div class="ag-lane" style="height:' + height + 'px">' + gridLines() + laneFor(ds, true) + '</div></div>';
+    }
+    return '<div class="ag-week"><div class="ag-wgutter"><div class="ag-whead">&nbsp;</div><div class="ag-gutter" style="height:' + height + 'px">' + ruler() + '</div></div>' + cols + '</div>';
+  }
+  function label() {
+    if (view === "dia") return WD[anchor.getDay()] + ", " + anchor.getDate() + " de " + MO[anchor.getMonth()] + " de " + anchor.getFullYear();
+    var mon = mondayOf(anchor), sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+    return "Semana de " + pad(mon.getDate()) + "/" + pad(mon.getMonth()+1) + " a " + pad(sun.getDate()) + "/" + pad(sun.getMonth()+1) + "/" + sun.getFullYear();
+  }
+  function grid() { return document.getElementById("agGrid"); }
+  function draw() {
+    document.getElementById("agLabel").textContent = label();
+    document.getElementById("agDate").value = ymd(anchor);
+    grid().innerHTML = view === "dia" ? renderDay() : renderWeek();
+    grid().querySelectorAll(".ag-block").forEach(function (b) { b.addEventListener("click", function () { openModal(b.getAttribute("data-id")); }); });
+  }
+  function renderAgenda() {
+    var msg = document.getElementById("agMsg"); msg.className = "form-msg";
+    grid().innerHTML = '<p class="form-hint">A carregar…</p>';
+    AZ.listBookings().then(function (list) { cache = list || []; draw(); })
+      .catch(function (e) { msg.className = "form-msg err"; msg.textContent = "Erro: " + (e.message || e); });
+  }
+
+  var modal = null;
+  function ensureModal() {
+    if (modal) return;
+    modal = document.createElement("div"); modal.className = "ag-modal"; modal.style.display = "none";
+    modal.innerHTML = '<div class="ag-modal-box"><button class="ag-modal-x" type="button">×</button><div class="ag-modal-body"></div><div class="ag-modal-actions"></div></div>';
+    document.body.appendChild(modal);
+    modal.addEventListener("click", function (e) { if (e.target === modal) closeM(); });
+    modal.querySelector(".ag-modal-x").addEventListener("click", closeM);
+  }
+  function closeM() { if (modal) modal.style.display = "none"; }
+  function openModal(id) {
+    var m = (cache || []).filter(function (x) { return x.id === id; })[0]; if (!m) return;
+    ensureModal();
+    var cv = chargeValue(m);
+    var val = cv.gratis ? "GRÁTIS 🎁" : (cv.consulta ? "sob consulta" : (cv.isFrom ? "a partir de " : "") + eur(cv.value));
+    var done = m.estado === "concluida";
+    modal.querySelector(".ag-modal-body").innerHTML =
+      '<h3>' + esc(m.nome || "Cliente") + '</h3>' +
+      '<p class="agm-line">📅 ' + dfmt(m.dia) + ' · 🕐 ' + (m.hora || "") + "–" + endStr(m) + '</p>' +
+      '<p class="agm-line">💅 ' + esc(m.servico || "—") + '</p>' +
+      (m.telefone ? '<p class="agm-line">📞 <a href="https://wa.me/' + m.telefone.replace(/\D/g,"") + '" target="_blank" rel="noopener" style="color:var(--gold)">' + esc(m.telefone) + '</a></p>' : "") +
+      (m.cupom ? '<p class="agm-line">🎟️ ' + esc(m.cupom) + '</p>' : "") +
+      (m.observacoes ? '<p class="agm-line">📝 ' + esc(m.observacoes) + '</p>' : "") +
+      '<p class="agm-val">💰 ' + val + '</p>';
+    var act = modal.querySelector(".ag-modal-actions");
+    act.innerHTML = '<button type="button" class="btn btn-outline" data-act="done">' + (done ? "Reabrir" : "Marcar concluída") + '</button>' +
+      '<button type="button" class="btn btn-outline" data-act="del" style="border-color:#a33;color:#a33">Apagar</button>';
+    act.querySelector('[data-act="done"]').onclick = function () { AZ.updateBooking(id, { estado: done ? "pendente" : "concluida" }).then(function () { closeM(); renderAgenda(); }); };
+    act.querySelector('[data-act="del"]').onclick = function () { if (confirm("Apagar esta marcação?")) AZ.deleteBooking(id).then(function () { closeM(); renderAgenda(); }); };
+    modal.style.display = "flex";
+  }
+
+  function rangeFor(period) {
+    var now = new Date(); now.setHours(0,0,0,0);
+    if (period === "hoje") return [ymd(now), ymd(now)];
+    if (period === "semana") { var mo = mondayOf(now), su = new Date(mo); su.setDate(mo.getDate()+6); return [ymd(mo), ymd(su)]; }
+    if (period === "ano") return [now.getFullYear()+"-01-01", now.getFullYear()+"-12-31"];
+    if (period === "custom") return [document.getElementById("fatFrom").value, document.getElementById("fatTo").value];
+    var f = new Date(now.getFullYear(), now.getMonth(), 1), l = new Date(now.getFullYear(), now.getMonth()+1, 0);
+    return [ymd(f), ymd(l)];
+  }
+  function fcard(ttl, val, kind) { return '<div class="fat-card ' + (kind || "") + '"><div class="fat-num">' + val + '</div><div class="fat-lbl">' + ttl + '</div></div>'; }
+  function renderFat() {
+    var period = document.getElementById("fatPeriod").value;
+    document.getElementById("fatRange").style.display = period === "custom" ? "flex" : "none";
+    var r = rangeFor(period), from = r[0], to = r[1];
+    var onlyDone = document.getElementById("fatOnlyDone").checked;
+    var sum = document.getElementById("fatSummary"), bysv = document.getElementById("fatByService");
+    if (period === "custom" && (!from || !to)) { sum.innerHTML = '<p class="form-hint">Escolha as duas datas do intervalo.</p>'; bysv.innerHTML = ""; return; }
+    sum.innerHTML = '<p class="form-hint">A carregar…</p>'; bysv.innerHTML = "";
+    AZ.listBookings().then(function (list) {
+      var items = (list || []).filter(function (m) { if (!m.dia || m.dia < from || m.dia > to) return false; if (onlyDone && m.estado !== "concluida") return false; return true; });
+      var total = 0, n = items.length, consulta = 0, gratis = 0, withVal = 0, bys = {};
+      items.forEach(function (m) {
+        var cv = chargeValue(m), key = m.servico || "Outro";
+        if (!bys[key]) bys[key] = { n: 0, total: 0 };
+        bys[key].n++;
+        if (cv.gratis) gratis++;
+        else if (cv.consulta) consulta++;
+        else { total += cv.value; withVal++; bys[key].total += cv.value; }
+      });
+      var ticket = withVal ? total / withVal : 0;
+      sum.innerHTML = '<div class="fat-cards">' +
+        fcard("Total faturado", eur(total), "gold") + fcard("Marcações", String(n), "") +
+        fcard("Ticket médio", eur(ticket), "") + fcard("Grátis (fidelidade)", String(gratis), "") +
+        fcard("Sob consulta", String(consulta), "") + '</div>' +
+        '<p class="form-hint mt-1">Período: ' + dfmt(from) + ' a ' + dfmt(to) + '. Serviços "sob consulta" não entram no total.</p>';
+      var keys = Object.keys(bys).sort(function (a,b) { return bys[b].total - bys[a].total; });
+      var rows = keys.map(function (k) { return '<tr><td>' + esc(k) + '</td><td style="text-align:center">' + bys[k].n + '</td><td style="text-align:right">' + eur(bys[k].total) + '</td></tr>'; }).join("");
+      bysv.innerHTML = keys.length ? '<table class="fat-table"><tr><th>Serviço</th><th style="text-align:center">Nº</th><th style="text-align:right">Total</th></tr>' + rows + '</table>' : '<p class="form-hint">Sem marcações neste período.</p>';
+    }).catch(function (e) { sum.innerHTML = '<p class="form-msg err">Erro: ' + (e.message || e) + '</p>'; });
+  }
+
+  function step(dir) { if (view === "dia") anchor.setDate(anchor.getDate() + dir); else anchor.setDate(anchor.getDate() + dir * 7); draw(); }
+  function bind() {
+    document.querySelectorAll(".ag-vt").forEach(function (b) {
+      b.addEventListener("click", function () {
+        document.querySelectorAll(".ag-vt").forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active"); view = b.getAttribute("data-agview"); draw();
+      });
+    });
+    document.getElementById("agPrev").addEventListener("click", function () { step(-1); });
+    document.getElementById("agNext").addEventListener("click", function () { step(1); });
+    document.getElementById("agToday").addEventListener("click", function () { anchor = new Date(); anchor.setHours(0,0,0,0); draw(); });
+    document.getElementById("agRefresh").addEventListener("click", renderAgenda);
+    document.getElementById("agDate").addEventListener("change", function () { if (this.value) { anchor = parseYmd(this.value); draw(); } });
+    document.getElementById("fatPeriod").addEventListener("change", renderFat);
+    document.getElementById("fatFrom").addEventListener("change", renderFat);
+    document.getElementById("fatTo").addEventListener("change", renderFat);
+    document.getElementById("fatOnlyDone").addEventListener("change", renderFat);
+    document.getElementById("fatRefresh").addEventListener("click", renderFat);
+    document.querySelectorAll(".panel-tab").forEach(function (t) {
+      t.addEventListener("click", function () {
+        var tab = t.getAttribute("data-tab");
+        if (tab === "agenda") renderAgenda();
+        if (tab === "fat") renderFat();
+      });
+    });
+  }
+  bind();
+  AZ.onChange(function (acc) {
+    if (acc && AZ.isAdmin(acc)) {
+      var active = document.querySelector(".panel-tab.active");
+      if (active && active.getAttribute("data-tab") === "agenda") renderAgenda();
+    }
+  });
+})();
+</script><footer class="site-footer">
   <div class="container footer-grid">
     <div>
       <a class="brand" href="../">Inova <span>Beauty</span></a>
