@@ -193,9 +193,44 @@
   </div>
 </main>
 
+<!-- ===== COMUNIDADE ===== -->
+<main class="app-screen" id="scr-comunidade">
+  <h1>Comunidade Inova</h1>
+  <p class="as-sub">Partilhe o resultado do seu atendimento e veja as publicações de outras clientes. 💛</p>
+
+  <div id="feedNeedLogin" class="form-card" style="text-align:center;padding:1.6rem 1.2rem">
+    <p>Inicie sessão para publicar, dar gosto e comentar.</p>
+    <div class="center-actions"><button type="button" class="btn btn-gold" data-goto="conta">Entrar / Registar-se</button></div>
+  </div>
+
+  <div id="feedArea" style="display:none">
+    <div class="post-composer">
+      <h3>Nova publicação</h3>
+      <label class="ap-btn" for="postPhotoFile" style="display:inline-block">📷 Escolher foto</label>
+      <input type="file" id="postPhotoFile" accept="image/*" style="display:none">
+      <img class="post-photo-preview" id="postPreview" alt="Pré-visualização">
+      <div class="form-field" style="margin-top:.6rem">
+        <select id="postServico" style="padding:.6rem .8rem;border-radius:10px;border:1px solid var(--gold-faint);background:var(--cream);font-family:var(--font-body);width:100%">
+          <option value="">Serviço (opcional)</option>
+          <option>Threading de Sobrancelhas</option><option>Brow Lamination</option><option>Alisamento de Sobrancelhas</option><option>Coloração de Sobrancelhas (Henna / Tintura / Descoloração)</option><option>Lifting de Pestanas</option><option>Lifting + Tintura de Pestanas</option><option>Permanente de Pestanas</option><option>Tintura de Pestanas</option><option>Micropigmentação de Sobrancelhas</option><option>Hidraglos de Lábios</option><option>Threading (rosto)</option><option>Depilação a Laser</option>
+        </select>
+      </div>
+      <div class="form-field" style="margin-top:.6rem">
+        <textarea id="postDesc" rows="2" placeholder="Escreva uma descrição…" style="width:100%;border:1px solid var(--gold-faint);border-radius:10px;padding:.7rem .9rem;font-family:var(--font-body)"></textarea>
+      </div>
+      <div class="form-msg" id="postMsg"></div>
+      <div class="center-actions" style="justify-content:flex-start">
+        <button type="button" class="btn btn-gold" id="postBtn">Publicar</button>
+      </div>
+    </div>
+    <div id="feedList"></div>
+  </div>
+</main>
+
 <nav class="tabbar" aria-label="Navegação da app">
   <button type="button" class="active" data-tab="inicio"><span class="tb-icon">🏠</span>Início</button>
   <button type="button" data-tab="marcar"><span class="tb-icon">📅</span>Marcar</button>
+  <button type="button" data-tab="comunidade"><span class="tb-icon">📸</span>Feed</button>
   <button type="button" data-tab="cartao"><span class="tb-icon">💛</span>Cartão</button>
   <button type="button" data-tab="conta"><span class="tb-icon">👤</span>Conta</button>
 </nav>
@@ -214,6 +249,7 @@
     });
     window.scrollTo(0, 0);
     render();
+    if (tab === "comunidade") renderFeed();
   }
   document.querySelectorAll(".tabbar button").forEach(function (b) {
     b.addEventListener("click", function () { show(b.getAttribute("data-tab")); });
@@ -304,6 +340,7 @@
     } else {
       document.getElementById("appBarAvatar").src = window.InovaAuth.avatarUrl(null);
     }
+    if (document.getElementById("scr-comunidade").classList.contains("active")) renderFeed();
   }
 
   /* autenticação */
@@ -517,6 +554,96 @@
       window.open(waUrl, "_blank", "noopener");
     });
   });
+
+  /* ---- Comunidade (feed) ---- */
+  function esc(s) { return String(s || "").replace(/[<>&]/g, function (c) { return {"<":"&lt;",">":"&gt;","&":"&amp;"}[c]; }); }
+  var postPhoto = null;
+  document.getElementById("postPhotoFile").addEventListener("change", function (e) {
+    var f = e.target.files[0]; if (!f) return;
+    var m = document.getElementById("postMsg"); m.className = "form-msg"; m.textContent = "A processar imagem…";
+    window.InovaAuth.fileToPhoto(f).then(function (d) {
+      postPhoto = d; var pv = document.getElementById("postPreview"); pv.src = d; pv.classList.add("show");
+      m.textContent = "";
+    }).catch(function (err) { m.className = "form-msg err"; m.textContent = err.message; });
+  });
+  document.getElementById("postBtn").addEventListener("click", function () {
+    var m = document.getElementById("postMsg"); m.className = "form-msg";
+    if (!postPhoto) { m.className = "form-msg err"; m.textContent = "Escolha uma foto para publicar."; return; }
+    var btn = document.getElementById("postBtn"); btn.disabled = true;
+    window.InovaAuth.createPost({
+      foto: postPhoto,
+      descricao: document.getElementById("postDesc").value,
+      servico: document.getElementById("postServico").value
+    }).then(function (r) {
+      btn.disabled = false;
+      if (r.error) { m.className = "form-msg err"; m.textContent = r.error; return; }
+      m.className = "form-msg ok"; m.textContent = "✅ Publicado!";
+      postPhoto = null;
+      document.getElementById("postPreview").classList.remove("show");
+      document.getElementById("postDesc").value = "";
+      document.getElementById("postPhotoFile").value = "";
+      renderFeed();
+    });
+  });
+
+  function renderFeed() {
+    var acc = window.InovaAuth.current();
+    document.getElementById("feedNeedLogin").style.display = acc ? "none" : "block";
+    document.getElementById("feedArea").style.display = acc ? "block" : "none";
+    if (!acc) return;
+    var box = document.getElementById("feedList");
+    box.innerHTML = '<p class="form-hint">A carregar publicações…</p>';
+    window.InovaAuth.listPosts().then(function (posts) {
+      if (!posts.length) { box.innerHTML = '<p class="form-hint">Ainda não há publicações. Seja a primeira a partilhar! 💛</p>'; return; }
+      var myUid = acc.uid || acc.phone;
+      box.innerHTML = "";
+      posts.forEach(function (post) {
+        var likes = post.likes || [];
+        var liked = likes.indexOf(myUid) >= 0;
+        var canDel = post.autorUid === myUid || window.InovaAuth.isAdmin(acc);
+        var el = document.createElement("div");
+        el.className = "post-card";
+        el.innerHTML =
+          '<div class="post-head"><img src="' + (post.autorAvatar || "") + '" alt=""><div><div class="ph-name">' + esc(post.autorNome) + '</div>' +
+          (post.servico ? '<div class="ph-serv">' + esc(post.servico) + '</div>' : "") + '</div>' +
+          (canDel ? '<button class="ph-del" data-del="' + post.id + '">apagar</button>' : "") + '</div>' +
+          '<img class="post-photo" src="' + post.foto + '" alt="publicação">' +
+          (post.descricao ? '<div class="post-desc">' + esc(post.descricao) + '</div>' : "") +
+          '<div class="post-actions">' +
+          '<button data-like="' + post.id + '" class="' + (liked ? "liked" : "") + '">' + (liked ? "❤️" : "🤍") + ' <span>' + likes.length + '</span></button>' +
+          '<button data-cmt="' + post.id + '">💬 Comentar</button></div>' +
+          '<div class="post-comments" id="cmts-' + post.id + '" style="display:none"></div>';
+        box.appendChild(el);
+      });
+      box.querySelectorAll("[data-like]").forEach(function (b) {
+        b.addEventListener("click", function () { window.InovaAuth.toggleLike(b.getAttribute("data-like")).then(renderFeed); });
+      });
+      box.querySelectorAll("[data-del]").forEach(function (b) {
+        b.addEventListener("click", function () { if (confirm("Apagar esta publicação?")) window.InovaAuth.deletePost(b.getAttribute("data-del")).then(renderFeed); });
+      });
+      box.querySelectorAll("[data-cmt]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var id = b.getAttribute("data-cmt");
+          var c = document.getElementById("cmts-" + id);
+          if (c.style.display === "none") { c.style.display = "block"; loadComments(id, c); } else { c.style.display = "none"; }
+        });
+      });
+    }).catch(function (e) { box.innerHTML = '<p class="form-msg err">Erro ao carregar: ' + (e.message || e) + '</p>'; });
+  }
+
+  function loadComments(postId, container) {
+    container.innerHTML = '<p class="form-hint">A carregar…</p>';
+    window.InovaAuth.listComments(postId).then(function (cmts) {
+      var html = cmts.map(function (c) { return '<div class="cmt"><strong>' + esc(c.autorNome) + ':</strong> ' + esc(c.texto) + '</div>'; }).join("");
+      html += '<div class="cmt-form"><input type="text" placeholder="Escreva um comentário…" id="ci-' + postId + '"><button data-send="' + postId + '">➤</button></div>';
+      container.innerHTML = html;
+      container.querySelector("[data-send]").addEventListener("click", function () {
+        var input = document.getElementById("ci-" + postId);
+        var txt = input.value.trim(); if (!txt) return;
+        window.InovaAuth.addComment(postId, txt).then(function () { loadComments(postId, container); });
+      });
+    });
+  }
 
   /* service worker */
   if ("serviceWorker" in navigator && location.protocol === "https:") {

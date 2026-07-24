@@ -1042,6 +1042,54 @@ section { padding: 4.5rem 0; }
 .booking-card .bk-body strong { color: var(--ink); font-size: 1rem; }
 .booking-card .bk-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
 
+/* ---------- Comunidade (feed do app) ---------- */
+.post-composer {
+  background: var(--white);
+  border: 1px solid var(--gold-faint);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.1rem 1.2rem;
+  margin-bottom: 1.2rem;
+}
+.post-composer h3 { font-size: 1.15rem; margin-bottom: .7rem; }
+.post-photo-preview {
+  width: 100%;
+  border-radius: 12px;
+  margin: .6rem 0;
+  display: none;
+  max-height: 300px;
+  object-fit: cover;
+}
+.post-photo-preview.show { display: block; }
+.post-card {
+  background: var(--white);
+  border: 1px solid var(--gold-faint);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+}
+.post-head { display: flex; align-items: center; gap: .6rem; padding: .8rem 1rem; }
+.post-head img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--gold-soft); }
+.post-head .ph-name { font-weight: 500; font-size: .95rem; color: var(--ink); }
+.post-head .ph-serv { font-size: .78rem; color: var(--gold); }
+.post-head .ph-del { margin-left: auto; background: none; border: none; color: #a33; cursor: pointer; font-size: .8rem; }
+.post-card > img.post-photo { width: 100%; display: block; max-height: 460px; object-fit: cover; }
+.post-desc { padding: .7rem 1rem 0; font-size: .95rem; color: var(--ink-soft); }
+.post-actions { display: flex; gap: 1.2rem; padding: .7rem 1rem; align-items: center; }
+.post-actions button {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: .9rem; color: var(--ink-soft);
+  display: flex; align-items: center; gap: .35rem;
+}
+.post-actions .liked { color: #e0245e; font-weight: 500; }
+.post-comments { padding: 0 1rem 1rem; }
+.post-comments .cmt { font-size: .88rem; padding: .3rem 0; border-top: 1px dotted var(--gold-faint); }
+.post-comments .cmt strong { color: var(--ink); }
+.cmt-form { display: flex; gap: .5rem; margin-top: .6rem; }
+.cmt-form input { flex: 1; border: 1px solid var(--gold-faint); border-radius: 999px; padding: .5rem .9rem; font-family: var(--font-body); font-size: .88rem; outline: none; }
+.cmt-form button { border: none; background: var(--gold); color: #fff; border-radius: 999px; padding: 0 1rem; cursor: pointer; }
+
 /* ---------- Chat online ---------- */
 .chat-fab {
   position: fixed;
