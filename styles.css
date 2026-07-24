@@ -306,6 +306,7 @@ section { padding: 4.5rem 0; }
 /* ---------- Carrossel (hero da home) ---------- */
 .hero-slider {
   position: relative;
+  padding: 0;
   background:
     radial-gradient(ellipse at 75% 20%, rgba(176, 141, 87, .28), transparent 55%),
     radial-gradient(ellipse at 15% 85%, rgba(176, 141, 87, .16), transparent 50%),
