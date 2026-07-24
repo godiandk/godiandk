@@ -158,7 +158,10 @@
       "auth/wrong-password": "Senha incorreta.",
       "auth/invalid-credential": "Email ou senha incorretos.",
       "auth/too-many-requests": "Demasiadas tentativas. Tente novamente mais tarde.",
-      "auth/network-request-failed": "Sem ligação à internet. Tente novamente."
+      "auth/network-request-failed": "Sem ligação à internet. Tente novamente.",
+      "auth/configuration-not-found": "Falta ativar o login por Email/Senha no Firebase (Authentication → Sign-in method → Email/Password).",
+      "auth/operation-not-allowed": "O login por Email/Senha ainda não está ativado no Firebase (Authentication → Sign-in method).",
+      "auth/admin-restricted-operation": "Operação restrita. Verifique as definições de Authentication no Firebase."
     };
     return map[c] || (e && e.message) || "Ocorreu um erro. Tente novamente.";
   }
@@ -299,6 +302,61 @@
     return list.indexOf(acc.email.toLowerCase()) >= 0;
   }
 
+  /* ---------------- Marcações ---------------- */
+  var LS_BOOK = "inova_marcacoes";
+  function readBookings() { try { return JSON.parse(localStorage.getItem(LS_BOOK)) || []; } catch (e) { return []; } }
+  function writeBookings(l) { try { localStorage.setItem(LS_BOOK, JSON.stringify(l)); } catch (e) {} }
+
+  function saveBooking(data) {
+    var acc = current();
+    var rec = {
+      nome: (data.nome || (acc && acc.name) || "").trim(),
+      telefone: (data.telefone || (acc && acc.phone) || "").trim(),
+      email: (acc && acc.email) || "",
+      servico: data.servico || "",
+      dia: data.dia || "",
+      hora: data.hora || "",
+      observacoes: (data.observacoes || "").trim(),
+      cupom: (data.cupom || "").trim(),
+      clienteUid: acc ? (acc.uid || acc.phone || null) : null,
+      estado: "pendente"
+    };
+    if (backend === "firebase") {
+      if (!fbAuth.currentUser) return Promise.resolve({ error: "Inicie sessão para guardar a marcação." });
+      rec.criadoEm = firebase.firestore.FieldValue.serverTimestamp();
+      return fbDb.collection("marcacoes").add(rec).then(function () { return { ok: true }; })
+        .catch(function (e) { return { error: fbErr(e) }; });
+    }
+    rec.id = "loc" + Date.now(); rec.criadoEm = new Date().toISOString();
+    var l = readBookings(); l.unshift(rec); writeBookings(l);
+    return Promise.resolve({ ok: true });
+  }
+
+  function listBookings() {
+    if (backend === "firebase") {
+      return fbDb.collection("marcacoes").get().then(function (snap) {
+        var arr = []; snap.forEach(function (doc) { arr.push(Object.assign({ id: doc.id }, doc.data())); });
+        arr.sort(function (a, b) { return String(a.dia + a.hora).localeCompare(String(b.dia + b.hora)); });
+        return arr;
+      });
+    }
+    var l = readBookings();
+    l.sort(function (a, b) { return String(a.dia + a.hora).localeCompare(String(b.dia + b.hora)); });
+    return Promise.resolve(l);
+  }
+
+  function updateBooking(id, changes) {
+    if (backend === "firebase") return fbDb.collection("marcacoes").doc(id).set(changes, { merge: true });
+    var l = readBookings().map(function (m) { return m.id === id ? Object.assign(m, changes) : m; });
+    writeBookings(l); return Promise.resolve();
+  }
+
+  function deleteBooking(id) {
+    if (backend === "firebase") return fbDb.collection("marcacoes").doc(id).delete();
+    writeBookings(readBookings().filter(function (m) { return m.id !== id; }));
+    return Promise.resolve();
+  }
+
   function onChange(cb) {
     changeCbs.push(cb);
     // dispara já com o estado atual (após ready)
@@ -329,6 +387,10 @@
     avatarUrl: avatarUrl,
     defaultAvatar: defaultAvatar,
     fileToAvatar: fileToAvatar,
-    charList: charList
+    charList: charList,
+    saveBooking: saveBooking,
+    listBookings: listBookings,
+    updateBooking: updateBooking,
+    deleteBooking: deleteBooking
   };
 })();

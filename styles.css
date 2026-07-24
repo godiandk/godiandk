@@ -1014,6 +1014,34 @@ section { padding: 4.5rem 0; }
 .badge.used { background: rgba(220, 70, 70, .12); color: #a33; }
 .table-scroll { overflow-x: auto; }
 
+/* ---------- Cartões de marcação (painel) ---------- */
+.booking-card {
+  background: var(--white);
+  border: 1px solid var(--gold-faint);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin-bottom: .9rem;
+  box-shadow: var(--shadow);
+}
+.booking-card.done { opacity: .6; border-left-color: var(--gold-soft); }
+.booking-card .bk-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .6rem;
+  flex-wrap: wrap;
+  margin-bottom: .6rem;
+}
+.booking-card .bk-when {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+.booking-card .bk-body { font-size: .92rem; color: var(--ink-soft); display: flex; flex-direction: column; gap: .25rem; }
+.booking-card .bk-body strong { color: var(--ink); font-size: 1rem; }
+.booking-card .bk-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
+
 /* ---------- Chat online ---------- */
 .chat-fab {
   position: fixed;
