@@ -23,7 +23,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 
 body {
   font-family: var(--font-body);
@@ -32,6 +32,8 @@ body {
   background: var(--cream);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  width: 100%;
 }
 
 img, svg { max-width: 100%; display: block; }
@@ -877,9 +879,9 @@ section { padding: 4.5rem 0; }
   box-shadow: var(--shadow);
   padding: 2rem 1.8rem;
 }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+.form-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.1rem; }
 @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
-.form-field { display: flex; flex-direction: column; gap: .35rem; }
+.form-field { display: flex; flex-direction: column; gap: .35rem; min-width: 0; }
 .form-field.full { grid-column: 1 / -1; }
 .form-field label {
   font-size: .74rem;
@@ -900,6 +902,9 @@ section { padding: 4.5rem 0; }
   border-radius: 10px;
   padding: .75rem .9rem;
   outline: none;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   transition: border-color .2s, box-shadow .2s;
 }
 .form-field input:focus,
@@ -1043,6 +1048,38 @@ section { padding: 4.5rem 0; }
 .booking-card .bk-body { font-size: .92rem; color: var(--ink-soft); display: flex; flex-direction: column; gap: .25rem; }
 .booking-card .bk-body strong { color: var(--ink); font-size: 1rem; }
 .booking-card .bk-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
+
+/* Bloco de cobrança — valor, desconto e valor final a cobrar */
+.bk-charge {
+  margin-top: .55rem;
+  padding: .6rem .8rem;
+  background: var(--cream);
+  border: 1px solid var(--gold-faint);
+  border-radius: 10px;
+}
+.bk-charge.free { background: rgba(31, 174, 90, .1); border-color: rgba(31, 174, 90, .4); }
+.bk-charge-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: .9rem;
+  color: var(--ink-soft);
+  padding: .12rem 0;
+}
+.bk-charge-row.desc span:last-child { color: #1c7d46; font-weight: 500; }
+.bk-charge-row.final {
+  margin-top: .3rem;
+  padding-top: .4rem;
+  border-top: 1px dashed var(--gold-faint);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+.bk-charge-row.final span:last-child { color: var(--gold); }
+.bk-charge.free .bk-charge-row.final span:last-child { color: #1c7d46; }
+.bk-charge-note { font-size: .78rem; color: var(--ink-soft); font-style: italic; margin-top: .3rem; }
+.bk-charge-note.warn { color: #a33; font-style: normal; }
 
 /* ---------- Comunidade (feed do app) ---------- */
 .post-composer {
