@@ -33,16 +33,64 @@
 
 <main>
 
-  <section class="hero" id="inicio">
-    <div class="container hero-inner">
-      <p class="eyebrow">Tecnologia · Marketing · Automação</p>
-      <h1>Transformamos ideias em <span class="gold">resultados digitais</span></h1>
-      <p class="hero-sub">A Tecnova Digital une desenvolvimento de software, marketing de performance e inteligência artificial para acelerar o crescimento do seu negócio.</p>
-      <div class="hero-cta">
-        <a href="#contato" class="btn btn-gold btn-lg">Solicitar orçamento</a>
-        <a href="#servicos" class="btn btn-outline btn-lg">Conhecer serviços</a>
-      </div>
+  <section class="hero-slider" id="inicio" aria-label="Destaques Tecnova Digital">
+    <div class="hs-track">
+
+      <!-- Slide 1: marca + fundador -->
+      <article class="hs-slide active">
+        <div class="container hs-grid">
+          <div class="hs-text">
+            <p class="eyebrow">Tecnologia · Marketing · Automação</p>
+            <h1>Transformamos ideias em <span class="gold">resultados digitais</span></h1>
+            <p class="hero-sub">A Tecnova Digital une desenvolvimento de software, marketing de performance e inteligência artificial para acelerar o crescimento do seu negócio.</p>
+            <div class="hero-cta">
+              <a href="#contato" class="btn btn-gold btn-lg">Solicitar orçamento</a>
+              <a href="#servicos" class="btn btn-outline btn-lg">Conhecer serviços</a>
+            </div>
+          </div>
+          <div class="hs-media">
+            <img src="img/wesley-vianna.jpg" alt="Wesley Vianna — Fundador & CEO da Tecnova Digital" width="820" height="1230" loading="eager">
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 2: liderança -->
+      <article class="hs-slide">
+        <div class="container hs-grid">
+          <div class="hs-text">
+            <p class="eyebrow">Quem lidera a Tecnova</p>
+            <h2>Estratégia e execução <span class="gold">lideradas por quem entende do digital</span></h2>
+            <p class="hero-sub">Wesley Vianna e a equipe Tecnova unem tecnologia e marketing de performance para gerar retorno real e mensurável em cada projeto.</p>
+            <div class="hero-cta">
+              <a href="#contato" class="btn btn-gold btn-lg">Falar com a equipe</a>
+              <a href="#sobre" class="btn btn-outline btn-lg">Conhecer a Tecnova</a>
+            </div>
+          </div>
+          <div class="hs-media">
+            <img src="img/wesley-vianna.jpg" alt="Wesley Vianna — Fundador & CEO da Tecnova Digital" width="820" height="1230" loading="lazy">
+          </div>
+        </div>
+      </article>
+
+      <!-- Slide 3: CTA de orçamento -->
+      <article class="hs-slide">
+        <div class="container hs-grid solo">
+          <div class="hs-text center">
+            <p class="eyebrow center">Vamos começar</p>
+            <h2>Peça o seu <span class="gold">orçamento sem compromisso</span></h2>
+            <p class="hero-sub">Conte o seu desafio e a nossa equipe prepara uma proposta pensada para o seu negócio.</p>
+            <div class="hero-cta">
+              <a href="#contato" class="btn btn-gold btn-lg">Solicitar orçamento</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
     </div>
+
+    <button type="button" class="hs-arrow prev" aria-label="Slide anterior">&#8249;</button>
+    <button type="button" class="hs-arrow next" aria-label="Slide seguinte">&#8250;</button>
+    <div class="hs-dots" role="tablist" aria-label="Navegação dos destaques"></div>
   </section>
 
   <section class="section" id="servicos">
