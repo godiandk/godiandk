@@ -43,6 +43,7 @@ window.INOVA_DIC.es = {
 "Fazer marcação": "Reservar",
 "Confirmar marcação": "Confirmar reserva",
 "Entrar": "Entrar",
+"Iniciar sessão": "Iniciar sesión",
 "Entrar / Registar-se": "Entrar / Registrarse",
 "👤 Entrar": "👤 Entrar",
 "Registar-se": "Registrarse",
