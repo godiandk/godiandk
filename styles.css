@@ -1404,23 +1404,21 @@ section { padding: 4.5rem 0; }
 .lc-msg.err { display: block; background: rgba(220, 70, 70, .18); color: #ff9c9c; }
 
 /* ---------- Tabs de autenticação ---------- */
-.auth-tabs { display: flex; gap: .6rem; margin-bottom: 1.5rem; }
-.auth-tab {
-  flex: 1;
-  padding: .7rem 1rem;
-  border-radius: 10px;
-  border: 1px solid var(--gold-faint);
-  background: transparent;
-  font-family: var(--font-body);
-  font-size: .82rem;
-  font-weight: 500;
-  letter-spacing: .14em;
-  text-transform: uppercase;
+/* ---------- Conta: login / criar conta (estilo limpo) ---------- */
+.auth-card { max-width: 440px; margin-inline: auto; }
+.auth-card + .auth-card { margin-top: 1.2rem; }
+.auth-title { text-align: center; font-size: 1.45rem; margin-bottom: 1.2rem; }
+.btn-block { width: 100%; }
+.center-actions .btn-block { flex: 1 1 100%; }
+.auth-sep {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin: 1.5rem 0 1rem;
   color: var(--ink-soft);
-  cursor: pointer;
-  transition: all .2s;
+  font-size: .8rem;
 }
-.auth-tab.active { background: var(--gold); border-color: var(--gold); color: var(--white); }
+.auth-sep::before, .auth-sep::after { content: ""; flex: 1; height: 1px; background: var(--gold-faint); }
 
 /* ---------- Botão flutuante do app ---------- */
 .app-float {

@@ -115,21 +115,23 @@
 <main class="app-screen" id="scr-conta">
   <h1>A minha conta</h1>
   <div id="authArea">
-    <div class="form-card" style="padding:1.3rem 1.1rem">
-      <div class="auth-tabs">
-        <button type="button" class="auth-tab active" data-auth="login">Entrar</button>
-        <button type="button" class="auth-tab" data-auth="signup">Registar-se</button>
-      </div>
+    <div class="form-card auth-card" id="loginCard" style="padding:1.3rem 1.1rem">
       <form id="loginForm" novalidate>
         <div class="form-grid" style="grid-template-columns:1fr">
           <div class="form-field"><label for="lEmail">Email</label><input id="lEmail" type="email" autocomplete="email"></div>
           <div class="form-field"><label for="lPass">Senha</label><input id="lPass" type="password" autocomplete="current-password"></div>
         </div>
         <div class="form-msg" id="loginMsg"></div>
-        <div class="center-actions"><button type="submit" class="btn btn-gold">Iniciar sessão</button></div>
+        <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Entrar</button></div>
         <p class="text-center mt-2"><a href="#" id="forgotLink" style="font-size:.85rem;color:var(--gold)">Esqueci a minha senha</a></p>
       </form>
-      <form id="signupForm" novalidate style="display:none">
+      <div class="auth-sep"><span>ainda não tem conta?</span></div>
+      <div class="center-actions"><button type="button" class="btn btn-outline btn-block" id="showSignupBtn">Criar conta</button></div>
+    </div>
+
+    <div class="form-card auth-card" id="signupCard" style="display:none;padding:1.3rem 1.1rem">
+      <h2 class="auth-title">Criar conta</h2>
+      <form id="signupForm" novalidate>
         <div class="form-grid" style="grid-template-columns:1fr">
           <div class="form-field">
             <label>Foto de perfil (opcional)</label>
@@ -159,9 +161,10 @@
           <div class="form-field"><label for="sPass2">Confirmar senha*</label><input id="sPass2" type="password" autocomplete="new-password"></div>
         </div>
         <div class="form-msg" id="signupMsg"></div>
-        <div class="center-actions"><button type="submit" class="btn btn-gold">Criar a minha conta</button></div>
+        <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Criar a minha conta</button></div>
         <p class="form-hint text-center mt-2">🔒 Senha protegida com criptografia (SHA-256 + salt), guardada só neste dispositivo.</p>
       </form>
+      <p class="text-center mt-2"><a href="#" id="backToLogin" style="font-size:.85rem;color:var(--gold)">Já tem conta? Iniciar sessão</a></p>
     </div>
   </div>
   <div id="profileArea" style="display:none">
@@ -355,14 +358,13 @@
   }
 
   /* autenticação */
-  document.querySelectorAll(".auth-tab").forEach(function (t) {
-    t.addEventListener("click", function () {
-      document.querySelectorAll(".auth-tab").forEach(function (x) { x.classList.remove("active"); });
-      t.classList.add("active");
-      document.getElementById("loginForm").style.display = t.getAttribute("data-auth") === "login" ? "block" : "none";
-      document.getElementById("signupForm").style.display = t.getAttribute("data-auth") === "signup" ? "block" : "none";
-    });
-  });
+  function showAuth(mode) {
+    var signup = mode === "signup";
+    document.getElementById("loginCard").style.display = signup ? "none" : "block";
+    document.getElementById("signupCard").style.display = signup ? "block" : "none";
+  }
+  document.getElementById("showSignupBtn").addEventListener("click", function () { showAuth("signup"); });
+  document.getElementById("backToLogin").addEventListener("click", function (e) { e.preventDefault(); showAuth("login"); });
   function msg(el, text) { el.className = "form-msg err"; el.textContent = text; }
 
   /* Foto de perfil / personagem e sexo no registo */

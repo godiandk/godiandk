@@ -49,6 +49,8 @@ window.INOVA_DIC.es = {
 "Registar-se": "Registrarse",
 "Criar conta": "Crear cuenta",
 "Criar a minha conta": "Crear mi cuenta",
+"ainda não tem conta?": "¿aún no tienes cuenta?",
+"Já tem conta? Iniciar sessão": "¿Ya tienes cuenta? Inicia sesión",
 "Sair": "Salir",
 "Guardar": "Guardar",
 "Guardar alterações": "Guardar cambios",
