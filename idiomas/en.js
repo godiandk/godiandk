@@ -43,6 +43,7 @@ window.INOVA_DIC.en = {
 "Fazer marcação": "Book now",
 "Confirmar marcação": "Confirm booking",
 "Entrar": "Log in",
+"Iniciar sessão": "Log in",
 "Entrar / Registar-se": "Log in / Sign up",
 "👤 Entrar": "👤 Log in",
 "Registar-se": "Sign up",
