@@ -135,32 +135,33 @@ section { padding: 4.5rem 0; }
 .nav-wrap {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   min-height: 76px;
   gap: 1rem;
 }
 
 .brand {
   font-family: var(--font-display);
-  font-size: 1.45rem;
-  letter-spacing: .26em;
+  font-size: 1.4rem;
+  letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--ink);
   white-space: nowrap;
+  margin-right: auto;
 }
 .brand span { color: var(--gold); }
 
 .main-nav > ul {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: .85rem;
   list-style: none;
 }
 
 .main-nav a.nav-link {
-  font-size: .82rem;
+  font-size: .77rem;
   font-weight: 400;
-  letter-spacing: .16em;
+  letter-spacing: .04em;
   text-transform: uppercase;
   color: var(--ink-soft);
   padding: .4rem 0;
@@ -217,8 +218,8 @@ section { padding: 4.5rem 0; }
 .dropdown li.dd-book a { color: var(--white); background: linear-gradient(120deg, var(--gold), var(--gold-soft)); font-weight: 600; border-radius: 8px; margin: .2rem .5rem; }
 .dropdown li.dd-book a:hover { color: var(--white); padding-left: 1.4rem; filter: brightness(1.05); }
 
-.nav-cta { margin-left: .4rem; }
-.nav-cta .btn { padding: .6rem 1.4rem; font-size: .78rem; }
+.nav-cta { margin-left: .3rem; }
+.nav-cta .btn { padding: .5rem 1.05rem; font-size: .74rem; }
 
 /* Hamburger */
 .nav-toggle {
@@ -237,7 +238,7 @@ section { padding: 4.5rem 0; }
   transition: all .3s;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
   .nav-toggle { display: block; }
   .main-nav {
     position: fixed;
