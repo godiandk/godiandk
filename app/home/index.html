@@ -592,7 +592,7 @@
     var servico = document.getElementById("bService").value;
     var hora = document.getElementById("bTime").value;
     var cp = couponInput.value.trim().toUpperCase();
-    var sbtn = document.querySelector("#bookForm button[type="submit"]");
+    var sbtn = document.querySelector('#bookForm button[type="submit"]');
     if (sbtn) { sbtn.disabled = true; }
     window.InovaAuth.saveBooking({
       nome: name, telefone: phone, servico: servico,
