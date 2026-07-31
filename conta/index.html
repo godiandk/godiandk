@@ -68,12 +68,7 @@
   <div class="container" style="max-width:760px">
 
     <div id="authArea">
-      <div class="form-card">
-        <div class="auth-tabs">
-          <button type="button" class="auth-tab active" data-auth="login">Entrar</button>
-          <button type="button" class="auth-tab" data-auth="signup">Criar conta</button>
-        </div>
-
+      <div class="form-card auth-card" id="loginCard">
         <form id="loginForm" novalidate>
           <div class="form-grid">
             <div class="form-field">
@@ -86,11 +81,16 @@
             </div>
           </div>
           <div class="form-msg" id="loginMsg"></div>
-          <div class="center-actions"><button type="submit" class="btn btn-gold">Iniciar sessão</button></div>
+          <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Entrar</button></div>
           <p class="text-center mt-2"><a href="#" id="forgotLink" class="link-gold" style="font-size:.85rem;color:var(--gold)">Esqueci a minha senha</a></p>
         </form>
+        <div class="auth-sep"><span>ainda não tem conta?</span></div>
+        <div class="center-actions"><button type="button" class="btn btn-outline btn-block" id="showSignupBtn">Criar conta</button></div>
+      </div>
 
-        <form id="signupForm" novalidate style="display:none">
+      <div class="form-card auth-card" id="signupCard" style="display:none">
+        <h2 class="auth-title">Criar conta</h2>
+        <form id="signupForm" novalidate>
           <div class="form-grid">
             <div class="form-field full">
               <label>Foto de perfil (opcional)</label>
@@ -140,9 +140,10 @@
             </div>
           </div>
           <div class="form-msg" id="signupMsg"></div>
-          <div class="center-actions"><button type="submit" class="btn btn-gold">Criar a minha conta</button></div>
+          <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Criar a minha conta</button></div>
           <p class="form-hint text-center mt-2">🔒 A sua senha é protegida com criptografia (SHA-256 + salt) e os dados ficam guardados apenas neste dispositivo — nunca são enviados para terceiros.</p>
         </form>
+        <p class="text-center mt-2"><a href="#" id="backToLogin" class="link-gold" style="font-size:.85rem;color:var(--gold)">Já tem conta? Iniciar sessão</a></p>
       </div>
     </div>
 
@@ -223,21 +224,20 @@
   var profileArea = document.getElementById("profileArea");
   var loginForm = document.getElementById("loginForm");
   var signupForm = document.getElementById("signupForm");
+  var loginCard = document.getElementById("loginCard");
+  var signupCard = document.getElementById("signupCard");
 
-  document.querySelectorAll(".auth-tab").forEach(function (t) {
-    t.addEventListener("click", function () {
-      document.querySelectorAll(".auth-tab").forEach(function (x) { x.classList.remove("active"); });
-      t.classList.add("active");
-      loginForm.style.display = t.getAttribute("data-auth") === "login" ? "block" : "none";
-      signupForm.style.display = t.getAttribute("data-auth") === "signup" ? "block" : "none";
-    });
-  });
+  function showAuth(mode) {
+    var signup = mode === "signup";
+    loginCard.style.display = signup ? "none" : "block";
+    signupCard.style.display = signup ? "block" : "none";
+    try { window.scrollTo({ top: 0, behavior: "smooth" }); } catch (e) {}
+  }
+  document.getElementById("showSignupBtn").addEventListener("click", function () { showAuth("signup"); });
+  document.getElementById("backToLogin").addEventListener("click", function (e) { e.preventDefault(); showAuth("login"); });
 
   // link direto: /conta/?tab=signup abre logo o registo
-  if (new URLSearchParams(location.search).get("tab") === "signup") {
-    var st = document.querySelector('[data-auth="signup"]');
-    if (st) st.click();
-  }
+  if (new URLSearchParams(location.search).get("tab") === "signup") showAuth("signup");
 
   function msg(el, text, ok) {
     el.className = "form-msg " + (ok ? "ok" : "err");
@@ -291,7 +291,7 @@
     var acc = window.InovaAuth.current();
     if (!acc) {
       authArea.style.display = "block"; profileArea.style.display = "none";
-      var lt = document.querySelector('[data-auth="login"]'); if (lt) lt.click();
+      showAuth("login");
       return;
     }
     authArea.style.display = "none";

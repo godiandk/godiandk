@@ -49,6 +49,8 @@ window.INOVA_DIC.en = {
 "Registar-se": "Sign up",
 "Criar conta": "Create account",
 "Criar a minha conta": "Create my account",
+"ainda não tem conta?": "don't have an account yet?",
+"Já tem conta? Iniciar sessão": "Already have an account? Log in",
 "Sair": "Log out",
 "Guardar": "Save",
 "Guardar alterações": "Save changes",
