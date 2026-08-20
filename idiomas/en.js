@@ -97,7 +97,7 @@ window.INOVA_DIC.en = {
 "Técnica fio a fio ultra natural, com consulta de avaliação deduzida no valor do procedimento. Veja o passo a passo sem mistérios.": "Ultra-natural hair-by-hair technique, with the assessment consultation deducted from the procedure price. See the step-by-step, no mysteries.",
 "🎂 Presente de aniversário": "🎂 Birthday gift",
 "10% de desconto no <em>seu mês</em>": "10% off in <em>your month</em>",
-"Crie a sua conta gratuita e receba automaticamente um cupom de 10% no mês do seu aniversário. É o nosso mimo para si.": "Create your free account and automatically receive a 10% coupon in your birthday month. It's our little gift to you.",
+"Crie a sua conta gratuita e receba automaticamente um cupom de 10% na semana do seu aniversário. É o nosso mimo para si.": "Create your free account and automatically receive a 10% coupon in your birthday week. It's our little gift to you.",
 "Beleza, precisão e <em>cuidado</em> em cada detalhe": "Beauty, precision and <em>care</em> in every detail",
 "Especialistas em sobrancelhas, pestanas, micropigmentação e depilação com linha. Realce a sua beleza natural com quem trata cada detalhe como arte.": "Specialists in eyebrows, lashes, micropigmentation and threading. Enhance your natural beauty with someone who treats every detail as art.",
 "Destaques Inova Beauty": "Inova Beauty highlights",

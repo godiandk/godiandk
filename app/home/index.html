@@ -18,6 +18,20 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="../../firebase-config.js"></script>
+<link rel="canonical" href="https://godiandk.github.io/godiandk/app/home/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Inova Beauty">
+<meta property="og:locale" content="pt_PT">
+<meta property="og:title" content="APP — Inova Beauty">
+<meta property="og:description" content="A app Inova Beauty: marcações, cartão de fidelidade e conta.">
+<meta property="og:url" content="https://godiandk.github.io/godiandk/app/home/">
+<meta property="og:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="APP — Inova Beauty">
+<meta name="twitter:description" content="A app Inova Beauty: marcações, cartão de fidelidade e conta.">
+<meta name="twitter:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
 </head>
 <body class="app-shell" data-no-chat>
 
@@ -163,6 +177,7 @@
         <div class="form-msg" id="signupMsg"></div>
         <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Criar a minha conta</button></div>
         <p class="form-hint text-center mt-2">🔒 Senha protegida com criptografia (SHA-256 + salt), guardada só neste dispositivo.</p>
+        <p class="form-hint text-center mt-2" style="font-size:.72rem;opacity:.75">Ao criar conta, aceita a nossa <a href="../../privacidade/" style="color:var(--gold)">Política de Privacidade</a> e os <a href="../../termos/" style="color:var(--gold)">Termos</a>.</p>
       </form>
       <p class="text-center mt-2"><a href="#" id="backToLogin" style="font-size:.85rem;color:var(--gold)">Já tem conta? Iniciar sessão</a></p>
     </div>
@@ -581,6 +596,7 @@
       sel.disabled = false; sel.selectedIndex = 0;
     }
   });
+  (function () { var di = document.getElementById("bDate"); if (di) { var t = new Date(); t.setMinutes(t.getMinutes() - t.getTimezoneOffset()); di.min = t.toISOString().slice(0, 10); } })();
   document.getElementById("bookForm").addEventListener("submit", function (e) {
     e.preventDefault();
     var bm = document.getElementById("bookMsg");
@@ -588,6 +604,9 @@
     var phone = document.getElementById("bPhone").value.trim();
     var date = document.getElementById("bDate").value;
     if (!name || !phone || !date) { bm.className = "form-msg err"; bm.textContent = "Preencha o nome, o telemóvel e o dia."; return; }
+    var picked = new Date(date + "T00:00:00"), today0 = new Date(); today0.setHours(0, 0, 0, 0);
+    if (picked < today0) { bm.className = "form-msg err"; bm.textContent = "Escolha uma data a partir de hoje."; return; }
+    if (picked.getDay() === 0) { bm.className = "form-msg err"; bm.textContent = "Aos domingos estamos fechados. Escolha de segunda a sábado."; return; }
     var usarPremio = document.getElementById("useReward").checked;
     var reward = usarPremio ? window.InovaAuth.activeReward() : null;
     var d = date.split("-");
