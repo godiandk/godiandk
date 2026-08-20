@@ -18,6 +18,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="../../firebase-config.js"></script>
+<script src="../../analytics.js"></script>
 <link rel="canonical" href="https://godiandk.github.io/godiandk/app/home/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Inova Beauty">
@@ -623,6 +624,7 @@
     }).then(function (r) {
       var after = reward ? window.InovaAuth.consumeReward(reward.code, { dia: date, hora: hora }) : Promise.resolve();
       return after.then(function () {
+        try { if (window.InovaTrack) window.InovaTrack.event("Marcacao", { servico: servico }); } catch (e) {}
         bm.className = "form-msg ok";
         bm.innerHTML = "✅ <strong>Marcação feita com sucesso!</strong><br>" +
           (reward ? "🎁 Prémio de fidelidade aplicado — Sobrancelha grátis.<br>" : "") +
