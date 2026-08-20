@@ -97,7 +97,7 @@ window.INOVA_DIC.es = {
 "Técnica fio a fio ultra natural, com consulta de avaliação deduzida no valor do procedimento. Veja o passo a passo sem mistérios.": "Técnica pelo a pelo ultra natural, con la consulta de evaluación descontada del precio del procedimiento. Mira el paso a paso sin misterios.",
 "🎂 Presente de aniversário": "🎂 Regalo de cumpleaños",
 "10% de desconto no <em>seu mês</em>": "10% de descuento en <em>tu mes</em>",
-"Crie a sua conta gratuita e receba automaticamente um cupom de 10% no mês do seu aniversário. É o nosso mimo para si.": "Crea tu cuenta gratuita y recibe automáticamente un cupón del 10% en el mes de tu cumpleaños. Es nuestro detalle para ti.",
+"Crie a sua conta gratuita e receba automaticamente um cupom de 10% na semana do seu aniversário. É o nosso mimo para si.": "Crea tu cuenta gratuita y recibe automáticamente un cupón del 10% en la semana de tu cumpleaños. Es nuestro detalle para ti.",
 "Beleza, precisão e <em>cuidado</em> em cada detalhe": "Belleza, precisión y <em>cuidado</em> en cada detalle",
 "Especialistas em sobrancelhas, pestanas, micropigmentação e depilação com linha. Realce a sua beleza natural com quem trata cada detalhe como arte.": "Especialistas en cejas, pestañas, micropigmentación y depilación con hilo. Realza tu belleza natural con quien trata cada detalle como arte.",
 "Destaques Inova Beauty": "Destacados Inova Beauty",
