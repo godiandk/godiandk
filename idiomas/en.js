@@ -96,7 +96,7 @@ window.INOVA_DIC.en = {
 "Sobrancelhas perfeitas <em>ao acordar</em>": "Perfect eyebrows <em>when you wake up</em>",
 "Técnica fio a fio ultra natural, com consulta de avaliação deduzida no valor do procedimento. Veja o passo a passo sem mistérios.": "Ultra-natural hair-by-hair technique, with the assessment consultation deducted from the procedure price. See the step-by-step, no mysteries.",
 "🎂 Presente de aniversário": "🎂 Birthday gift",
-"10% de desconto no <em>seu mês</em>": "10% off in <em>your month</em>",
+"10% de desconto no seu <em>aniversário</em>": "10% off on your <em>birthday</em>",
 "Crie a sua conta gratuita e receba automaticamente um cupom de 10% na semana do seu aniversário. É o nosso mimo para si.": "Create your free account and automatically receive a 10% coupon in your birthday week. It's our little gift to you.",
 "Beleza, precisão e <em>cuidado</em> em cada detalhe": "Beauty, precision and <em>care</em> in every detail",
 "Especialistas em sobrancelhas, pestanas, micropigmentação e depilação com linha. Realce a sua beleza natural com quem trata cada detalhe como arte.": "Specialists in eyebrows, lashes, micropigmentation and threading. Enhance your natural beauty with someone who treats every detail as art.",
@@ -373,6 +373,37 @@ window.INOVA_DIC.en = {
 "📅 Marcar horário": "📅 Book an appointment",
 "Ver preçário completo": "See full price list",
 "Como é feito": "How it's done",
-"💬 Chat online": "💬 Live chat"
+"💬 Chat online": "💬 Live chat",
+
+/* ---------- porquê escolher-nos ---------- */
+"Confiança": "Trust",
+"Porquê escolher a Inova Beauty": "Why choose Inova Beauty",
+"Técnica especializada": "Specialist technique",
+"Cada sobrancelha, pestana ou micropigmentação é trabalhada ao detalhe, ao seu rosto — nada de moldes iguais para todas.": "Every brow, lash or micropigmentation is worked in detail, to suit your face — no one-size-fits-all templates.",
+"Higiene rigorosa": "Strict hygiene",
+"Material esterilizado e descartável a cada cliente. O seu conforto e segurança vêm sempre em primeiro lugar.": "Sterilised and single-use materials for every client. Your comfort and safety always come first.",
+"Marcação em 1 minuto": "Book in 1 minute",
+"Escolha serviço, dia e hora online e receba a confirmação. Sem filas de mensagens, sem esperas.": "Choose service, day and time online and get your confirmation. No message threads, no waiting.",
+"Cartão de fidelidade": "Loyalty card",
+"Junte 10 selos e ganhe um serviço grátis. E ainda 10% de desconto na semana do seu aniversário.": "Collect 10 stamps and get a free service. Plus 10% off during your birthday week.",
+
+/* ---------- perguntas frequentes ---------- */
+"Dúvidas frequentes": "Frequently asked",
+"Perguntas frequentes": "Frequently asked questions",
+"Como faço uma marcação?": "How do I book?",
+"Quanto tempo demora cada serviço?": "How long does each service take?",
+"A depilação a laser é definitiva?": "Is laser hair removal permanent?",
+"Posso cancelar ou remarcar?": "Can I cancel or reschedule?",
+"Como funciona o cartão de fidelidade?": "How does the loyalty card work?",
+"Os meus dados estão seguros?": "Is my data safe?",
+"É online e demora cerca de 1 minuto: escolha o serviço, o dia e a hora em": "It's online and takes about 1 minute: choose the service, day and time in",
+"e confirme. A sua marcação fica registada diretamente para o estúdio e confirmamos o horário em breve.": "and confirm. Your booking goes straight to the studio and we confirm the time shortly.",
+"Política de Privacidade": "Privacy Policy",
+"Depende do serviço: o threading de sobrancelhas é rápido (cerca de 15 minutos), tratamentos de pestanas e coloração rondam os 30–60 minutos, e a depilação a laser varia entre 15 e 60 minutos conforme a zona. Indicamos sempre a duração ao confirmar.": "It depends on the service: eyebrow threading is quick (around 15 minutes), lash treatments and tinting take about 30–60 minutes, and laser hair removal ranges from 15 to 60 minutes depending on the area. We always tell you the duration when confirming.",
+"Não prometemos resultado \"definitivo\". O laser proporciona uma redução progressiva e duradoura do pelo ao longo das sessões — em média são precisas 6 a 10 sessões, com intervalos de 4 a 6 semanas.": "We don't promise a \"permanent\" result. Laser gives a progressive, long-lasting reduction of hair over the sessions — on average 6 to 10 sessions are needed, 4 to 6 weeks apart.",
+"Claro. Se precisar de alterar ou cancelar, avise-nos com antecedência pelo": "Of course. If you need to change or cancel, let us know in advance via",
+"para libertarmos o horário para outra cliente.": "so we can free up the slot for another client.",
+"Ao criar a sua conta gratuita, junta selos a cada visita. Com 10 selos ganha um serviço grátis. E recebe automaticamente um cupão de 10% de desconto na semana do seu aniversário. 🎂": "When you create your free account, you collect stamps on every visit. With 10 stamps you get a free service. And you automatically receive a 10% discount coupon during your birthday week. 🎂",
+"Sim. Tratamos os seus dados ao abrigo do RGPD e não os vendemos nem cedemos a terceiros. Saiba mais na nossa": "Yes. We process your data under the GDPR and never sell or share it with third parties. Learn more in our"
 
 };
