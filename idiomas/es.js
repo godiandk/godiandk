@@ -96,7 +96,7 @@ window.INOVA_DIC.es = {
 "Sobrancelhas perfeitas <em>ao acordar</em>": "Cejas perfectas <em>al despertar</em>",
 "Técnica fio a fio ultra natural, com consulta de avaliação deduzida no valor do procedimento. Veja o passo a passo sem mistérios.": "Técnica pelo a pelo ultra natural, con la consulta de evaluación descontada del precio del procedimiento. Mira el paso a paso sin misterios.",
 "🎂 Presente de aniversário": "🎂 Regalo de cumpleaños",
-"10% de desconto no <em>seu mês</em>": "10% de descuento en <em>tu mes</em>",
+"10% de desconto no seu <em>aniversário</em>": "10% de descuento en tu <em>cumpleaños</em>",
 "Crie a sua conta gratuita e receba automaticamente um cupom de 10% na semana do seu aniversário. É o nosso mimo para si.": "Crea tu cuenta gratuita y recibe automáticamente un cupón del 10% en la semana de tu cumpleaños. Es nuestro detalle para ti.",
 "Beleza, precisão e <em>cuidado</em> em cada detalhe": "Belleza, precisión y <em>cuidado</em> en cada detalle",
 "Especialistas em sobrancelhas, pestanas, micropigmentação e depilação com linha. Realce a sua beleza natural com quem trata cada detalhe como arte.": "Especialistas en cejas, pestañas, micropigmentación y depilación con hilo. Realza tu belleza natural con quien trata cada detalle como arte.",
@@ -372,6 +372,37 @@ window.INOVA_DIC.es = {
 "💶 Preços": "💶 Precios",
 "📅 Marcar horário": "📅 Reservar cita",
 "Ver preçário completo": "Ver lista de precios completa",
-"💬 Chat online": "💬 Chat en vivo"
+"💬 Chat online": "💬 Chat en vivo",
+
+/* ---------- por qué elegirnos ---------- */
+"Confiança": "Confianza",
+"Porquê escolher a Inova Beauty": "Por qué elegir Inova Beauty",
+"Técnica especializada": "Técnica especializada",
+"Cada sobrancelha, pestana ou micropigmentação é trabalhada ao detalhe, ao seu rosto — nada de moldes iguais para todas.": "Cada ceja, pestaña o micropigmentación se trabaja al detalle, para tu rostro — nada de moldes iguales para todas.",
+"Higiene rigorosa": "Higiene rigurosa",
+"Material esterilizado e descartável a cada cliente. O seu conforto e segurança vêm sempre em primeiro lugar.": "Material esterilizado y desechable con cada cliente. Tu comodidad y seguridad son siempre lo primero.",
+"Marcação em 1 minuto": "Reserva en 1 minuto",
+"Escolha serviço, dia e hora online e receba a confirmação. Sem filas de mensagens, sem esperas.": "Elige servicio, día y hora online y recibe la confirmación. Sin cadenas de mensajes, sin esperas.",
+"Cartão de fidelidade": "Tarjeta de fidelidad",
+"Junte 10 selos e ganhe um serviço grátis. E ainda 10% de desconto na semana do seu aniversário.": "Junta 10 sellos y consigue un servicio gratis. Y además un 10% de descuento en la semana de tu cumpleaños.",
+
+/* ---------- preguntas frecuentes ---------- */
+"Dúvidas frequentes": "Preguntas frecuentes",
+"Perguntas frequentes": "Preguntas frecuentes",
+"Como faço uma marcação?": "¿Cómo hago una reserva?",
+"Quanto tempo demora cada serviço?": "¿Cuánto dura cada servicio?",
+"A depilação a laser é definitiva?": "¿La depilación láser es definitiva?",
+"Posso cancelar ou remarcar?": "¿Puedo cancelar o cambiar la cita?",
+"Como funciona o cartão de fidelidade?": "¿Cómo funciona la tarjeta de fidelidad?",
+"Os meus dados estão seguros?": "¿Mis datos están seguros?",
+"É online e demora cerca de 1 minuto: escolha o serviço, o dia e a hora em": "Es online y tarda alrededor de 1 minuto: elige el servicio, el día y la hora en",
+"e confirme. A sua marcação fica registada diretamente para o estúdio e confirmamos o horário em breve.": "y confirma. Tu reserva queda registrada directamente para el estudio y confirmamos el horario en breve.",
+"Política de Privacidade": "Política de Privacidad",
+"Depende do serviço: o threading de sobrancelhas é rápido (cerca de 15 minutos), tratamentos de pestanas e coloração rondam os 30–60 minutos, e a depilação a laser varia entre 15 e 60 minutos conforme a zona. Indicamos sempre a duração ao confirmar.": "Depende del servicio: el threading de cejas es rápido (unos 15 minutos), los tratamientos de pestañas y coloración rondan los 30–60 minutos, y la depilación láser varía entre 15 y 60 minutos según la zona. Siempre indicamos la duración al confirmar.",
+"Não prometemos resultado \"definitivo\". O laser proporciona uma redução progressiva e duradoura do pelo ao longo das sessões — em média são precisas 6 a 10 sessões, com intervalos de 4 a 6 semanas.": "No prometemos un resultado \"definitivo\". El láser ofrece una reducción progresiva y duradera del vello a lo largo de las sesiones — de media hacen falta de 6 a 10 sesiones, con intervalos de 4 a 6 semanas.",
+"Claro. Se precisar de alterar ou cancelar, avise-nos com antecedência pelo": "Claro. Si necesitas cambiar o cancelar, avísanos con antelación por",
+"para libertarmos o horário para outra cliente.": "para liberar el horario para otra clienta.",
+"Ao criar a sua conta gratuita, junta selos a cada visita. Com 10 selos ganha um serviço grátis. E recebe automaticamente um cupão de 10% de desconto na semana do seu aniversário. 🎂": "Al crear tu cuenta gratuita, juntas sellos en cada visita. Con 10 sellos consigues un servicio gratis. Y recibes automáticamente un cupón de 10% de descuento en la semana de tu cumpleaños. 🎂",
+"Sim. Tratamos os seus dados ao abrigo do RGPD e não os vendemos nem cedemos a terceiros. Saiba mais na nossa": "Sí. Tratamos tus datos conforme al RGPD y no los vendemos ni cedemos a terceros. Más información en nuestra"
 
 };
