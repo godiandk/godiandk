@@ -28,7 +28,14 @@ window.INOVA_DIC.en = {
 "© 2026 Inova Beauty — Todos os direitos reservados. ·": "© 2026 Inova Beauty — All rights reserved. ·",
 "Beleza, precisão e cuidado em cada detalhe.": "Beauty, precision and care in every detail.",
 "Beleza, precisão e cuidado.": "Beauty, precision and care.",
-"Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas, pestanas e micropigmentação.": "Beauty, precision and care in every detail. Specialists in eyebrows, lashes and micropigmentation.",
+"Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas, pestanas e micropigmentação. Em Canidelo, Vila Nova de Gaia.": "Beauty, precision and care in every detail. Specialists in eyebrows, lashes and micropigmentation. In Canidelo, Vila Nova de Gaia.",
+
+/* ---------- localização ---------- */
+"Zona": "Area",
+"Atendemos em Canidelo, Vila Nova de Gaia — na Rua da Bélgica, mesmo em frente à Padaria Mirassol. O atendimento é por marcação e a morada exata é enviada assim que confirma o seu horário.": "We're in Canidelo, Vila Nova de Gaia — on Rua da Bélgica, right across from Padaria Mirassol. We work by appointment and send the exact address as soon as you confirm your booking.",
+"Canidelo, Vila Nova de Gaia — Rua da Bélgica, mesmo em frente à <strong>Padaria Mirassol</strong>. Espaço reservado, por marcação. A morada exata é enviada ao confirmar.": "Canidelo, Vila Nova de Gaia — Rua da Bélgica, right across from <strong>Padaria Mirassol</strong>. A private space, by appointment. The exact address is sent when you confirm.",
+"✨ Marcar e receber a morada": "✨ Book and get the address",
+"Referência: <strong>Padaria Mirassol</strong>, na Rua da Bélgica (Canidelo). Estamos mesmo em frente. A morada exata é reservada e enviada ao confirmar a marcação.": "Reference: <strong>Padaria Mirassol</strong>, on Rua da Bélgica (Canidelo). We're right across the street. The exact address is private and sent when you confirm your booking.",
 
 /* ---------- botões / ações ---------- */
 "Agendar": "Book now",

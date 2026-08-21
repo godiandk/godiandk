@@ -28,7 +28,14 @@ window.INOVA_DIC.es = {
 "© 2026 Inova Beauty — Todos os direitos reservados. ·": "© 2026 Inova Beauty — Todos los derechos reservados. ·",
 "Beleza, precisão e cuidado em cada detalhe.": "Belleza, precisión y cuidado en cada detalle.",
 "Beleza, precisão e cuidado.": "Belleza, precisión y cuidado.",
-"Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas, pestanas e micropigmentação.": "Belleza, precisión y cuidado en cada detalle. Especialistas en cejas, pestañas y micropigmentación.",
+"Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas, pestanas e micropigmentação. Em Canidelo, Vila Nova de Gaia.": "Belleza, precisión y cuidado en cada detalle. Especialistas en cejas, pestañas y micropigmentación. En Canidelo, Vila Nova de Gaia.",
+
+/* ---------- ubicación ---------- */
+"Zona": "Zona",
+"Atendemos em Canidelo, Vila Nova de Gaia — na Rua da Bélgica, mesmo em frente à Padaria Mirassol. O atendimento é por marcação e a morada exata é enviada assim que confirma o seu horário.": "Atendemos en Canidelo, Vila Nova de Gaia — en la Rua da Bélgica, justo enfrente de la Padaria Mirassol. Atendemos con cita previa y enviamos la dirección exacta en cuanto confirmas tu reserva.",
+"Canidelo, Vila Nova de Gaia — Rua da Bélgica, mesmo em frente à <strong>Padaria Mirassol</strong>. Espaço reservado, por marcação. A morada exata é enviada ao confirmar.": "Canidelo, Vila Nova de Gaia — Rua da Bélgica, justo enfrente de la <strong>Padaria Mirassol</strong>. Un espacio reservado, con cita previa. La dirección exacta se envía al confirmar.",
+"✨ Marcar e receber a morada": "✨ Reservar y recibir la dirección",
+"Referência: <strong>Padaria Mirassol</strong>, na Rua da Bélgica (Canidelo). Estamos mesmo em frente. A morada exata é reservada e enviada ao confirmar a marcação.": "Referencia: <strong>Padaria Mirassol</strong>, en la Rua da Bélgica (Canidelo). Estamos justo enfrente. La dirección exacta es reservada y se envía al confirmar la reserva.",
 
 /* ---------- botões / ações ---------- */
 "Agendar": "Reservar",
