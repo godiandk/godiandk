@@ -251,7 +251,8 @@ section { padding: 4.5rem 0; }
 }
 
 @media (max-width: 1200px) {
-  .nav-toggle { display: block; }
+  .nav-toggle { display: block; order: 5; }
+  .nav-right { order: 4; }
   /* backdrop-filter on the header creates a containing block, which would
      make the fixed menu anchor to the header instead of the viewport
      (iOS Safari bug: menu opens at the document top when scrolled down).
