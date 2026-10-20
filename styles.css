@@ -1800,12 +1800,16 @@ body.app-shell {
 .bk-chip:hover, .bk-chip.on { background: var(--gold); color: var(--white); border-color: var(--gold); }
 
 /* ---------- Painel: Disponibilidade ---------- */
-.dp-top { position: sticky; top: 80px; z-index: 6; display: grid; gap: .4rem; margin-bottom: 1rem; }
+.dp-top { position: sticky; top: 80px; z-index: 6; display: grid; gap: .4rem; }
 .dp-status { padding: .65rem .95rem; border-radius: 12px; font-size: .92rem; line-height: 1.4;
   background: var(--cream-2); border: 1px solid var(--gold-faint); }
 .dp-status.ok { color: #1f5a35; background: #e6f2e6; border-color: #b6d8b6; }
 .dp-status.err { color: #8c2c2c; border-color: #e0b4b4; background: #fbf0f0; }
 .dp-status.wait { color: var(--ink-soft); }
+.dp-status.idle { display: none; }
+.dp-top { margin-bottom: .2rem; }
+.dp-status, .dp-selbar { margin-bottom: .4rem; }
+.dp-sclose { border: none; background: none; color: inherit; font-size: 1.1rem; cursor: pointer; float: right; padding: 0 .3rem; line-height: 1; }
 .dp-undo { border: 1px solid currentColor; background: none; color: inherit; border-radius: 999px; padding: .28rem .85rem;
   font: inherit; font-size: .85rem; margin-left: .5rem; cursor: pointer; white-space: nowrap; }
 .dp-selbar { display: flex; align-items: center; gap: .45rem; background: var(--gold); color: #fff;
@@ -1911,7 +1915,7 @@ body.app-shell {
 .dp-row-main span { color: #1f5a35; font-size: .93rem; }
 .dp-row-main em { font-style: normal; font-size: .8rem; background: var(--ink); color: #fff; border-radius: 999px; padding: .1rem .6rem; }
 .dp-row-btns { display: flex; gap: .4rem; }
-.dp-row-btns button { border: 1px solid var(--gold-soft); background: var(--white); border-radius: 999px; padding: .45rem .9rem; font: inherit; font-size: .85rem; cursor: pointer; }
+.dp-row-btns button { border: 1px solid var(--gold-soft); background: var(--white); color: var(--ink); border-radius: 999px; padding: .45rem .9rem; font: inherit; font-size: .85rem; cursor: pointer; }
 .dp-row-btns button:last-child { color: #8c2c2c; border-color: #d9a3a3; }
 
 /* duração, regras, avançado */
