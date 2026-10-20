@@ -122,6 +122,9 @@
       if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(window.INOVA_FIREBASE_CONFIG);
       fbAuth = firebase.auth();
       fbDb = firebase.firestore();
+      // No Safari/iPhone a ligação por streaming pode demorar vários segundos a falhar;
+      // com isto o Firestore passa sozinho para long-polling e responde logo.
+      try { if (fbDb.settings) fbDb.settings({ experimentalAutoDetectLongPolling: true, merge: true }); } catch (e) {}
       try { fbAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL); } catch (e) {}
       backend = "firebase";
       fbAuth.onAuthStateChanged(function (user) {
