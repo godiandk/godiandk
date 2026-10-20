@@ -1958,3 +1958,25 @@ body.app-shell {
 .ag-chk input { width: 20px; height: 20px; accent-color: var(--gold); }
 .ag-modal-box { max-height: 92vh; overflow-y: auto; }
 .ag-modal-box .form-field { margin-bottom: .7rem; }
+
+/* Painel: lista de serviços por categoria */
+.dp-ul { margin: 0 0 .7rem; padding-left: 1.15rem; display: grid; gap: .45rem; }
+.dp-grps { display: grid; gap: .6rem; margin-top: .8rem; }
+.dp-grp { border: 1px solid var(--gold-faint); border-radius: 12px; background: var(--white); padding: .1rem .95rem; }
+.dp-grp > summary { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; cursor: pointer; list-style: none; padding: .85rem 0; }
+.dp-grp > summary::-webkit-details-marker { display: none; }
+.dp-grp > summary::after { content: "+"; margin-left: auto; color: var(--gold); font-size: 1.5rem; line-height: 1; }
+.dp-grp[open] > summary::after { content: "−"; }
+.dp-grp > summary b { font-size: 1rem; font-weight: 500; }
+.dp-grp > summary span { font-size: .78rem; color: #1f5a35; background: #e3f0e1; border-radius: 999px; padding: .15rem .7rem; }
+.dp-grp > summary span.none { color: #8c2c2c; background: #f6e3e3; }
+.dp-grp-btns { display: flex; gap: .5rem; flex-wrap: wrap; margin: 0 0 .5rem; }
+.dp-grp-btns button { border: 1px solid var(--gold-soft); background: var(--white); color: var(--ink); border-radius: 999px; padding: .4rem .85rem; font: inherit; font-size: .82rem; cursor: pointer; }
+.dp-svc { display: grid; gap: .5rem; border-top: 1px dotted var(--gold-faint); padding: .75rem 0; }
+.dp-svc-name { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
+.dp-svc-name span { font-size: .98rem; line-height: 1.3; }
+.dp-svc-name small { color: var(--ink-soft); font-size: .8rem; white-space: nowrap; }
+.dp-svc.off .dp-svc-name span { color: var(--ink-soft); opacity: .7; }
+.dp-svc-ctl { display: flex; align-items: center; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+.dp-tog { display: flex; align-items: center; gap: .55rem; font-size: .92rem; cursor: pointer; }
+.dp-tog input { width: 24px; height: 24px; accent-color: #2f7d4d; }

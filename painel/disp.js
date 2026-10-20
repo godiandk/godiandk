@@ -33,7 +33,7 @@
   var bookings = [], ready = false, synced = false, timer = null;
   var status = { cls: "idle", text: "", undo: false };   // idle = barra escondida
   var hideTimer = null;
-  var open = { ajuda: false, avancado: false, periodo: false };
+  var open = { ajuda: false, avancado: false, periodo: false, grupos: {} };
 
   function C() { return IA.state.cfg; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -233,15 +233,32 @@
         : '<p class="dp-muted">Ainda não escolheu nenhum dia deste mês. <b>As clientes não conseguem marcar.</b> Toque nos dias no calendário acima.</p>') + '</div>';
   }
 
-  /* ---------- duração e regras ---------- */
+  /* ---------- serviços: duração e o que aparece na marcação ---------- */
+  function priceText(v) {
+    var p = IA.priceOf(v);
+    function eur(n) { return n.toFixed(2).replace(".", ",") + "€"; }
+    return p.consulta ? "sob consulta" : (p.base != null ? eur(p.base) : "a partir de " + eur(p.from));
+  }
   function durHtml() {
-    var cfg = C(), h = '<div class="form-card dp-card"><h3>⏱️ Quanto tempo demora cada serviço</h3>' +
-      '<p class="dp-muted">Serve para o site só mostrar horas em que o serviço cabe. Exemplo: um serviço de 2 horas não aparece às 18:30 se acaba de atender às 19:00. Pode mudar quando quiser.</p><div class="dp-dur">';
-    IA.SERVICOS.forEach(function (s) {
-      var cur = IA.durationFor(cfg, s[0]), opts = "", seen = false, m;
-      for (m = 15; m <= 300; m += 15) { if (m === cur) seen = true; opts += '<option value="' + m + '"' + (m === cur ? " selected" : "") + ">" + IA.fmtDur(m) + "</option>"; }
-      if (!seen) opts += '<option value="' + cur + '" selected>' + IA.fmtDur(cur) + "</option>";
-      h += '<div class="dp-durrow"><span>' + esc(s[0]) + '</span><select class="dp-sel" data-dur="' + encodeURIComponent(s[0]) + '">' + opts + '</select></div>';
+    var cfg = C(), h = '<div class="form-card dp-card"><h3>🧾 Serviços: tempo e o que aparece na marcação</h3>' +
+      '<p class="dp-muted">Aqui estão <b>todos os serviços do preçário</b>, por categoria. Toque numa categoria para a abrir. Para cada serviço pode:</p>' +
+      '<ul class="dp-muted dp-ul"><li><b>Escolher quanto tempo demora.</b> O site só mostra horas em que o serviço cabe (um serviço de 2 horas não aparece às 18:30 se acaba de atender às 19:00).</li>' +
+      '<li><b>Desligar “Na marcação”</b> se não quer que as clientes o escolham (ele deixa de aparecer na lista do site e da app).</li></ul>' +
+      '<p class="dp-muted">Os tempos já vêm preenchidos com valores prováveis. <b>Confirme os seus</b> e ajuste o que for diferente.</p><div class="dp-grps">';
+    IA.GRUPOS.forEach(function (g) {
+      var on = g.itens.filter(function (it) { return IA.servicoAtivo(cfg, it); }).length;
+      h += '<details class="dp-grp" data-g="' + g.id + '"' + (open.grupos[g.id] ? " open" : "") + '><summary><b>' + esc(g.nome) + '</b><span class="' + (on ? "" : "none") + '">' +
+        (on === g.itens.length ? "todos na marcação" : (on ? on + " de " + g.itens.length + " na marcação" : "nenhum na marcação")) + '</span></summary>' +
+        '<div class="dp-grp-btns"><button type="button" data-a="grp-on" data-g="' + g.id + '">Ligar todos</button><button type="button" data-a="grp-off" data-g="' + g.id + '">Desligar todos</button></div><div class="dp-dur">';
+      g.itens.forEach(function (it) {
+        var cur = IA.durationFor(cfg, it.v), opts = "", seen = false, m, enc = encodeURIComponent(it.v), isOn = IA.servicoAtivo(cfg, it);
+        for (m = 15; m <= 300; m += 15) { if (m === cur) seen = true; opts += '<option value="' + m + '"' + (m === cur ? " selected" : "") + ">" + IA.fmtDur(m) + "</option>"; }
+        if (!seen) opts += '<option value="' + cur + '" selected>' + IA.fmtDur(cur) + "</option>";
+        h += '<div class="dp-svc' + (isOn ? "" : " off") + '"><div class="dp-svc-name"><span>' + esc(it.l) + '</span><small>' + esc(priceText(it.v)) + '</small></div>' +
+          '<div class="dp-svc-ctl"><label class="dp-tog"><input type="checkbox" data-ativo="' + enc + '"' + (isOn ? " checked" : "") + '> Na marcação</label>' +
+          '<select class="dp-sel" data-dur="' + enc + '" aria-label="Duração de ' + esc(it.l) + '">' + opts + '</select></div></div>';
+      });
+      h += '</div></details>';
     });
     return h + '</div></div>';
   }
@@ -349,6 +366,10 @@
       if (t.checked && !s.janelas.length) s.janelas = [{ de: "09:00", ate: "19:00" }];
       if (!t.checked) s.janelas = [];
       cfg.semanaOk = true; touch(); render();
+    } else if (t.hasAttribute("data-ativo")) {
+      var nm = decodeURIComponent(t.getAttribute("data-ativo")), itm = IA.itemOf(nm);
+      if (t.checked === itm.ativo) delete cfg.ativos[nm]; else cfg.ativos[nm] = t.checked;
+      touch(t.checked ? "“" + itm.l + "” aparece na marcação." : "“" + itm.l + "” deixou de aparecer na marcação.", false); render();
     } else if (t.hasAttribute("data-dur")) {
       cfg.duracoes[decodeURIComponent(t.getAttribute("data-dur"))] = +t.value; touch("Duração guardada.", false);
     } else if (t.hasAttribute("data-rule")) {
@@ -358,7 +379,8 @@
     }
   });
   root.addEventListener("toggle", function (e) {
-    var t = e.target; if (!t || !t.id) return;
+    var t = e.target; if (!t) return;
+    if (t.classList && t.classList.contains("dp-grp")) { open.grupos[t.getAttribute("data-g")] = t.open; return; }
     if (t.id === "dpHelp") open.ajuda = t.open; else if (t.id === "dpAdv") open.avancado = t.open; else if (t.id === "dpPeriodo") open.periodo = t.open;
   }, true);
 
@@ -369,6 +391,12 @@
     else if (a === "nav") { cursor.setMonth(cursor.getMonth() + (+b.getAttribute("data-v"))); render(); }
     else if (a === "pick") { pickDays(b.getAttribute("data-v")); render(); }
     else if (a === "hidestatus") hideStatus();
+    else if (a === "grp-on" || a === "grp-off") {
+      var gid = b.getAttribute("data-g"), on = a === "grp-on", cnt = 0;
+      IA.GRUPOS.forEach(function (g) { if (g.id !== gid) return; g.itens.forEach(function (it) { if (on === it.ativo) delete cfg.ativos[it.v]; else cfg.ativos[it.v] = on; cnt++; }); });
+      open.grupos[gid] = true;
+      touch(pl(cnt, "serviço", "serviços") + (on ? " ligados" : " desligados") + " na marcação.", false); render();
+    }
     else if (a === "clear") { sel = {}; pendingClose = false; render(); }
     else if (a === "unsel") { delete sel[d]; pendingClose = false; render(); }
     else if (a === "goto") scrollTo("dpPanel");

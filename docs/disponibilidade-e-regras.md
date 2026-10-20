@@ -4,7 +4,8 @@ No painel (`/painel/` → **🗓️ Disponibilidade**) define-se:
 
 - os **dias do mês em que atende** e as horas (passo a passo: tocar nos dias, escolher as horas, confirmar), com folgas, vários períodos por dia e escolha de dias seguidos;
 - opcionalmente, um horário fixo semanal (secção "Avançado");
-- a duração de cada serviço, a pausa entre clientes, a antecedência mínima e até quando se aceitam marcações.
+- **todos os serviços do preçário** (79, por categoria): para cada um, a duração e se aparece ou não na marcação;
+- a pausa entre clientes, a antecedência mínima e até quando se aceitam marcações.
 
 Por omissão **nenhum dia está aberto**: as clientes só conseguem marcar nos dias que a administradora escolher.
 Na Agenda do painel há ainda "➕ Nova marcação" (pedidos por WhatsApp/telefone) e "↔ Remarcar".
@@ -44,3 +45,15 @@ Dentro de `match /databases/{database}/documents { ... }`, junto às restantes c
 
 Sem estas regras o site não consegue ler os horários (mostra "Não foi possível carregar os horários" em vez de oferecer
 horas erradas) e as alterações do painel não são guardadas.
+
+## Catálogo de serviços
+
+Os serviços vivem num único catálogo (`disponibilidade.js`, `GRUPOS`): nome guardado na marcação, nome mostrado,
+duração por omissão e preço. É ele que alimenta o formulário do site e da app, a aba Disponibilidade, a Agenda e o
+Faturamento. **Se o preçário mudar, atualizar também o catálogo** — há um teste que compara os dois linha a linha.
+
+- Os nomes antigos (ex.: "Coloração de Sobrancelhas (Henna / Tintura / Descoloração)") continuam a funcionar para as
+  marcações já feitas, mas já não aparecem no formulário.
+- Os grupos "Extensão de Pestanas", "Despigmentação" e "Tratamentos" (Brow Vitamin) estão "temporariamente indisponíveis"
+  no preçário e começam desligados; a administradora liga-os no painel quando voltarem.
+- Os produtos do preçário não são serviços marcáveis e ficam de fora.
