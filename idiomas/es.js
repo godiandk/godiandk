@@ -540,6 +540,7 @@ window.INOVA_DIC.es = {
 "Ao confirmar, aceita a nossa": "Al confirmar, aceptas nuestra",
 "Ao criar conta, aceita a nossa": "Al crear la cuenta, aceptas nuestra",
 "e os": "y los",
-"Termos": "Términos"
+"Termos": "Términos",
+"Não foi possível carregar os horários. Atualize a página ou fale connosco no WhatsApp.": "No hemos podido cargar los horarios. Actualiza la página o escríbenos por WhatsApp."
 
 };

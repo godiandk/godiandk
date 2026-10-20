@@ -468,6 +468,9 @@
       clienteUid: acc ? (acc.uid || acc.phone || null) : null,
       estado: "pendente"
     };
+    if (data.manual) {            // feita pela administradora a pedido da cliente (WhatsApp, telefone…)
+      rec.clienteUid = null; rec.email = ""; rec.origem = "manual"; rec.nome = (data.nome || "").trim();
+    }
     if (backend === "firebase") {
       // guarda mesmo sem sessão (a regra do Firestore permite criar marcações)
       rec.criadoEm = firebase.firestore.FieldValue.serverTimestamp();
@@ -533,6 +536,26 @@
     }
     writeBookings(readBookings().filter(function (m) { return m.id !== id; }));
     return Promise.resolve();
+  }
+
+  /* Remarcar: muda dia/hora, liberta as horas antigas e ocupa as novas (tudo numa operação) */
+  function rescheduleBooking(id, data) {
+    var slots = data.slots || [];
+    if (backend === "firebase") {
+      return fbDb.collection("ocupados").where("marc", "==", id).get()
+        .catch(function () { return { forEach: function () {} }; })
+        .then(function (snap) {
+          var b = fbDb.batch();
+          b.set(fbDb.collection("marcacoes").doc(id), { dia: data.dia, hora: data.hora }, { merge: true });
+          snap.forEach(function (d) { b.delete(d.ref); });
+          slots.forEach(function (sl) { b.set(fbDb.collection("ocupados").doc(sl.id), { dia: sl.dia, min: sl.min, marc: id }); });
+          return b.commit();
+        }).then(function () { return { ok: true }; })
+        .catch(function (e) { return { error: fbErr(e) }; });
+    }
+    var l = readBookings().map(function (m) { if (m.id === id) { m.dia = data.dia; m.hora = data.hora; m.slots = slots; } return m; });
+    writeBookings(l);
+    return Promise.resolve({ ok: true });
   }
 
   /* ---------------- Disponibilidade (dias, horários, durações) ---------------- */
@@ -754,6 +777,7 @@
     listBookings: listBookings,
     updateBooking: updateBooking,
     deleteBooking: deleteBooking,
+    rescheduleBooking: rescheduleBooking,
     getAgendaCfg: getAgendaCfg,
     saveAgendaCfg: saveAgendaCfg,
     listOcupados: listOcupados,

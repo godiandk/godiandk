@@ -2,8 +2,12 @@
 
 No painel (`/painel/` → **🗓️ Disponibilidade**) define-se:
 
-- o horário semanal (vários intervalos por dia), dias bloqueados, horários especiais e períodos de férias;
+- os **dias do mês em que atende** e as horas (passo a passo: tocar nos dias, escolher as horas, confirmar), com folgas, vários períodos por dia e escolha de dias seguidos;
+- opcionalmente, um horário fixo semanal (secção "Avançado");
 - a duração de cada serviço, a pausa entre clientes, a antecedência mínima e até quando se aceitam marcações.
+
+Por omissão **nenhum dia está aberto**: as clientes só conseguem marcar nos dias que a administradora escolher.
+Na Agenda do painel há ainda "➕ Nova marcação" (pedidos por WhatsApp/telefone) e "↔ Remarcar".
 
 A configuração fica em `config/agenda`. Cada marcação ocupa registos de 15 min em `ocupados/{AAAA-MM-DD_HHMM}`, gravados
 na mesma operação que a marcação — se duas clientes escolherem o mesmo horário, só uma consegue.
@@ -38,5 +42,5 @@ Dentro de `match /databases/{database}/documents { ... }`, junto às restantes c
     }
 ```
 
-Sem estas regras o site continua a funcionar (usa o horário habitual 09h–19h, segunda a sábado), mas as alterações do
-painel não são guardadas e não há proteção contra marcações no mesmo horário.
+Sem estas regras o site não consegue ler os horários (mostra "Não foi possível carregar os horários" em vez de oferecer
+horas erradas) e as alterações do painel não são guardadas.

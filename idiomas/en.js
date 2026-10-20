@@ -542,6 +542,7 @@ window.INOVA_DIC.en = {
 "Ao confirmar, aceita a nossa": "By confirming, you accept our",
 "Ao criar conta, aceita a nossa": "By creating an account, you accept our",
 "e os": "and the",
-"Termos": "Terms"
+"Termos": "Terms",
+"Não foi possível carregar os horários. Atualize a página ou fale connosco no WhatsApp.": "We couldn't load the available times. Please refresh the page or message us on WhatsApp."
 
 };

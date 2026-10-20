@@ -34,6 +34,7 @@
 <meta name="twitter:title" content="Painel — Inova Beauty">
 <meta name="twitter:description" content="Área reservada Inova Beauty: marcações, geração e validação de cupons.">
 <meta name="twitter:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
+<style>.app-float,.wa-float,.chat-fab,.chat-panel{display:none!important}</style>
 </head>
 <body data-no-chat>
 <header class="site-header">
@@ -123,7 +124,9 @@
             <input type="date" id="agDate" class="ag-datepick">
             <button type="button" class="btn btn-outline ag-today" id="agRefresh">↻</button>
           </div>
+          <button type="button" class="dp-big go" id="agNew" style="margin:.3rem 0 1rem">➕ Nova marcação<small>para pedidos que chegaram por WhatsApp ou telefone</small></button>
           <div class="ag-label" id="agLabel"></div>
+          <div class="ag-dayinfo" id="agInfo"></div>
           <p class="form-hint">Toque numa marcação para ver detalhes, marcar como concluída ou apagar. As zonas sombreadas são horas sem atendimento (defina-as na aba Disponibilidade).</p>
           <div class="form-msg" id="agMsg"></div>
           <div id="agGrid" class="mt-1"></div>
@@ -685,8 +688,20 @@
     return "Semana de " + pad(mon.getDate()) + "/" + pad(mon.getMonth()+1) + " a " + pad(sun.getDate()) + "/" + pad(sun.getMonth()+1) + "/" + sun.getFullYear();
   }
   function grid() { return document.getElementById("agGrid"); }
+  function dayInfoHtml() {
+    var IA = window.InovaAgenda, cfg = IA.state.cfg;
+    if (view === "dia") {
+      var wins = IA.windowsFor(cfg, ymd(anchor)).map(function (w) { return IA.fromMin(w.de) + " às " + IA.fromMin(w.ate); });
+      return wins.length ? '<span class="ag-on">🟢 Atende: ' + wins.join(" e ") + '</span>'
+        : '<span class="ag-offtxt">⚪ Folga — as clientes não conseguem marcar neste dia.</span> <a href="#" data-goto-disp style="color:var(--gold)">Abrir este dia para atender</a>';
+    }
+    var mon = mondayOf(anchor), n = 0;
+    for (var i = 0; i < 7; i++) { var d = new Date(mon); d.setDate(mon.getDate() + i); if (IA.windowsFor(cfg, ymd(d)).length) n++; }
+    return '<span class="' + (n ? "ag-on" : "ag-offtxt") + '">' + (n ? "🟢 Atende em " + n + (n === 1 ? " dia" : " dias") + " desta semana." : "⚪ Sem dias de atendimento nesta semana.") + '</span>';
+  }
   function draw() {
     document.getElementById("agLabel").textContent = label();
+    document.getElementById("agInfo").innerHTML = dayInfoHtml();
     document.getElementById("agDate").value = ymd(anchor);
     grid().innerHTML = view === "dia" ? renderDay() : renderWeek();
     grid().querySelectorAll(".ag-block").forEach(function (b) { b.addEventListener("click", function () { openModal(b.getAttribute("data-id")); }); });
@@ -696,14 +711,14 @@
     grid().innerHTML = '<p class="form-hint">A carregar…</p>';
     // mostra logo as marcações; a configuração de horários chega em paralelo e redesenha as zonas sombreadas
     window.InovaAgenda.loadCfg().then(function () { if (cache) draw(); });
-    AZ.listBookings().then(function (list) { cache = list || []; draw(); })
+    AZ.listBookings().then(function (list) { cache = list || []; draw(); if (window.InovaDispRefresh) window.InovaDispRefresh(cache); })
       .catch(function (e) { msg.className = "form-msg err"; msg.textContent = "Erro: " + (e.message || e); });
   }
 
   var modal = null;
   function ensureModal() {
     if (modal) return;
-    modal = document.createElement("div"); modal.className = "ag-modal"; modal.style.display = "none";
+    modal = document.createElement("div"); modal.className = "ag-modal"; modal.style.display = "none"; modal.setAttribute("data-sem-traducao", "");
     modal.innerHTML = '<div class="ag-modal-box"><button class="ag-modal-x" type="button">×</button><div class="ag-modal-body"></div><div class="ag-modal-actions"></div></div>';
     document.body.appendChild(modal);
     modal.addEventListener("click", function (e) { if (e.target === modal) closeM(); });
@@ -726,10 +741,75 @@
       '<p class="agm-val">💰 ' + val + '</p>';
     var act = modal.querySelector(".ag-modal-actions");
     act.innerHTML = '<button type="button" class="btn btn-outline" data-act="done">' + (done ? "Reabrir" : "Marcar concluída") + '</button>' +
+      '<button type="button" class="btn btn-outline" data-act="move">↔ Remarcar</button>' +
       '<button type="button" class="btn btn-outline" data-act="del" style="border-color:#a33;color:#a33">Apagar</button>';
+    act.querySelector('[data-act="move"]').onclick = function () { openForm("move", m); };
     act.querySelector('[data-act="done"]').onclick = function () { AZ.updateBooking(id, { estado: done ? "pendente" : "concluida" }).then(function () { closeM(); renderAgenda(); }); };
-    act.querySelector('[data-act="del"]').onclick = function () { if (confirm("Apagar esta marcação?")) AZ.deleteBooking(id).then(function () { closeM(); renderAgenda(); }); };
+    act.querySelector('[data-act="del"]').onclick = function () { if (confirm("Apagar esta marcação? O horário volta a ficar livre para as clientes.")) AZ.deleteBooking(id).then(function () { closeM(); renderAgenda(); }); };
     modal.style.display = "flex";
+  }
+
+  /* ---- nova marcação manual e remarcar ---- */
+  function todayStr() { return ymd(new Date()); }
+  function openForm(kind, m) {
+    var IA = window.InovaAgenda;
+    ensureModal();
+    var isMove = kind === "move";
+    var servOpts = IA.SERVICOS.map(function (s) { return '<option' + (isMove && m.servico === s[0] ? " selected" : "") + '>' + esc(s[0]) + '</option>'; }).join("");
+    modal.querySelector(".ag-modal-body").innerHTML =
+      '<h3>' + (isMove ? "↔ Remarcar" : "➕ Nova marcação") + '</h3>' +
+      '<p class="agm-line" style="font-size:.88rem;color:var(--ink-soft)">' + (isMove
+        ? 'Escolha o novo dia e a nova hora de <b>' + esc(m.nome || "cliente") + '</b>. O horário antigo fica livre.'
+        : 'Use para pedidos que chegaram por WhatsApp ou telefone. O horário fica ocupado e deixa de aparecer às clientes.') + '</p>' +
+      (isMove ? '' : '<div class="form-field"><label for="nmName">Nome da cliente*</label><input id="nmName" type="text" autocomplete="off"></div>' +
+        '<div class="form-field"><label for="nmPhone">Telemóvel (opcional)</label><input id="nmPhone" type="tel"></div>') +
+      '<div class="form-field"><label for="nmServ">Serviço</label><select id="nmServ"' + (isMove ? " disabled" : "") + '>' + servOpts + '</select></div>' +
+      '<div class="form-field"><label for="nmDay">Dia</label><input id="nmDay" type="date" min="' + todayStr() + '" value="' + (isMove ? m.dia : ymd(anchor)) + '"></div>' +
+      '<div class="form-field"><label for="nmTime">Hora</label><select id="nmTime"><option value="">A carregar…</option></select></div>' +
+      '<label class="ag-chk"><input type="checkbox" id="nmAny"> Mostrar também horas fora do meu horário de atendimento</label>' +
+      (isMove ? '' : '<div class="form-field"><label for="nmNotes">Notas (opcional)</label><input id="nmNotes" type="text"></div>') +
+      '<div class="form-msg" id="nmMsg"></div>';
+    var act = modal.querySelector(".ag-modal-actions");
+    act.innerHTML = '<button type="button" class="btn btn-gold" data-act="save">' + (isMove ? "Guardar nova hora" : "Guardar marcação") + '</button>' +
+      '<button type="button" class="btn btn-outline" data-act="cancel">Cancelar</button>';
+    modal.style.display = "flex";
+    var $ = function (id) { return modal.querySelector("#" + id); }, occList = [];
+    function setMsg(cls, t) { var e = $("nmMsg"); e.className = "form-msg " + cls; e.textContent = t; }
+    function fillTimes() {
+      var occ = IA.occMap(occList.filter(function (x) { return !isMove || x.marc !== m.id; }));
+      var times = IA.availableTimes(IA.state.cfg, occ, $("nmDay").value, $("nmServ").value, new Date(), { admin: true, todasAsHoras: $("nmAny").checked });
+      var sel = $("nmTime"), prev = sel.value; sel.innerHTML = "";
+      if (!times.length) { sel.appendChild(new Option($("nmAny").checked ? "Sem horas livres neste dia" : "Sem horas livres no seu horário", "")); return; }
+      times.forEach(function (t) { sel.appendChild(new Option(t, t)); });
+      if (isMove && $("nmDay").value === m.dia && times.indexOf(m.hora) >= 0 && !prev) sel.value = m.hora; else if (times.indexOf(prev) >= 0) sel.value = prev;
+    }
+    function reload() { return AZ.listOcupados(todayStr()).then(function (r) { occList = r.list || []; fillTimes(); }); }
+    ["nmDay", "nmServ", "nmAny"].forEach(function (id) { $(id).addEventListener("change", fillTimes); });
+    reload();
+    act.querySelector('[data-act="cancel"]').onclick = closeM;
+    act.querySelector('[data-act="save"]').onclick = function () {
+      var dia = $("nmDay").value, hora = $("nmTime").value, serv = isMove ? m.servico : $("nmServ").value;
+      if (!isMove && !$("nmName").value.trim()) return setMsg("err", "Escreva o nome da cliente.");
+      if (!dia || !hora) return setMsg("err", "Escolha o dia e uma hora livre.");
+      var btn = act.querySelector('[data-act="save"]'); btn.disabled = true;
+      reload().then(function () {
+        var occ = IA.occMap(occList.filter(function (x) { return !isMove || x.marc !== m.id; }));
+        if (IA.availableTimes(IA.state.cfg, occ, dia, serv, new Date(), { admin: true, todasAsHoras: true }).indexOf(hora) < 0) {
+          btn.disabled = false; return setMsg("err", "Essa hora já não está livre. Escolha outra.");
+        }
+        var slots = IA.slotsFor(IA.state.cfg, serv, dia, IA.toMin(hora));
+        var job = isMove ? AZ.rescheduleBooking(m.id, { dia: dia, hora: hora, slots: slots })
+          : AZ.saveBooking({ manual: true, nome: $("nmName").value, telefone: $("nmPhone").value, servico: serv, dia: dia, hora: hora, observacoes: $("nmNotes").value, slots: slots });
+        job.then(function (r) {
+          btn.disabled = false;
+          if (r && r.conflito) { reload(); return setMsg("err", "Essa hora acabou de ser ocupada. Escolha outra."); }
+          if (r && r.error) return setMsg("err", "Não foi possível guardar: " + r.error);
+          anchor = parseYmd(dia); closeM(); renderAgenda();
+          var msg = document.getElementById("agMsg"); msg.className = "form-msg ok";
+          msg.textContent = isMove ? "✅ Marcação passada para " + dfmt(dia) + " às " + hora + "." : "✅ Marcação guardada para " + dfmt(dia) + " às " + hora + ".";
+        });
+      });
+    };
   }
 
   function rangeFor(period) {
@@ -785,6 +865,10 @@
     document.getElementById("agNext").addEventListener("click", function () { step(1); });
     document.getElementById("agToday").addEventListener("click", function () { anchor = new Date(); anchor.setHours(0,0,0,0); draw(); });
     document.getElementById("agRefresh").addEventListener("click", renderAgenda);
+    document.getElementById("agNew").addEventListener("click", function () { openForm("new"); });
+    document.getElementById("agInfo").addEventListener("click", function (e) {
+      if (e.target && e.target.hasAttribute && e.target.hasAttribute("data-goto-disp")) { e.preventDefault(); var t = document.querySelector('[data-tab="disp"]'); if (t) t.click(); }
+    });
     document.getElementById("agDate").addEventListener("change", function () { if (this.value) { anchor = parseYmd(this.value); draw(); } });
     document.getElementById("fatPeriod").addEventListener("change", renderFat);
     document.getElementById("fatFrom").addEventListener("change", renderFat);
