@@ -18,22 +18,179 @@ window.InovaAgenda = (function () {
 
   var U = 15;   // unidade de ocupação (minutos)
 
-  // Serviços do formulário de marcação e duração por omissão (minutos)
-  var SERVICOS = [
-    ["Threading de Sobrancelhas", 30],
-    ["Brow Lamination", 60],
-    ["Alisamento de Sobrancelhas", 60],
-    ["Coloração de Sobrancelhas (Henna / Tintura / Descoloração)", 45],
-    ["Lifting de Pestanas", 60],
-    ["Lifting + Tintura de Pestanas", 75],
-    ["Permanente de Pestanas", 60],
-    ["Tintura de Pestanas", 30],
-    ["Micropigmentação de Sobrancelhas", 120],
-    ["Hidraglos de Lábios", 45],
-    ["Threading (rosto)", 30],
-    ["Depilação a Laser", 30],
-    ["Outro (indico na mensagem)", 30]
+  /* ============================================================
+     CATÁLOGO DE SERVIÇOS — todos os serviços do preçário.
+       v = nome guardado na marcação (único)      l = nome mostrado na lista
+       d = duração por omissão, em minutos        p = preço do preçário:
+           {b: valor} fixo · {f: valor} "a partir de" · {c: 1} sob consulta
+     Grupos com `off: true` estão "temporariamente indisponíveis" no preçário
+     e não aparecem na marcação (a administradora pode ligá-los no painel).
+     ============================================================ */
+  function b_(n) { return { b: n }; }
+  var CONS = { c: 1 };
+  var GRUPOS = [
+    { id: "thr", nome: "Threading — Depilação com Linha", itens: [
+      ["Threading de Sobrancelhas", "Sobrancelhas", 30, b_(10.5)],
+      ["Threading — Buço", "Buço", 15, b_(5)],
+      ["Threading — Queixo", "Queixo", 15, b_(6)],
+      ["Threading — Meio das Sobrancelhas", "Meio das Sobrancelhas", 15, b_(6)],
+      ["Threading — Maçãs do Rosto", "Maçãs do Rosto", 15, b_(5.5)],
+      ["Threading — Face", "Face", 30, b_(12)],
+      ["Threading — Testa", "Testa", 15, b_(7.5)],
+      ["Threading — Pescoço", "Pescoço", 30, b_(10.5)],
+      ["Threading — Nariz", "Nariz", 15, b_(4)],
+      ["Threading — Orelhas", "Orelhas", 15, b_(6.5)],
+      ["Threading — Mãos", "Mãos", 30, b_(9)],
+      ["Threading — Dedos", "Dedos", 15, b_(5)],
+      ["Threading — Sobrancelhas + Buço", "Sobrancelhas + Buço", 30, b_(15)],
+      ["Threading — Rosto Completo", "Rosto Completo", 60, b_(35)]
+    ] },
+    { id: "hom", nome: "Threading — Homem", itens: [
+      ["Threading Homem — Sobrancelhas", "Sobrancelhas", 30, b_(10.5)],
+      ["Threading Homem — Maçãs do Rosto / Contorno da Barba", "Maçãs do Rosto / Contorno da Barba", 30, b_(7.5)],
+      ["Threading Homem — Patilhas", "Patilhas", 15, b_(9.5)]
+    ] },
+    { id: "teen", nome: "Teen (até 18 anos)", itens: [
+      ["Teen Brows", "Teen Brows", 30, b_(10.5)],
+      ["Teen Brows + Buço", "Teen Brows + Buço", 30, b_(18.5)]
+    ] },
+    { id: "col", nome: "Coloração de Sobrancelhas", itens: [
+      ["Coloração — Henna", "Henna", 45, b_(26.5)],
+      ["Coloração — Tintura de Sobrancelhas", "Tintura", 30, b_(24)],
+      ["Coloração — Descoloração de Sobrancelhas", "Descoloração de Sobrancelhas", 45, b_(27.5)],
+      ["Coloração — Henna + Threading", "Henna + Threading", 60, b_(36.4)],
+      ["Coloração — Tintura + Threading", "Tintura + Threading", 45, b_(34.2)]
+    ] },
+    { id: "brow", nome: "Sobrancelhas — Tratamentos", itens: [
+      ["Brow Lamination", "Brow Lamination", 60, b_(35)],
+      ["Alisamento de Sobrancelhas", "Alisamento de Sobrancelhas", 60, b_(35)],
+      ["Brow Care", "Brow Care", 15, b_(8.5)],
+      ["Brow Lamination + Threading", "Brow Lamination + Threading", 75, b_(44.1)],
+      ["Brow Lamination + Tintura", "Brow Lamination + Tintura", 90, b_(53.1)],
+      ["Alisamento + Threading", "Alisamento + Threading", 75, b_(44.1)],
+      ["Alisamento + Tintura", "Alisamento + Tintura", 90, b_(53.1)]
+    ] },
+    { id: "pest", nome: "Pestanas", itens: [
+      ["Lifting de Pestanas", "Lifting de Pestanas", 60, b_(31)],
+      ["Permanente de Pestanas", "Permanente de Pestanas", 60, b_(31)],
+      ["Tintura de Pestanas", "Tintura de Pestanas", 30, b_(24)],
+      ["Lash Care", "Lash Care", 15, b_(8.5)],
+      ["Lifting + Tintura de Pestanas", "Lifting + Tintura de Pestanas", 75, b_(49.5)],
+      ["Permanente + Tintura de Pestanas", "Permanente + Tintura de Pestanas", 75, b_(49.5)]
+    ] },
+    { id: "micro", nome: "Micropigmentação — Sobrancelhas", itens: [
+      ["Micropigmentação — Consulta de Avaliação", "Consulta de Avaliação", 30, b_(35)],
+      ["Micropigmentação de Sobrancelhas", "Sobrancelhas", 150, b_(225)],
+      ["Micropigmentação — Retoque até 60 dias", "Retoque até 60 dias", 90, b_(75)],
+      ["Micropigmentação — Retoque até 1 ano", "Retoque até 1 ano", 120, b_(179)]
+    ] },
+    { id: "hidra", nome: "Hidraglos — Lábios", itens: [
+      ["Hidraglos com Cor", "Hidraglos com Cor", 45, CONS],
+      ["Hidraglos sem Cor", "Hidraglos sem Cor", 45, b_(65)]
+    ] },
+    { id: "laser", nome: "Depilação a Laser", itens: [
+      ["Laser — Buço", "Buço", 15, b_(8)],
+      ["Laser — Axilas", "Axilas", 15, b_(15)],
+      ["Laser — Virilha Normal", "Virilha Normal", 30, b_(20)],
+      ["Laser — Virilha + Perianal", "Virilha + Perianal", 30, b_(30)],
+      ["Laser — Meia Perna", "Meia Perna", 30, b_(25)],
+      ["Laser — Perna Completa", "Perna Completa", 45, b_(30)],
+      ["Laser — Patilhas", "Patilhas", 15, b_(8)],
+      ["Laser — Antebraços", "Antebraços", 30, b_(15)],
+      ["Laser — Braços", "Braços", 30, b_(20)],
+      ["Laser — Glúteos", "Glúteos", 30, b_(20)],
+      ["Laser — Queixo", "Queixo", 15, b_(15)],
+      ["Laser — Nariz", "Nariz", 15, b_(8)],
+      ["Laser — Orelhas", "Orelhas", 15, b_(8)],
+      ["Laser — Entre Sobrancelhas", "Entre Sobrancelhas", 15, b_(7)],
+      ["Laser — Maçãs do Rosto", "Maçãs do Rosto", 15, b_(8)],
+      ["Laser — Lombar", "Lombar", 15, b_(10)],
+      ["Laser — Costas Completas", "Costas Completas", 60, b_(35)],
+      ["Laser — Pés", "Pés", 30, b_(10)],
+      ["Laser — Mãos", "Mãos", 30, b_(10)],
+      ["Laser — Abdómen", "Abdómen", 45, b_(35)],
+      ["Laser — Axilas + Virilha", "Axilas + Virilha", 45, b_(25)],
+      ["Laser — Buço + Queixo", "Buço + Queixo", 30, b_(15)],
+      ["Laser — Rosto Completo", "Rosto Completo", 45, b_(25)],
+      ["Laser — Pernas + Axilas + Virilha", "Pernas + Axilas + Virilha", 60, b_(35)],
+      ["Depilação a Laser", "Outra zona (indico nas observações)", 30, CONS]
+    ] },
+    { id: "ext", nome: "Extensão de Pestanas", off: true, itens: [
+      ["Extensão — Pestanas Express", "Pestanas Express", 60, b_(40)],
+      ["Extensão — 1ª Aplicação", "1ª Aplicação", 105, b_(65)],
+      ["Extensão — Manutenção até 4 semanas", "Manutenção até 4 semanas", 60, b_(45)],
+      ["Extensão — Manutenção até 6 semanas", "Manutenção até 6 semanas", 75, b_(55)],
+      ["Extensão — Remoção de Pestanas", "Remoção de Pestanas", 30, b_(16)],
+      ["Extensão — Remoção (não aplicadas na clínica)", "Remoção (não aplicadas na clínica)", 45, b_(30)]
+    ] },
+    { id: "desp", nome: "Despigmentação", off: true, itens: [
+      ["Despigmentação de Sobrancelhas — 1ª Sessão", "Despigmentação de Sobrancelhas — 1ª Sessão", 60, b_(75)],
+      ["Despigmentação — Sessão de Manutenção", "Sessão de Manutenção", 60, b_(65)]
+    ] },
+    { id: "trat", nome: "Tratamentos", off: true, itens: [
+      ["Brow Vitamin", "Brow Vitamin", 45, b_(75)],
+      ["Pack 4 sessões Brow Vitamin", "Pack 4 sessões Brow Vitamin", 45, b_(280)]
+    ] },
+    { id: "outro", nome: "Outro", itens: [
+      ["Outro (indico na mensagem)", "Outro (indico na mensagem)", 30, CONS]
+    ] }
   ];
+  // Nomes antigos (marcações já feitas antes do catálogo completo): continuam a ter duração e preço.
+  var LEGADO = [
+    ["Coloração de Sobrancelhas (Henna / Tintura / Descoloração)", 45, { f: 24 }],
+    ["Hidraglos de Lábios", 45, { f: 65 }],
+    ["Threading (rosto)", 30, { f: 4 }]
+  ];
+  GRUPOS.forEach(function (g) {
+    g.itens = g.itens.map(function (i) { return { v: i[0], l: i[1], d: i[2], p: i[3], ativo: !g.off, grupo: g.nome }; });
+  });
+  var PRECOS = {}, DUR0 = {};
+  GRUPOS.forEach(function (g) { g.itens.forEach(function (i) { PRECOS[i.v] = i.p; DUR0[i.v] = i.d; }); });
+  LEGADO.forEach(function (i) { PRECOS[i[0]] = i[2]; DUR0[i[0]] = i[1]; });
+
+  /* Preço de um serviço: { base } | { from } | { consulta:true } (aceita nomes com sufixo, ex. "(PRÉMIO…)") */
+  function priceOf(serv) {
+    var best = null;
+    if (!serv) return { consulta: true };
+    if (PRECOS[serv]) best = serv;
+    else Object.keys(PRECOS).forEach(function (k) { if (serv.indexOf(k) === 0 && (!best || k.length > best.length)) best = k; });
+    var p = best && PRECOS[best];
+    if (!p || p.c) return { consulta: true };
+    return p.b != null ? { base: p.b } : { from: p.f };
+  }
+  function itemOf(v) { for (var i = 0; i < GRUPOS.length; i++) for (var j = 0; j < GRUPOS[i].itens.length; j++) if (GRUPOS[i].itens[j].v === v) return GRUPOS[i].itens[j]; return null; }
+  /* Está visível na marcação? (a administradora pode ligar/desligar no painel) */
+  function servicoAtivo(cfg, item) {
+    var a = cfg && cfg.ativos;
+    if (a && Object.prototype.hasOwnProperty.call(a, item.v)) return a[item.v] !== false;
+    return item.ativo;
+  }
+  /* Grupos só com os serviços visíveis na marcação */
+  function gruposAtivos(cfg) {
+    return GRUPOS.map(function (g) { return { id: g.id, nome: g.nome, itens: g.itens.filter(function (i) { return servicoAtivo(cfg, i); }) }; })
+      .filter(function (g) { return g.itens.length; });
+  }
+  function trLabel(s, lang) {
+    try {
+      var l = lang || (window.InovaI18N && window.InovaI18N.atual && window.InovaI18N.atual());
+      var d = l && l !== "pt" && window.INOVA_DIC && window.INOVA_DIC[l];
+      return (d && d[s]) || s;
+    } catch (e) { return s; }
+  }
+  /* Preenche a lista de serviços (agrupada por categoria). opts: todos, placeholder (false = sem), lang */
+  function fillServiceSelect(sel, cfg, opts) {
+    opts = opts || {};
+    var keep = sel.value;
+    sel.innerHTML = "";
+    if (opts.placeholder !== false) sel.appendChild(new Option(trLabel("Escolha o serviço…", opts.lang), ""));
+    (opts.todos ? GRUPOS : gruposAtivos(cfg)).forEach(function (g) {
+      var og = document.createElement("optgroup");
+      og.label = trLabel(g.nome, opts.lang);
+      g.itens.forEach(function (i) { og.appendChild(new Option(trLabel(i.l, opts.lang), i.v)); });
+      sel.appendChild(og);
+    });
+    if (keep) { for (var k = 0; k < sel.options.length; k++) if (sel.options[k].value === keep) { sel.value = keep; break; } }
+  }
   var WD = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
   var MO = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 
@@ -47,14 +204,14 @@ window.InovaAgenda = (function () {
   function validHm(s) { return /^\d{1,2}:\d{2}$/.test(String(s || "")); }
   function copy(o) { return JSON.parse(JSON.stringify(o)); }
 
-  function defaultDurations() { var o = {}; SERVICOS.forEach(function (s) { o[s[0]] = s[1]; }); return o; }
+  function defaultDurations() { var o = {}; Object.keys(DUR0).forEach(function (k) { o[k] = DUR0[k]; }); return o; }
 
   /* Ponto de partida: nenhum dia está aberto. A administradora escolhe no calendário
      os dias em que atende (ou define um horário fixo semanal, se tiver). */
   function defaults() {
     var semana = {};
     for (var i = 0; i < 7; i++) semana[i] = { aberto: false, janelas: [] };
-    return { passo: 30, buffer: 0, antecedenciaH: 2, horizonte: 90, semanaOk: false, semana: semana, dias: {}, duracoes: defaultDurations() };
+    return { passo: 30, buffer: 0, antecedenciaH: 2, horizonte: 90, semanaOk: false, semana: semana, dias: {}, ativos: {}, duracoes: defaultDurations() };
   }
 
   function cleanWins(list) {
@@ -93,6 +250,9 @@ window.InovaAgenda = (function () {
         if (e.aberto === false) d.dias[k] = { aberto: false };
         else d.dias[k] = { aberto: true, janelas: cleanWins(e.janelas) };
       });
+    }
+    if (raw.ativos && typeof raw.ativos === "object") {
+      Object.keys(raw.ativos).forEach(function (k) { if (DUR0[k] != null && typeof raw.ativos[k] === "boolean") d.ativos[k] = raw.ativos[k]; });
     }
     if (raw.duracoes) {
       Object.keys(raw.duracoes).forEach(function (k) {
@@ -271,6 +431,11 @@ window.InovaAgenda = (function () {
     // mostra já a última configuração conhecida (se houver) enquanto a rede responde
     (function () { var c = cacheRead(); if (c) { st.cfg = normalize(c); state.cfg = st.cfg; st.fromCache = true; } })();
 
+    function fillServices() {
+      if (o.service.disabled) return;          // prémio de fidelidade em curso: não mexer na lista
+      fillServiceSelect(o.service, st.cfg, {});
+    }
+
     function setLimits() {
       var di = o.date; if (!di) return;
       di.min = today();
@@ -294,6 +459,13 @@ window.InovaAgenda = (function () {
     function refresh() {
       var serv = o.service.value, dia = o.date.value, prev = o.time.value;
       setLimits();
+      if (!serv) {
+        o.time.innerHTML = "";
+        o.time.appendChild(new Option("Escolha primeiro o serviço", ""));
+        if (o.info) o.info.innerHTML = "";
+        if (o.days) o.days.innerHTML = "";
+        return;
+      }
       var dur = durationFor(st.cfg, serv);
       var durHtml = '<span>Duração aproximada:</span> <b>' + fmtDur(dur) + '</b>';
       o.time.innerHTML = "";
@@ -341,17 +513,17 @@ window.InovaAgenda = (function () {
       o.date.value = b.getAttribute("data-dia");
       refresh();
     });
-    document.addEventListener("click", function (e) {
-      if (e.target.closest && e.target.closest(".lang-btn,.lang-opt,[data-lang]")) setTimeout(refresh, 120);
-    });
+    // o sistema de idiomas avisa quando arranca e sempre que se muda de idioma
+    document.addEventListener("inova:idioma", function () { fillServices(); refresh(); });
 
+    fillServices();
     refresh();
-    load().then(refresh);
-    return { refresh: refresh, confirm: confirm, reload: function () { return load().then(refresh); } };
+    load().then(function () { fillServices(); refresh(); });
+    return { refresh: refresh, confirm: confirm, reload: function () { return load().then(function () { fillServices(); refresh(); }); } };
   }
 
   return {
-    U: U, SERVICOS: SERVICOS, WD: WD, MO: MO, state: state, loadCfg: loadCfg,
+    U: U, GRUPOS: GRUPOS, priceOf: priceOf, itemOf: itemOf, servicoAtivo: servicoAtivo, gruposAtivos: gruposAtivos, fillServiceSelect: fillServiceSelect, trLabel: trLabel, WD: WD, MO: MO, state: state, loadCfg: loadCfg,
     defaults: defaults, normalize: normalize, copy: copy, cleanWins: cleanWins,
     windowsFor: windowsFor, weeklyWindows: weeklyWindows, dayMode: dayMode,
     durationFor: durationFor, blockLength: blockLength, slotsFor: slotsFor,

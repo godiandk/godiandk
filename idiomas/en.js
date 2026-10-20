@@ -543,6 +543,16 @@ window.INOVA_DIC.en = {
 "Ao criar conta, aceita a nossa": "By creating an account, you accept our",
 "e os": "and the",
 "Termos": "Terms",
-"Não foi possível carregar os horários. Atualize a página ou fale connosco no WhatsApp.": "We couldn't load the available times. Please refresh the page or message us on WhatsApp."
+"Não foi possível carregar os horários. Atualize a página ou fale connosco no WhatsApp.": "We couldn't load the available times. Please refresh the page or message us on WhatsApp.",
+"Brow Lamination + Threading": "Brow Lamination + Threading",
+"Brow Lamination + Tintura": "Brow Lamination + Tint",
+"Alisamento + Threading": "Straightening + Threading",
+"Alisamento + Tintura": "Straightening + Tint",
+"Permanente + Tintura de Pestanas": "Lash Perm + Tint",
+"Outra zona (indico nas observações)": "Other area (I'll say in the notes)",
+"Outro": "Other",
+"Escolha o serviço…": "Choose the service…",
+"Escolha primeiro o serviço": "Choose the service first",
+"Escolha o serviço.": "Please choose the service."
 
 };

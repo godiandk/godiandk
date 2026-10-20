@@ -355,29 +355,9 @@
   /* ---- marcações ---- */
   function fmtDia(dia) { if (!dia) return "—"; var d = dia.split("-"); return d.length === 3 ? d[2] + "/" + d[1] + "/" + d[0] : dia; }
 
-  /* Tabela de preços por serviço (para ajudar a Thayana a saber quanto cobrar). */
-  var PRICE = {
-    "Threading de Sobrancelhas": { base: 10.5 },
-    "Brow Lamination": { base: 35 },
-    "Alisamento de Sobrancelhas": { base: 35 },
-    "Coloração de Sobrancelhas (Henna / Tintura / Descoloração)": { from: 24 },
-    "Lifting de Pestanas": { base: 31 },
-    "Lifting + Tintura de Pestanas": { base: 49.5 },
-    "Permanente de Pestanas": { base: 31 },
-    "Tintura de Pestanas": { base: 24 },
-    "Micropigmentação de Sobrancelhas": { base: 225 },
-    "Hidraglos de Lábios": { from: 65 },
-    "Threading (rosto)": { from: 4 },
-    "Depilação a Laser": { consulta: true },
-    "Outro (indico na mensagem)": { consulta: true }
-  };
+  /* Preços por serviço: vêm do catálogo único (disponibilidade.js), igual ao preçário. */
   function eur(v) { return v.toFixed(2).replace(".", ",") + "€"; }
-  function priceInfo(servico) {
-    if (!servico) return { consulta: true };
-    if (PRICE[servico]) return PRICE[servico];
-    for (var k in PRICE) { if (servico.indexOf(k) === 0) return PRICE[k]; }
-    return { consulta: true };
-  }
+  function priceInfo(servico) { return window.InovaAgenda.priceOf(servico); }
   function chargeBlock(m) {
     if (m.gratuito) {
       return '<div class="bk-charge free"><div class="bk-charge-row final"><span>💰 Valor a cobrar</span><span>GRÁTIS 🎁</span></div>' +
@@ -537,28 +517,8 @@
   var AZ = window.InovaAuth, CP = window.InovaCoupon;
   if (!AZ) return;
 
-  var PRICE = {
-    "Threading de Sobrancelhas": { base: 10.5, dur: 30 },
-    "Brow Lamination": { base: 35, dur: 60 },
-    "Alisamento de Sobrancelhas": { base: 35, dur: 60 },
-    "Coloração de Sobrancelhas (Henna / Tintura / Descoloração)": { from: 24, dur: 45 },
-    "Lifting de Pestanas": { base: 31, dur: 60 },
-    "Lifting + Tintura de Pestanas": { base: 49.5, dur: 75 },
-    "Permanente de Pestanas": { base: 31, dur: 60 },
-    "Tintura de Pestanas": { base: 24, dur: 30 },
-    "Micropigmentação de Sobrancelhas": { base: 225, dur: 120 },
-    "Hidraglos de Lábios": { from: 65, dur: 45 },
-    "Threading (rosto)": { from: 4, dur: 30 },
-    "Depilação a Laser": { consulta: true, dur: 30 },
-    "Outro (indico na mensagem)": { consulta: true, dur: 30 }
-  };
-  function info(serv) {
-    if (!serv) return { consulta: true, dur: 30 };
-    if (PRICE[serv]) return PRICE[serv];
-    for (var k in PRICE) { if (serv.indexOf(k) === 0) return PRICE[k]; }
-    return { consulta: true, dur: 30 };
-  }
-  function durOf(serv) { var IA = window.InovaAgenda; return IA ? IA.durationFor(IA.state.cfg, serv) : (info(serv).dur || 30); }
+  function info(serv) { return window.InovaAgenda.priceOf(serv); }
+  function durOf(serv) { var IA = window.InovaAgenda; return IA.durationFor(IA.state.cfg, serv); }
   function eur(v) { return v.toFixed(2).replace(".", ",") + "€"; }
   function chargeValue(m) {
     if (m.gratuito) return { value: 0, gratis: true };
@@ -755,7 +715,6 @@
     var IA = window.InovaAgenda;
     ensureModal();
     var isMove = kind === "move";
-    var servOpts = IA.SERVICOS.map(function (s) { return '<option' + (isMove && m.servico === s[0] ? " selected" : "") + '>' + esc(s[0]) + '</option>'; }).join("");
     modal.querySelector(".ag-modal-body").innerHTML =
       '<h3>' + (isMove ? "↔ Remarcar" : "➕ Nova marcação") + '</h3>' +
       '<p class="agm-line" style="font-size:.88rem;color:var(--ink-soft)">' + (isMove
@@ -763,7 +722,7 @@
         : 'Use para pedidos que chegaram por WhatsApp ou telefone. O horário fica ocupado e deixa de aparecer às clientes.') + '</p>' +
       (isMove ? '' : '<div class="form-field"><label for="nmName">Nome da cliente*</label><input id="nmName" type="text" autocomplete="off"></div>' +
         '<div class="form-field"><label for="nmPhone">Telemóvel (opcional)</label><input id="nmPhone" type="tel"></div>') +
-      '<div class="form-field"><label for="nmServ">Serviço</label><select id="nmServ"' + (isMove ? " disabled" : "") + '>' + servOpts + '</select></div>' +
+      '<div class="form-field"><label for="nmServ">Serviço</label><select id="nmServ"' + (isMove ? " disabled" : "") + '></select></div>' +
       '<div class="form-field"><label for="nmDay">Dia</label><input id="nmDay" type="date" min="' + todayStr() + '" value="' + (isMove ? m.dia : ymd(anchor)) + '"></div>' +
       '<div class="form-field"><label for="nmTime">Hora</label><select id="nmTime"><option value="">A carregar…</option></select></div>' +
       '<label class="ag-chk"><input type="checkbox" id="nmAny"> Mostrar também horas fora do meu horário de atendimento</label>' +
@@ -774,10 +733,13 @@
       '<button type="button" class="btn btn-outline" data-act="cancel">Cancelar</button>';
     modal.style.display = "flex";
     var $ = function (id) { return modal.querySelector("#" + id); }, occList = [];
+    IA.fillServiceSelect($("nmServ"), IA.state.cfg, { todos: true, placeholder: false, lang: "pt" });
+    if (isMove) { var o1 = document.createElement("option"); o1.value = m.servico; o1.textContent = m.servico; $("nmServ").insertBefore(o1, $("nmServ").firstChild); $("nmServ").value = m.servico; }
+    function curServ() { return isMove ? m.servico : $("nmServ").value; }
     function setMsg(cls, t) { var e = $("nmMsg"); e.className = "form-msg " + cls; e.textContent = t; }
     function fillTimes() {
       var occ = IA.occMap(occList.filter(function (x) { return !isMove || x.marc !== m.id; }));
-      var times = IA.availableTimes(IA.state.cfg, occ, $("nmDay").value, $("nmServ").value, new Date(), { admin: true, todasAsHoras: $("nmAny").checked });
+      var times = IA.availableTimes(IA.state.cfg, occ, $("nmDay").value, curServ(), new Date(), { admin: true, todasAsHoras: $("nmAny").checked });
       var sel = $("nmTime"), prev = sel.value; sel.innerHTML = "";
       if (!times.length) { sel.appendChild(new Option($("nmAny").checked ? "Sem horas livres neste dia" : "Sem horas livres no seu horário", "")); return; }
       times.forEach(function (t) { sel.appendChild(new Option(t, t)); });
