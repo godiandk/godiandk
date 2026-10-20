@@ -526,4 +526,20 @@ window.INOVA_DIC.es = {
 "temporariamente indisponível": "temporalmente no disponible",
 "Temporariamente indisponível": "Temporalmente no disponible",
 
+/* ---------- disponibilidade / marcação ---------- */
+"Escolha primeiro o dia": "Elige primero el día",
+"Sem horários disponíveis": "Sin horarios disponibles",
+"Duração aproximada:": "Duración aproximada:",
+"Neste dia não há atendimento.": "Este día no hay atención.",
+"Sem horários disponíveis neste dia.": "Sin horarios disponibles este día.",
+"Próximos dias disponíveis:": "Próximos días disponibles:",
+"De momento não há horários disponíveis. Fale connosco no WhatsApp.": "Ahora mismo no hay horarios disponibles. Escríbenos por WhatsApp.",
+"Escolha um horário disponível.": "Elige un horario disponible.",
+"Esse horário já não está disponível. Escolha outro, por favor.": "Ese horario ya no está disponible. Elige otro, por favor.",
+"Esse horário acabou de ser ocupado. Escolha outro, por favor.": "Ese horario acaba de ser ocupado. Elige otro, por favor.",
+"Ao confirmar, aceita a nossa": "Al confirmar, aceptas nuestra",
+"Ao criar conta, aceita a nossa": "Al crear la cuenta, aceptas nuestra",
+"e os": "y los",
+"Termos": "Términos"
+
 };

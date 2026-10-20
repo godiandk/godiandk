@@ -449,6 +449,7 @@
 
   function saveBooking(data) {
     var acc = current();
+    var slots = (data.slots || []).filter(function (x) { return x && x.id && x.dia; });
     var rec = {
       nome: (data.nome || (acc && acc.name) || "").trim(),
       telefone: (data.telefone || (acc && acc.phone) || "").trim(),
@@ -467,11 +468,32 @@
     if (backend === "firebase") {
       // guarda mesmo sem sessão (a regra do Firestore permite criar marcações)
       rec.criadoEm = firebase.firestore.FieldValue.serverTimestamp();
-      return fbDb.collection("marcacoes").add(rec).then(function () { return { ok: true }; })
-        .catch(function (e) { return { error: fbErr(e) }; });
+      var mref = fbDb.collection("marcacoes").doc();
+      var batch = fbDb.batch();
+      batch.set(mref, rec);
+      // cada 15 min tomados vira um registo próprio: se alguém o ocupar primeiro,
+      // a gravação inteira falha e ninguém fica com o mesmo horário
+      slots.forEach(function (sl) {
+        batch.set(fbDb.collection("ocupados").doc(sl.id), { dia: sl.dia, min: sl.min, marc: mref.id });
+      });
+      return batch.commit().then(function () { return { ok: true }; }).catch(function (e) {
+        if (!slots.length || !e || e.code !== "permission-denied") return { error: fbErr(e) };
+        // ou o horário foi ocupado entretanto, ou as regras ainda não têm a coleção "ocupados"
+        return listOcupados(slots[0].dia).then(function (r) {
+          var tomado = r.ok && r.list.some(function (o) { return slots.some(function (sl) { return sl.id === o.id; }); });
+          if (tomado) return { conflito: true };
+          return fbDb.collection("marcacoes").add(rec).then(function () { return { ok: true }; })
+            .catch(function (e2) { return { error: fbErr(e2) }; });
+        });
+      });
     }
     rec.id = "loc" + Date.now(); rec.criadoEm = new Date().toISOString();
-    var l = readBookings(); l.unshift(rec); writeBookings(l);
+    var l = readBookings();
+    var busy = {};
+    l.forEach(function (m) { (m.slots || []).forEach(function (sl) { busy[sl.id] = 1; }); });
+    if (slots.some(function (sl) { return busy[sl.id]; })) return Promise.resolve({ conflito: true });
+    rec.slots = slots;
+    l.unshift(rec); writeBookings(l);
     return Promise.resolve({ ok: true });
   }
 
@@ -495,9 +517,86 @@
   }
 
   function deleteBooking(id) {
-    if (backend === "firebase") return fbDb.collection("marcacoes").doc(id).delete();
+    if (backend === "firebase") {
+      // liberta também as horas que esta marcação ocupava
+      return fbDb.collection("ocupados").where("marc", "==", id).get()
+        .catch(function () { return { forEach: function () {} }; })
+        .then(function (snap) {
+          var b = fbDb.batch();
+          b.delete(fbDb.collection("marcacoes").doc(id));
+          snap.forEach(function (d) { b.delete(d.ref); });
+          return b.commit();
+        });
+    }
     writeBookings(readBookings().filter(function (m) { return m.id !== id; }));
     return Promise.resolve();
+  }
+
+  /* ---------------- Disponibilidade (dias, horários, durações) ---------------- */
+  var LS_AGENDA = "inova_agenda_cfg";
+
+  // Leitura pública: as clientes precisam de a ver para escolher horário.
+  function getAgendaCfg() {
+    if (backend === "firebase") {
+      return fbDb.collection("config").doc("agenda").get()
+        .then(function (d) { return { ok: true, cfg: d.exists ? d.data() : null }; })
+        .catch(function () { return { ok: false, cfg: null }; });
+    }
+    try { return Promise.resolve({ ok: true, cfg: JSON.parse(localStorage.getItem(LS_AGENDA)) || null }); }
+    catch (e) { return Promise.resolve({ ok: true, cfg: null }); }
+  }
+
+  function saveAgendaCfg(cfg) {
+    if (backend === "firebase") {
+      return fbDb.collection("config").doc("agenda").set(cfg)
+        .then(function () { return { ok: true }; })
+        .catch(function (e) { return { error: fbErr(e), permissao: !!(e && e.code === "permission-denied") }; });
+    }
+    try { localStorage.setItem(LS_AGENDA, JSON.stringify(cfg)); } catch (e) {}
+    return Promise.resolve({ ok: true });
+  }
+
+  // Horas ocupadas a partir de um dia: [{ id, dia, min, marc }]
+  function listOcupados(fromDia) {
+    if (backend === "firebase") {
+      return fbDb.collection("ocupados").where("dia", ">=", fromDia).get().then(function (snap) {
+        var arr = [];
+        snap.forEach(function (d) { var x = d.data(); arr.push({ id: d.id, dia: x.dia, min: x.min, marc: x.marc }); });
+        return { ok: true, list: arr };
+      }).catch(function () { return { ok: false, list: [] }; });
+    }
+    var out = [];
+    readBookings().forEach(function (m) {
+      (m.slots || []).forEach(function (sl) { if (sl.dia >= fromDia) out.push({ id: sl.id, dia: sl.dia, min: sl.min, marc: m.id }); });
+    });
+    return Promise.resolve({ ok: true, list: out });
+  }
+
+  // Administradora: regista as horas de marcações antigas que ainda não as tinham.
+  // items: [{ marc, slots:[{id,dia,min}] }]
+  function syncSlots(items) {
+    if (!items || !items.length) return Promise.resolve({ ok: true, n: 0 });
+    if (backend === "firebase") {
+      var all = [];
+      items.forEach(function (it) { it.slots.forEach(function (sl) { all.push({ marc: it.marc, sl: sl }); }); });
+      var chunks = [];
+      for (var i = 0; i < all.length; i += 400) chunks.push(all.slice(i, i + 400));
+      return chunks.reduce(function (p, ch) {
+        return p.then(function () {
+          var b = fbDb.batch();
+          ch.forEach(function (x) { b.set(fbDb.collection("ocupados").doc(x.sl.id), { dia: x.sl.dia, min: x.sl.min, marc: x.marc }); });
+          return b.commit();
+        });
+      }, Promise.resolve()).then(function () { return { ok: true, n: items.length }; })
+        .catch(function (e) { return { error: fbErr(e) }; });
+    }
+    var l = readBookings().map(function (m) {
+      var it = items.filter(function (x) { return x.marc === m.id; })[0];
+      if (it) m.slots = it.slots;
+      return m;
+    });
+    writeBookings(l);
+    return Promise.resolve({ ok: true, n: items.length });
   }
 
   /* ---------------- Comunidade (feed social) ---------------- */
@@ -652,6 +751,10 @@
     listBookings: listBookings,
     updateBooking: updateBooking,
     deleteBooking: deleteBooking,
+    getAgendaCfg: getAgendaCfg,
+    saveAgendaCfg: saveAgendaCfg,
+    listOcupados: listOcupados,
+    syncSlots: syncSlots,
     listUsers: listUsers,
     grantAdmin: grantAdmin,
     revokeAdmin: revokeAdmin,
