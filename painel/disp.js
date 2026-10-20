@@ -31,7 +31,8 @@
   var pendingClose = false;
   var range = { from: "", to: "" };
   var bookings = [], ready = false, synced = false, timer = null;
-  var status = { cls: "wait", text: "As alterações guardam-se sozinhas.", undo: false };
+  var status = { cls: "idle", text: "", undo: false };   // idle = barra escondida
+  var hideTimer = null;
   var open = { ajuda: false, avancado: false, periodo: false };
 
   function C() { return IA.state.cfg; }
@@ -45,12 +46,24 @@
 
   /* ---------- guardar (automático) ---------- */
   function statusHtml() {
-    return esc(status.text) + (status.undo ? ' <button type="button" class="dp-undo" data-a="undo">↶ Desfazer</button>' : "");
+    return '<span class="dp-stext">' + esc(status.text) + '</span>' +
+      (status.undo ? ' <button type="button" class="dp-undo" data-a="undo">↶ Desfazer</button>' : "") +
+      (status.cls === "err" ? ' <button type="button" class="dp-sclose" data-a="hidestatus" aria-label="Fechar">✕</button>' : "");
   }
+  /* A mensagem de sucesso desaparece sozinha (mais tempo se tiver "Desfazer");
+     "A guardar…" fica até acabar; erros ficam até serem fechados no ✕. */
   function setStatus(cls, text, canUndo) {
+    clearTimeout(hideTimer);
     status = { cls: cls, text: text, undo: !!canUndo };
     var el = document.getElementById("dpStatus");
     if (el) { el.className = "dp-status " + cls; el.innerHTML = statusHtml(); }
+    if (cls === "ok") hideTimer = setTimeout(hideStatus, canUndo ? 10000 : 5000);
+  }
+  function hideStatus() {
+    clearTimeout(hideTimer);
+    status = { cls: "idle", text: "", undo: false };
+    var el = document.getElementById("dpStatus");
+    if (el) { el.className = "dp-status idle"; el.innerHTML = ""; }
   }
   function prune() {
     var cfg = C(), t = today(), out = copy(cfg);
@@ -355,6 +368,7 @@
     if (a === "day") { if (sel[d]) delete sel[d]; else sel[d] = true; pendingClose = false; render(); }
     else if (a === "nav") { cursor.setMonth(cursor.getMonth() + (+b.getAttribute("data-v"))); render(); }
     else if (a === "pick") { pickDays(b.getAttribute("data-v")); render(); }
+    else if (a === "hidestatus") hideStatus();
     else if (a === "clear") { sel = {}; pendingClose = false; render(); }
     else if (a === "unsel") { delete sel[d]; pendingClose = false; render(); }
     else if (a === "goto") scrollTo("dpPanel");
