@@ -49,13 +49,12 @@ window.InovaAgenda = (function () {
 
   function defaultDurations() { var o = {}; SERVICOS.forEach(function (s) { o[s[0]] = s[1]; }); return o; }
 
+  /* Ponto de partida: nenhum dia está aberto. A administradora escolhe no calendário
+     os dias em que atende (ou define um horário fixo semanal, se tiver). */
   function defaults() {
     var semana = {};
-    for (var i = 0; i < 7; i++) {
-      semana[i] = i === 0 ? { aberto: false, janelas: [] }
-                          : { aberto: true, janelas: [{ de: "09:00", ate: "19:00" }] };
-    }
-    return { passo: 30, buffer: 0, antecedenciaH: 2, horizonte: 90, semana: semana, dias: {}, duracoes: defaultDurations() };
+    for (var i = 0; i < 7; i++) semana[i] = { aberto: false, janelas: [] };
+    return { passo: 30, buffer: 0, antecedenciaH: 2, horizonte: 90, semanaOk: false, semana: semana, dias: {}, duracoes: defaultDurations() };
   }
 
   function cleanWins(list) {
@@ -78,6 +77,7 @@ window.InovaAgenda = (function () {
     d.buffer = num(raw.buffer, [0, 15, 30, 45, 60], d.buffer);
     d.antecedenciaH = num(raw.antecedenciaH, [0, 1, 2, 3, 6, 12, 24, 48, 72], d.antecedenciaH);
     d.horizonte = num(raw.horizonte, [14, 30, 60, 90, 180, 365], d.horizonte);
+    d.semanaOk = raw.semanaOk === true;
     if (raw.semana) {
       for (var i = 0; i < 7; i++) {
         var s = raw.semana[i];
@@ -154,15 +154,19 @@ window.InovaAgenda = (function () {
   }
 
   /* Horários de início livres ("HH:MM") para um serviço num dia. */
-  function availableTimes(cfg, occ, dia, serv, now) {
+  function availableTimes(cfg, occ, dia, serv, now, opts) {
     now = now || new Date();
+    opts = opts || {};
     if (!validYmd(dia)) return [];
     var day0 = parseYmd(dia), today0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    if (day0 < today0 || day0 > addDays(today0, cfg.horizonte)) return [];
+    if (day0 < today0) return [];
+    if (!opts.admin && day0 > addDays(today0, cfg.horizonte)) return [];
     var dur = durationFor(cfg, serv), len = blockLength(cfg, serv);
-    var minTs = now.getTime() + (cfg.antecedenciaH || 0) * 3600000;
+    var minTs = opts.admin ? now.getTime() - 3600000 : now.getTime() + (cfg.antecedenciaH || 0) * 3600000;
     var busy = (occ && occ[dia]) || {}, seen = {}, out = [];
-    windowsFor(cfg, dia).forEach(function (w) {
+    // a administradora pode escolher qualquer hora livre, mesmo fora do horário habitual
+    var wins = opts.todasAsHoras ? [{ de: 6 * 60, ate: 23 * 60 + 30 }] : windowsFor(cfg, dia);
+    wins.forEach(function (w) {
       for (var s = w.de; s + dur <= w.ate; s += cfg.passo) {
         if (seen[s]) continue;
         var ts = new Date(day0.getFullYear(), day0.getMonth(), day0.getDate(), Math.floor(s / 60), s % 60).getTime();
@@ -197,6 +201,12 @@ window.InovaAgenda = (function () {
   function fmtWins(wins) {
     return wins.length ? wins.map(function (w) { return fromMin(w.de) + "–" + fromMin(w.ate); }).join(" · ") : "";
   }
+  var WD_CURTO = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
+  var MO_CURTO = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  /* "sáb 7 nov" */
+  function fmtDiaCurto(dia) { var d = parseYmd(dia); return WD_CURTO[d.getDay()] + " " + d.getDate() + " " + MO_CURTO[d.getMonth()]; }
+  /* "09:00–13:00 · 14:00–18:00" a partir de janelas em texto */
+  function fmtJanelas(list) { return (list || []).map(function (w) { return w.de + "–" + w.ate; }).join(" · "); }
   function fmtDia(dia) { var a = String(dia || "").split("-"); return a.length === 3 ? a[2] + "/" + a[1] + "/" + a[0] : dia; }
 
   var state = { cfg: defaults(), carregada: false, lida: true, promessa: null };
@@ -233,7 +243,7 @@ window.InovaAgenda = (function () {
      ============================================================ */
   function bindBooking(o) {
     var AZ = window.InovaAuth;
-    var st = { cfg: defaults(), occ: {}, occOk: false, cfgOk: false };
+    var st = { cfg: defaults(), occ: {}, occOk: false, cfgOk: false, loaded: false, fromCache: false };
     var today = function () { return ymd(new Date()); };
 
     function lang() {
@@ -255,10 +265,11 @@ window.InovaAgenda = (function () {
         st.occ = occMap(r[1] && r[1].list);
         st.occOk = !!(r[1] && r[1].ok);
         state.cfg = st.cfg;
-      }).catch(function () {});
+        st.loaded = true;
+      }).catch(function () { st.loaded = true; });
     }
     // mostra já a última configuração conhecida (se houver) enquanto a rede responde
-    (function () { var c = cacheRead(); if (c) { st.cfg = normalize(c); state.cfg = st.cfg; } })();
+    (function () { var c = cacheRead(); if (c) { st.cfg = normalize(c); state.cfg = st.cfg; st.fromCache = true; } })();
 
     function setLimits() {
       var di = o.date; if (!di) return;
@@ -290,6 +301,12 @@ window.InovaAgenda = (function () {
         o.time.appendChild(new Option("Escolha primeiro o dia", ""));
         if (o.info) o.info.innerHTML = durHtml;
         renderDays(serv, false);
+        return;
+      }
+      if (st.loaded && !st.cfgOk && !st.fromCache) {
+        o.time.appendChild(new Option("Sem horários disponíveis", ""));
+        if (o.info) o.info.innerHTML = '<span class="bk-warn">Não foi possível carregar os horários. Atualize a página ou fale connosco no WhatsApp.</span>';
+        if (o.days) o.days.innerHTML = "";
         return;
       }
       var times = availableTimes(st.cfg, st.occ, dia, serv, new Date());
@@ -339,7 +356,7 @@ window.InovaAgenda = (function () {
     windowsFor: windowsFor, weeklyWindows: weeklyWindows, dayMode: dayMode,
     durationFor: durationFor, blockLength: blockLength, slotsFor: slotsFor,
     occMap: occMap, availableTimes: availableTimes, availableDays: availableDays,
-    fmtDur: fmtDur, fmtWins: fmtWins, fmtDia: fmtDia,
+    fmtDur: fmtDur, fmtWins: fmtWins, fmtDia: fmtDia, fmtDiaCurto: fmtDiaCurto, fmtJanelas: fmtJanelas, WD_CURTO: WD_CURTO, MO_CURTO: MO_CURTO,
     toMin: toMin, fromMin: fromMin, ymd: ymd, parseYmd: parseYmd, addDays: addDays, pad: pad,
     bindBooking: bindBooking
   };
