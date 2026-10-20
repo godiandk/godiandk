@@ -98,6 +98,7 @@
     <div id="panelArea" style="display:none">
       <div class="panel-tabs">
         <button type="button" class="panel-tab active" data-tab="agenda">📅 Agenda</button>
+        <button type="button" class="panel-tab" data-tab="disp">🗓️ Disponibilidade</button>
         <button type="button" class="panel-tab" data-tab="marc">📋 Marcações</button>
         <button type="button" class="panel-tab" data-tab="fat">💰 Faturamento</button>
         <button type="button" class="panel-tab" data-tab="gen">🎟️ Gerar cupom</button>
@@ -123,10 +124,14 @@
             <button type="button" class="btn btn-outline ag-today" id="agRefresh">↻</button>
           </div>
           <div class="ag-label" id="agLabel"></div>
-          <p class="form-hint">Toque numa marcação para ver detalhes, marcar como concluída ou apagar. Horário 09:00–19:00.</p>
+          <p class="form-hint">Toque numa marcação para ver detalhes, marcar como concluída ou apagar. As zonas sombreadas são horas sem atendimento (defina-as na aba Disponibilidade).</p>
           <div class="form-msg" id="agMsg"></div>
           <div id="agGrid" class="mt-1"></div>
         </div>
+      </div>
+
+      <div class="panel-section" id="tab-disp">
+        <div id="dispRoot" data-sem-traducao></div>
       </div>
 
       <div class="panel-section" id="tab-marc">
@@ -253,6 +258,8 @@
 <script>window.INOVA_PREFIX = "../";</script>
 <script src="../coupon.js"></script>
 <script src="../auth.js"></script>
+<script src="../disponibilidade.js"></script>
+<script src="disp.js"></script>
 <script>
 (function () {
   var gate = document.getElementById("loginGate");
@@ -547,7 +554,7 @@
     for (var k in PRICE) { if (serv.indexOf(k) === 0) return PRICE[k]; }
     return { consulta: true, dur: 30 };
   }
-  function durOf(serv) { return info(serv).dur || 30; }
+  function durOf(serv) { var IA = window.InovaAgenda; return IA ? IA.durationFor(IA.state.cfg, serv) : (info(serv).dur || 30); }
   function eur(v) { return v.toFixed(2).replace(".", ",") + "€"; }
   function chargeValue(m) {
     if (m.gratuito) return { value: 0, gratis: true };
@@ -573,6 +580,32 @@
   function shortServ(s) { s = s || "Serviço"; return s.length > 26 ? s.slice(0, 25) + "…" : s; }
 
   var START = 9 * 60, END = 19 * 60, SLOT = 30, SLOT_H = 46;
+  /* intervalo visível: cobre as horas de atendimento e as marcações dos dias mostrados */
+  function setRange(days) {
+    var IA = window.InovaAgenda, lo = 9 * 60, hi = 19 * 60;
+    days.forEach(function (ds) {
+      IA.windowsFor(IA.state.cfg, ds).forEach(function (w) { lo = Math.min(lo, w.de); hi = Math.max(hi, w.ate); });
+      (cache || []).forEach(function (m) {
+        if (m.dia !== ds || !m.hora) return;
+        lo = Math.min(lo, toMin(m.hora)); hi = Math.max(hi, toMin(m.hora) + durOf(m.servico));
+      });
+    });
+    START = Math.max(0, Math.floor(lo / SLOT) * SLOT);
+    END = Math.min(24 * 60, Math.ceil(hi / SLOT) * SLOT);
+    if (END - START < 60) END = START + 60;
+  }
+  /* sombreia o que está fora do horário de atendimento */
+  function offHtml(ds) {
+    var IA = window.InovaAgenda, wins = IA.windowsFor(IA.state.cfg, ds), px = function (m) { return (m - START) / SLOT * SLOT_H; };
+    var segs = [], cur = START;
+    wins.forEach(function (w) { if (w.de > cur) segs.push([cur, Math.min(w.de, END)]); cur = Math.max(cur, w.ate); });
+    if (cur < END) segs.push([cur, END]);
+    var h = segs.filter(function (s) { return s[1] > s[0]; }).map(function (s) {
+      return '<div class="ag-off" style="top:' + px(s[0]) + 'px;height:' + (px(s[1]) - px(s[0])) + 'px"></div>';
+    }).join("");
+    if (!wins.length) h += '<div class="ag-offlbl">Sem atendimento</div>';
+    return h;
+  }
   var view = "dia", anchor = new Date(); anchor.setHours(0,0,0,0);
   var cache = null;
 
@@ -624,20 +657,24 @@
   function gridLines() { var h = "", n = (END - START) / SLOT; for (var i = 0; i <= n; i++) h += '<div class="ag-line" style="top:' + (i * SLOT_H) + 'px"></div>'; return h; }
 
   function renderDay() {
-    var height = (END - START) / SLOT * SLOT_H, dayStr = ymd(anchor), lane = laneFor(dayStr, false);
+    var dayStr = ymd(anchor); setRange([dayStr]);
+    var height = (END - START) / SLOT * SLOT_H, lane = laneFor(dayStr, false);
     var html = '<div class="ag-day"><div class="ag-gutter" style="height:' + (height + 12) + 'px">' + ruler() + '</div>' +
-      '<div class="ag-lane" style="height:' + height + 'px">' + gridLines() + lane + '</div></div>';
+      '<div class="ag-lane" style="height:' + height + 'px">' + offHtml(dayStr) + gridLines() + lane + '</div></div>';
     if (!lane) html += '<p class="form-hint mt-2">Sem marcações neste dia.</p>';
     return html;
   }
   function renderWeek() {
-    var mon = mondayOf(anchor), height = (END - START) / SLOT * SLOT_H, cols = "";
+    var mon = mondayOf(anchor), cols = "", wk = [];
+    for (var q = 0; q < 7; q++) { var dq = new Date(mon); dq.setDate(mon.getDate() + q); wk.push(ymd(dq)); }
+    setRange(wk);
+    var height = (END - START) / SLOT * SLOT_H;
     for (var d = 0; d < 7; d++) {
       var day = new Date(mon); day.setDate(mon.getDate() + d);
       var ds = ymd(day), isToday = ds === ymd(new Date());
       cols += '<div class="ag-wcol' + (isToday ? " today" : "") + '"><div class="ag-whead">' + WD[day.getDay()].slice(0,3) +
         '<span>' + pad(day.getDate()) + '/' + pad(day.getMonth()+1) + '</span></div>' +
-        '<div class="ag-lane" style="height:' + height + 'px">' + gridLines() + laneFor(ds, true) + '</div></div>';
+        '<div class="ag-lane" style="height:' + height + 'px">' + offHtml(ds) + gridLines() + laneFor(ds, true) + '</div></div>';
     }
     return '<div class="ag-week"><div class="ag-wgutter"><div class="ag-whead">&nbsp;</div><div class="ag-gutter" style="height:' + height + 'px">' + ruler() + '</div></div>' + cols + '</div>';
   }
@@ -656,7 +693,7 @@
   function renderAgenda() {
     var msg = document.getElementById("agMsg"); msg.className = "form-msg";
     grid().innerHTML = '<p class="form-hint">A carregar…</p>';
-    AZ.listBookings().then(function (list) { cache = list || []; draw(); })
+    Promise.all([AZ.listBookings(), window.InovaAgenda.loadCfg()]).then(function (r) { cache = r[0] || []; draw(); })
       .catch(function (e) { msg.className = "form-msg err"; msg.textContent = "Erro: " + (e.message || e); });
   }
 
