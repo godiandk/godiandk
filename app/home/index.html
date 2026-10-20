@@ -435,7 +435,7 @@
     if (!email) { msg(lm, "Escreva o email acima e clique novamente."); return; }
     window.InovaAuth.resetPassword(email).then(function (r) {
       if (r.error) return msg(lm, r.error);
-      lm.className = "form-msg ok"; lm.textContent = "✅ Link de recuperação enviado para " + email + ".";
+      lm.className = "form-msg ok"; lm.textContent = "✅ Se existir uma conta com " + email + ", enviámos um link para criar uma nova senha. Veja também o spam (lixo eletrónico).";
     });
   });
   document.getElementById("signupForm").addEventListener("submit", function (e) {

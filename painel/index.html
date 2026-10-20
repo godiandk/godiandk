@@ -293,7 +293,7 @@
     if (!em) return lmsg(document.getElementById("loginMsg"), "Escreva o email acima e clique novamente.", false);
     window.InovaAuth.resetPassword(em).then(function (r) {
       if (r.error) return lmsg(document.getElementById("loginMsg"), r.error, false);
-      lmsg(document.getElementById("loginMsg"), "Link de recuperação enviado para " + em + ".", true);
+      lmsg(document.getElementById("loginMsg"), "Se existir uma conta com " + em + ", enviámos um link para criar uma nova senha. Veja também o spam (lixo eletrónico).", true);
     });
   });
   document.getElementById("logoutBtn").addEventListener("click", function () { window.InovaAuth.logout(); });
