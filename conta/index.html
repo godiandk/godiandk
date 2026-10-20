@@ -366,7 +366,7 @@
     if (!email) { msg(lm, "Escreva o seu email acima e clique novamente para receber o link.", false); return; }
     window.InovaAuth.resetPassword(email).then(function (r) {
       if (r.error) return msg(lm, r.error, false);
-      msg(lm, "✅ Enviámos um link de recuperação para " + email + ". Verifique o seu email.", true);
+      msg(lm, "✅ Se existir uma conta com " + email + ", enviámos um link para criar uma nova senha. Veja também o spam (lixo eletrónico).", true);
     });
   });
 
