@@ -246,7 +246,7 @@ window.INOVA_DIC.en = {
 "Telefone": "Phone",
 "Prefere ligar? Estamos disponíveis no horário de funcionamento.": "Prefer to call? We're available during opening hours.",
 "Horário": "Opening hours",
-"Segunda a Sábado<br>09h00 – 19h00": "Monday to Saturday<br>09:00 – 19:00",
+"Atendimento só por marcação<br>nos dias e horas disponíveis online": "By appointment only<br>on the days and times available online",
 "Marcações": "Bookings",
 "Atendemos por marcação para lhe garantir um serviço sem esperas.": "We work by appointment to ensure a service with no waiting.",
 "Pronta para marcar?": "Ready to book?",

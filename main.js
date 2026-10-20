@@ -61,7 +61,7 @@
   /* ---------- Chat online ---------- */
   var REPLIES = {
     precos: 'Os nossos preços estão todos no <a href="' + P + 'precario/">preçário online</a> 💛 Por exemplo: Threading de sobrancelhas 10,50€, Brow Lamination 35,00€, Lifting de pestanas 31,00€, Micropigmentação de sobrancelhas 225,00€.',
-    horario: "Funcionamos de segunda a sábado, das 09h00 às 19h00. Atendemos por marcação para não ter esperas 😊",
+    horario: 'Atendemos só por marcação, nos dias e horas que aparecem disponíveis na <a href="' + P + 'agendar/">marcação online</a> (os dias mudam ao longo do mês) 😊',
     servicos: 'Fazemos threading (depilação com linha), tratamentos de sobrancelhas, pestanas, extensões, micropigmentação e depilação a laser. Veja tudo em <a href="' + P + 'servicos/">Serviços</a>.',
     local: 'Envie-nos mensagem no WhatsApp e partilhamos logo a localização exata 📍 <a href="' + WA + '" target="_blank" rel="noopener">Pedir localização</a>',
     marcar: 'Perfeito! Pode marcar já: <a href="' + WA + '" target="_blank" rel="noopener">clique aqui para agendar no WhatsApp</a> ou use a nossa <a href="' + P + 'agendar/">marcação online</a> 💛',
