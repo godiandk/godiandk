@@ -272,6 +272,7 @@
     if (acc && window.InovaAuth.isAdmin(acc)) {
       gate.style.display = "none"; area.style.display = "block";
       document.getElementById("confWho").textContent = "Sessão: " + acc.name + " (" + acc.email + ")";
+      if (window.InovaAgenda) window.InovaAgenda.loadCfg();   // começa já a ler os horários
       renderMarc();
     } else {
       gate.style.display = "block"; area.style.display = "none";
@@ -693,7 +694,9 @@
   function renderAgenda() {
     var msg = document.getElementById("agMsg"); msg.className = "form-msg";
     grid().innerHTML = '<p class="form-hint">A carregar…</p>';
-    Promise.all([AZ.listBookings(), window.InovaAgenda.loadCfg()]).then(function (r) { cache = r[0] || []; draw(); })
+    // mostra logo as marcações; a configuração de horários chega em paralelo e redesenha as zonas sombreadas
+    window.InovaAgenda.loadCfg().then(function () { if (cache) draw(); });
+    AZ.listBookings().then(function (list) { cache = list || []; draw(); })
       .catch(function (e) { msg.className = "form-msg err"; msg.textContent = "Erro: " + (e.message || e); });
   }
 

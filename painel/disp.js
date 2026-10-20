@@ -295,9 +295,21 @@
 
   /* ---------- abrir a aba ---------- */
   function open() {
-    if (!ready) root.innerHTML = '<p class="form-hint">A carregar…</p>';
+    if (ready) { render(); return; }               // já carregado: mostra de imediato
+    root.innerHTML = '<p class="form-hint" id="dpLoading">A carregar a configuração… na primeira vez pode demorar alguns segundos.</p>';
+    var slow = setTimeout(function () {
+      var el = document.getElementById("dpLoading");
+      if (el) el.innerHTML = 'A ligação está lenta, a tentar ainda… <button type="button" class="dp-add" id="dpRetry">Tentar de novo</button>';
+    }, 7000);
+    document.addEventListener("click", function once(e) {
+      if (e.target && e.target.id === "dpRetry") { document.removeEventListener("click", once); clearTimeout(slow); open(); }
+    });
     Promise.all([IA.loadCfg(), AZ.listBookings().catch(function () { return []; })]).then(function (r) {
+      clearTimeout(slow);
       bookings = r[1] || []; ready = true; render(); syncOld(bookings);
+    }).catch(function (e) {
+      clearTimeout(slow);
+      root.innerHTML = '<p class="form-msg err" style="display:block">Não foi possível abrir a disponibilidade: ' + esc(e && (e.message || e)) + '</p>';
     });
   }
   document.querySelectorAll(".panel-tab").forEach(function (t) {

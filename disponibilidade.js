@@ -201,6 +201,19 @@ window.InovaAgenda = (function () {
 
   var state = { cfg: defaults(), carregada: false, lida: true, promessa: null };
 
+  /* Espera no máximo `ms`; se a rede estiver lenta, segue com `fallback` em vez de ficar preso. */
+  function withTimeout(promise, ms, fallback) {
+    return new Promise(function (resolve) {
+      var done = false, t = setTimeout(function () { if (!done) { done = true; resolve(fallback); } }, ms);
+      Promise.resolve(promise).then(function (v) { if (!done) { done = true; clearTimeout(t); resolve(v); } },
+        function () { if (!done) { done = true; clearTimeout(t); resolve(fallback); } });
+    });
+  }
+  /* Cópia local da última configuração lida: a marcação aparece logo, antes da rede responder. */
+  var LS_CACHE = "inova_agenda_cache";
+  function cacheRead() { try { return JSON.parse(localStorage.getItem(LS_CACHE)); } catch (e) { return null; } }
+  function cacheWrite(cfg) { try { localStorage.setItem(LS_CACHE, JSON.stringify(cfg)); } catch (e) {} }
+
   /* Carrega a configuração uma única vez e partilha o mesmo objeto
      entre a agenda e a aba Disponibilidade do painel. */
   function loadCfg() {
@@ -233,17 +246,19 @@ window.InovaAgenda = (function () {
     }
 
     function load() {
+      var none = { cfg: null, ok: false }, noneO = { list: [], ok: false };
       return Promise.all([
-        AZ.getAgendaCfg ? AZ.getAgendaCfg() : { cfg: null, ok: false },
-        AZ.listOcupados ? AZ.listOcupados(today()) : { list: [], ok: false }
+        withTimeout(AZ.getAgendaCfg ? AZ.getAgendaCfg() : none, 9000, none),
+        withTimeout(AZ.listOcupados ? AZ.listOcupados(today()) : noneO, 9000, noneO)
       ]).then(function (r) {
-        st.cfg = normalize(r[0] && r[0].cfg);
-        st.cfgOk = !!(r[0] && r[0].ok);
+        if (r[0] && r[0].ok) { st.cfg = normalize(r[0].cfg); st.cfgOk = true; cacheWrite(r[0].cfg || null); }
         st.occ = occMap(r[1] && r[1].list);
         st.occOk = !!(r[1] && r[1].ok);
         state.cfg = st.cfg;
       }).catch(function () {});
     }
+    // mostra já a última configuração conhecida (se houver) enquanto a rede responde
+    (function () { var c = cacheRead(); if (c) { st.cfg = normalize(c); state.cfg = st.cfg; } })();
 
     function setLimits() {
       var di = o.date; if (!di) return;
