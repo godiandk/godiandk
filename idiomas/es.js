@@ -246,7 +246,7 @@ window.INOVA_DIC.es = {
 "Telefone": "Teléfono",
 "Prefere ligar? Estamos disponíveis no horário de funcionamento.": "¿Prefieres llamar? Estamos disponibles en el horario de atención.",
 "Horário": "Horario",
-"Segunda a Sábado<br>09h00 – 19h00": "Lunes a Sábado<br>09:00 – 19:00",
+"Atendimento só por marcação<br>nos dias e horas disponíveis online": "Solo con cita previa<br>en los días y horas disponibles online",
 "Marcações": "Reservas",
 "Atendemos por marcação para lhe garantir um serviço sem esperas.": "Atendemos con cita previa para garantizarte un servicio sin esperas.",
 "Pronta para marcar?": "¿Lista para reservar?",
