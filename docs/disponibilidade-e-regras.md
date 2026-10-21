@@ -59,9 +59,10 @@ Faturamento. **Se o preçário mudar, atualizar também o catálogo** — há um
   descoloração de sobrancelhas e patilhas (homem). No catálogo, `off: true` desliga uma categoria e um 5.º valor `false`
   desliga um serviço. A administradora volta a ligá-los no painel (Disponibilidade → Serviços) quando os fizer;
   a página do preçário e as páginas de serviço são estáticas e passam a ter de ser atualizadas à mão.
-- As durações por omissão seguem o que a Thayana guardou no painel (ex.: Brow Lamination e Alisamento 45 min,
-  Henna 30 min), que é quem sabe quanto demora cada serviço.
+- As durações por omissão são exatamente as que a Thayana guardou no painel (ex.: Brow Lamination e Alisamento 45 min,
+  Henna 30 min): é ela que define quanto demora cada serviço. Única exceção: o Lifting, que ela escreveu como 1h30 na
+  lista de preços (no painel estava 1h).
 - `CAT_V` (em `disponibilidade.js`) sobe quando o catálogo muda de forma que não chega a configurações já guardadas:
-  v2 repõe o que está ligado/desligado; v3 acerta o Lifting (1h30) e o Lifting + Tintura (2h). Todas as outras durações
-  que ela escolheu mantêm-se.
+  v2 repõe o que está ligado/desligado; v4 acerta o Lifting (1h30) e repõe o Lifting + Tintura (1h30). Todas as outras
+  durações que ela escolheu mantêm-se.
 - Os produtos do preçário não são serviços marcáveis e ficam de fora.
