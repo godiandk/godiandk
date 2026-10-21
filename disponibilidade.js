@@ -27,13 +27,14 @@ window.InovaAgenda = (function () {
      "indisponíveis" no preçário e não aparecem na marcação — a administradora
      pode ligá-los no painel quando voltar a fazê-los.
      As durações por omissão são exatamente as que a Thayana guardou no painel (é ela que define quanto
-     demora cada serviço); a única exceção é o Lifting, que ela escreveu como 1h30 na lista de preços.
+     demora cada serviço). A lista de preços dela só serve para os preços, nunca para os tempos.
      CAT_V sobe quando o catálogo muda de forma que não chega a configurações já guardadas
-     (ver `normalize`): v2 repõe o que está ligado/desligado, v4 acerta o Lifting (e repõe o Lifting + Tintura).
+     (ver `normalize`): v2 repõe o que está ligado/desligado; v5 desfaz a alteração de Lifting e
+     Lifting + Tintura que as versões 3 e 4 fizeram por engano.
      ============================================================ */
   function b_(n) { return { b: n }; }
   var CONS = { c: 1 };
-  var CAT_V = 4;
+  var CAT_V = 5;
   var GRUPOS = [
     { id: "thr", nome: "Threading — Depilação com Linha", itens: [
       ["Threading de Sobrancelhas", "Sobrancelhas", 30, b_(10)],
@@ -77,7 +78,7 @@ window.InovaAgenda = (function () {
       ["Alisamento + Tintura", "Alisamento + Tintura", 60, b_(30)]
     ] },
     { id: "pest", nome: "Pestanas", itens: [
-      ["Lifting de Pestanas", "Lifting de Pestanas", 90, b_(25)],
+      ["Lifting de Pestanas", "Lifting de Pestanas", 60, b_(25)],
       ["Permanente de Pestanas", "Permanente de Pestanas", 60, b_(31), false],
       ["Tintura de Pestanas", "Tintura de Pestanas", 30, b_(15)],
       ["Lash Care", "Lash Care", 15, b_(8.5)],
@@ -267,7 +268,7 @@ window.InovaAgenda = (function () {
         if (v >= U && v <= 600) d.duracoes[k] = Math.round(v / U) * U;
       });
     }
-    if (v0 < 4) ["Lifting de Pestanas", "Lifting + Tintura de Pestanas"].forEach(function (k) { d.duracoes[k] = DUR0[k]; });
+    if (v0 === 3 || v0 === 4) ["Lifting de Pestanas", "Lifting + Tintura de Pestanas"].forEach(function (k) { d.duracoes[k] = DUR0[k]; });
     return d;
   }
 
