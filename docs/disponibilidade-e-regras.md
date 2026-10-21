@@ -4,7 +4,7 @@ No painel (`/painel/` → **🗓️ Disponibilidade**) define-se:
 
 - os **dias do mês em que atende** e as horas (passo a passo: tocar nos dias, escolher as horas, confirmar), com folgas, vários períodos por dia e escolha de dias seguidos;
 - opcionalmente, um horário fixo semanal (secção "Avançado");
-- **todos os serviços do preçário** (79, por categoria): para cada um, a duração e se aparece ou não na marcação;
+- **todos os serviços do preçário** (79, por categoria; 32 ligados por omissão): para cada um, a duração e se aparece ou não na marcação;
 - a pausa entre clientes, a antecedência mínima e até quando se aceitam marcações.
 
 Por omissão **nenhum dia está aberto**: as clientes só conseguem marcar nos dias que a administradora escolher.
@@ -54,6 +54,12 @@ Faturamento. **Se o preçário mudar, atualizar também o catálogo** — há um
 
 - Os nomes antigos (ex.: "Coloração de Sobrancelhas (Henna / Tintura / Descoloração)") continuam a funcionar para as
   marcações já feitas, mas já não aparecem no formulário.
-- Os grupos "Extensão de Pestanas", "Despigmentação" e "Tratamentos" (Brow Vitamin) estão "temporariamente indisponíveis"
-  no preçário e começam desligados; a administradora liga-os no painel quando voltarem.
+- Estão **indisponíveis** (desligados na marcação e assinalados no preçário) tudo o que a Thayana tirou da lista de preços:
+  laser, micropigmentação, Hidraglos, Teen, extensão de pestanas, despigmentação, Brow Vitamin, permanente de pestanas,
+  descoloração de sobrancelhas e patilhas (homem). No catálogo, `off: true` desliga uma categoria e um 5.º valor `false`
+  desliga um serviço. A administradora volta a ligá-los no painel (Disponibilidade → Serviços) quando os fizer;
+  a página do preçário e as páginas de serviço são estáticas e passam a ter de ser atualizadas à mão.
+- `CAT_V` (em `disponibilidade.js`) sobe sempre que preços, durações ou o que está ligado mudam no catálogo. A configuração
+  guardada com outra versão perde os "ligado/desligado" antigos e a duração do Lifting volta ao valor novo; as restantes
+  durações escolhidas por ela mantêm-se.
 - Os produtos do preçário não são serviços marcáveis e ficam de fora.
