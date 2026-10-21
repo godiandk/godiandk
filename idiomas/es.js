@@ -556,6 +556,12 @@ window.INOVA_DIC.es = {
 "Lifting de Pestanas*<small>com tintura: +5,00€</small>": "Lifting de pestañas*<small>con tinte: +5,00€</small>",
 "Lifting e tintura para um olhar marcante todos os dias, sem esforço.": "Lifting y tinte para una mirada marcada todos los días, sin esfuerzo.",
 "A coloração dá cor, preenchimento e definição às sobrancelhas — da henna (que também pigmenta a pele) à tintura dos pelos.": "La coloración da color, relleno y definición a las cejas — desde la henna (que también pigmenta la piel) hasta el tinte del pelo.",
-"com tintura: +5,00€": "con tinte: +5,00€"
+"com tintura: +5,00€": "con tinte: +5,00€",
+"Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas e pestanas. Em Canidelo, Vila Nova de Gaia.": "Belleza, precisión y cuidado en cada detalle. Especialistas en cejas y pestañas. En Canidelo, Vila Nova de Gaia.",
+"Especialistas em sobrancelhas, pestanas e depilação com linha. Realce a sua beleza natural com quem trata cada detalhe como arte.": "Especialistas en cejas, pestañas y depilación con hilo. Realza tu belleza natural con quien trata cada detalle como arte.",
+"Técnicas atuais: threading, laminação e lifting": "Técnicas actuales: threading, laminado y lifting",
+"Cada sobrancelha ou pestana é trabalhada ao detalhe, ao seu rosto — nada de moldes iguais para todas.": "Cada ceja o pestaña se trabaja al detalle, para tu rostro — nada de moldes iguales para todas.",
+"Depende do serviço: o threading de sobrancelhas é rápido (cerca de 15 minutos), e os tratamentos de pestanas e a coloração rondam os 30–60 minutos. Indicamos sempre a duração ao confirmar.": "Depende del servicio: el threading de cejas es rápido (unos 15 minutos), y los tratamientos de pestañas y la coloración rondan los 30–60 minutos. Siempre indicamos la duración al confirmar.",
+"Por trás da Inova Beauty está a <strong>Thayana</strong> — apaixonada por realçar a beleza natural de cada pessoa. Especializada nas técnicas mais atuais de embelezamento do olhar — threading, laminação de sobrancelhas e lifting de pestanas — entrega resultados precisos, naturais e duradouros.": "Detrás de Inova Beauty está <strong>Thayana</strong> — apasionada por realzar la belleza natural de cada persona. Especializada en las técnicas más actuales de embellecimiento de la mirada — threading, laminado de cejas y lifting de pestañas — entrega resultados precisos, naturales y duraderos."
 
 };

@@ -54,11 +54,10 @@ Faturamento. **Se o preçário mudar, atualizar também o catálogo** — há um
 
 - Os nomes antigos (ex.: "Coloração de Sobrancelhas (Henna / Tintura / Descoloração)") continuam a funcionar para as
   marcações já feitas, mas já não aparecem no formulário.
-- Estão **indisponíveis** (desligados na marcação e assinalados no preçário) tudo o que a Thayana tirou da lista de preços:
-  laser, micropigmentação, Hidraglos, Teen, extensão de pestanas, despigmentação, Brow Vitamin, permanente de pestanas,
-  descoloração de sobrancelhas e patilhas (homem). No catálogo, `off: true` desliga uma categoria e um 5.º valor `false`
-  desliga um serviço. A administradora volta a ligá-los no painel (Disponibilidade → Serviços) quando os fizer;
-  a página do preçário e as páginas de serviço são estáticas e passam a ter de ser atualizadas à mão.
+- Estão **escondidos do público** (desligados na marcação, fora do preçário, dos cartões e dos menus; as páginas ficam com
+  `noindex` e fora do `sitemap.xml`) todos os serviços que a Thayana ainda não faz. A lista completa, com preços e tempos, e
+  como os repor estão em `docs/servicos-indisponiveis.md`. No catálogo, `off: true` desliga uma categoria e um 5.º valor
+  `false` desliga um serviço; a administradora também os liga no painel (Disponibilidade → Serviços).
 - As durações por omissão são exatamente as que a Thayana guardou no painel (ex.: Brow Lamination e Alisamento 45 min,
   Henna 30 min, Lifting 1h): é ela que define quanto demora cada serviço. A lista de preços que ela devolveu serve só
   para os preços, nunca para os tempos.
