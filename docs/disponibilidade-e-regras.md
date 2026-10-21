@@ -60,9 +60,9 @@ Faturamento. **Se o preçário mudar, atualizar também o catálogo** — há um
   desliga um serviço. A administradora volta a ligá-los no painel (Disponibilidade → Serviços) quando os fizer;
   a página do preçário e as páginas de serviço são estáticas e passam a ter de ser atualizadas à mão.
 - As durações por omissão são exatamente as que a Thayana guardou no painel (ex.: Brow Lamination e Alisamento 45 min,
-  Henna 30 min): é ela que define quanto demora cada serviço. Única exceção: o Lifting, que ela escreveu como 1h30 na
-  lista de preços (no painel estava 1h).
+  Henna 30 min, Lifting 1h): é ela que define quanto demora cada serviço. A lista de preços que ela devolveu serve só
+  para os preços, nunca para os tempos.
 - `CAT_V` (em `disponibilidade.js`) sobe quando o catálogo muda de forma que não chega a configurações já guardadas:
-  v2 repõe o que está ligado/desligado; v4 acerta o Lifting (1h30) e repõe o Lifting + Tintura (1h30). Todas as outras
-  durações que ela escolheu mantêm-se.
+  v2 repõe o que está ligado/desligado; v5 desfaz uma alteração indevida do Lifting feita pelas versões 3 e 4.
+  As durações que ela escolheu nunca são tocadas.
 - Os produtos do preçário não são serviços marcáveis e ficam de fora.

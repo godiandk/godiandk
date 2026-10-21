@@ -558,7 +558,6 @@ window.INOVA_DIC.en = {
 "Lifting de Pestanas*<small>com tintura: +5,00€</small>": "Lash Lift*<small>with tint: +€5.00</small>",
 "Lifting e tintura para um olhar marcante todos os dias, sem esforço.": "Lift and tint for a striking look every day, effortlessly.",
 "A coloração dá cor, preenchimento e definição às sobrancelhas — da henna (que também pigmenta a pele) à tintura dos pelos.": "Colouring adds colour, fullness and definition to the eyebrows — from henna (which also tints the skin) to hair tint.",
-"🕐 Duração média: ≈ 1h30": "🕐 Average duration: ≈ 1h30",
 "com tintura: +5,00€": "with tint: +€5.00"
 
 };
