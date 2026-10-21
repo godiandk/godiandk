@@ -551,6 +551,12 @@ window.INOVA_DIC.es = {
 "Outro": "Otro",
 "Escolha o serviço…": "Elige el servicio…",
 "Escolha primeiro o serviço": "Elige primero el servicio",
-"Escolha o serviço.": "Elige el servicio."
+"Escolha o serviço.": "Elige el servicio.",
+"Indisponível": "No disponible",
+"Lifting de Pestanas*<small>com tintura: +5,00€</small>": "Lifting de pestañas*<small>con tinte: +5,00€</small>",
+"Lifting e tintura para um olhar marcante todos os dias, sem esforço.": "Lifting y tinte para una mirada marcada todos los días, sin esfuerzo.",
+"A coloração dá cor, preenchimento e definição às sobrancelhas — da henna (que também pigmenta a pele) à tintura dos pelos.": "La coloración da color, relleno y definición a las cejas — desde la henna (que también pigmenta la piel) hasta el tinte del pelo.",
+"🕐 Duração média: ≈ 1h30": "🕐 Duración media: ≈ 1h30",
+"com tintura: +5,00€": "con tinte: +5,00€"
 
 };

@@ -23,14 +23,18 @@ window.InovaAgenda = (function () {
        v = nome guardado na marcação (único)      l = nome mostrado na lista
        d = duração por omissão, em minutos        p = preço do preçário:
            {b: valor} fixo · {f: valor} "a partir de" · {c: 1} sob consulta
-     Grupos com `off: true` estão "temporariamente indisponíveis" no preçário
-     e não aparecem na marcação (a administradora pode ligá-los no painel).
+     Grupos com `off: true` (ou um serviço com o 5.º valor `false`) estão
+     "indisponíveis" no preçário e não aparecem na marcação — a administradora
+     pode ligá-los no painel quando voltar a fazê-los.
+     CAT_V sobe sempre que o catálogo muda (preços, durações ou o que está ligado):
+     a configuração guardada com outra versão volta ao ponto de partida novo.
      ============================================================ */
   function b_(n) { return { b: n }; }
   var CONS = { c: 1 };
+  var CAT_V = 2;
   var GRUPOS = [
     { id: "thr", nome: "Threading — Depilação com Linha", itens: [
-      ["Threading de Sobrancelhas", "Sobrancelhas", 30, b_(10.5)],
+      ["Threading de Sobrancelhas", "Sobrancelhas", 30, b_(10)],
       ["Threading — Buço", "Buço", 15, b_(5)],
       ["Threading — Queixo", "Queixo", 15, b_(6)],
       ["Threading — Meio das Sobrancelhas", "Meio das Sobrancelhas", 15, b_(6)],
@@ -43,52 +47,52 @@ window.InovaAgenda = (function () {
       ["Threading — Mãos", "Mãos", 30, b_(9)],
       ["Threading — Dedos", "Dedos", 15, b_(5)],
       ["Threading — Sobrancelhas + Buço", "Sobrancelhas + Buço", 30, b_(15)],
-      ["Threading — Rosto Completo", "Rosto Completo", 60, b_(35)]
+      ["Threading — Rosto Completo", "Rosto Completo", 60, b_(30)]
     ] },
     { id: "hom", nome: "Threading — Homem", itens: [
-      ["Threading Homem — Sobrancelhas", "Sobrancelhas", 30, b_(10.5)],
+      ["Threading Homem — Sobrancelhas", "Sobrancelhas", 30, b_(10)],
       ["Threading Homem — Maçãs do Rosto / Contorno da Barba", "Maçãs do Rosto / Contorno da Barba", 30, b_(7.5)],
-      ["Threading Homem — Patilhas", "Patilhas", 15, b_(9.5)]
+      ["Threading Homem — Patilhas", "Patilhas", 15, b_(9.5), false]
     ] },
-    { id: "teen", nome: "Teen (até 18 anos)", itens: [
+    { id: "teen", nome: "Teen (até 18 anos)", off: true, itens: [
       ["Teen Brows", "Teen Brows", 30, b_(10.5)],
       ["Teen Brows + Buço", "Teen Brows + Buço", 30, b_(18.5)]
     ] },
     { id: "col", nome: "Coloração de Sobrancelhas", itens: [
-      ["Coloração — Henna", "Henna", 45, b_(26.5)],
-      ["Coloração — Tintura de Sobrancelhas", "Tintura", 30, b_(24)],
-      ["Coloração — Descoloração de Sobrancelhas", "Descoloração de Sobrancelhas", 45, b_(27.5)],
-      ["Coloração — Henna + Threading", "Henna + Threading", 60, b_(36.4)],
-      ["Coloração — Tintura + Threading", "Tintura + Threading", 45, b_(34.2)]
+      ["Coloração — Henna", "Henna", 45, b_(10)],
+      ["Coloração — Tintura de Sobrancelhas", "Tintura", 30, b_(15)],
+      ["Coloração — Descoloração de Sobrancelhas", "Descoloração de Sobrancelhas", 45, b_(27.5), false],
+      ["Coloração — Henna + Threading", "Henna + Threading", 60, b_(15)],
+      ["Coloração — Tintura + Threading", "Tintura + Threading", 45, b_(20)]
     ] },
     { id: "brow", nome: "Sobrancelhas — Tratamentos", itens: [
-      ["Brow Lamination", "Brow Lamination", 60, b_(35)],
-      ["Alisamento de Sobrancelhas", "Alisamento de Sobrancelhas", 60, b_(35)],
+      ["Brow Lamination", "Brow Lamination", 60, b_(20)],
+      ["Alisamento de Sobrancelhas", "Alisamento de Sobrancelhas", 60, b_(20)],
       ["Brow Care", "Brow Care", 15, b_(8.5)],
-      ["Brow Lamination + Threading", "Brow Lamination + Threading", 75, b_(44.1)],
-      ["Brow Lamination + Tintura", "Brow Lamination + Tintura", 90, b_(53.1)],
-      ["Alisamento + Threading", "Alisamento + Threading", 75, b_(44.1)],
-      ["Alisamento + Tintura", "Alisamento + Tintura", 90, b_(53.1)]
+      ["Brow Lamination + Threading", "Brow Lamination + Threading", 75, b_(25)],
+      ["Brow Lamination + Tintura", "Brow Lamination + Tintura", 90, b_(30)],
+      ["Alisamento + Threading", "Alisamento + Threading", 75, b_(25)],
+      ["Alisamento + Tintura", "Alisamento + Tintura", 90, b_(30)]
     ] },
     { id: "pest", nome: "Pestanas", itens: [
-      ["Lifting de Pestanas", "Lifting de Pestanas", 60, b_(31)],
-      ["Permanente de Pestanas", "Permanente de Pestanas", 60, b_(31)],
-      ["Tintura de Pestanas", "Tintura de Pestanas", 30, b_(24)],
+      ["Lifting de Pestanas", "Lifting de Pestanas", 90, b_(25)],
+      ["Permanente de Pestanas", "Permanente de Pestanas", 60, b_(31), false],
+      ["Tintura de Pestanas", "Tintura de Pestanas", 30, b_(15)],
       ["Lash Care", "Lash Care", 15, b_(8.5)],
-      ["Lifting + Tintura de Pestanas", "Lifting + Tintura de Pestanas", 75, b_(49.5)],
-      ["Permanente + Tintura de Pestanas", "Permanente + Tintura de Pestanas", 75, b_(49.5)]
+      ["Lifting + Tintura de Pestanas", "Lifting + Tintura de Pestanas", 105, b_(30)],
+      ["Permanente + Tintura de Pestanas", "Permanente + Tintura de Pestanas", 75, b_(49.5), false]
     ] },
-    { id: "micro", nome: "Micropigmentação — Sobrancelhas", itens: [
+    { id: "micro", nome: "Micropigmentação — Sobrancelhas", off: true, itens: [
       ["Micropigmentação — Consulta de Avaliação", "Consulta de Avaliação", 30, b_(35)],
       ["Micropigmentação de Sobrancelhas", "Sobrancelhas", 150, b_(225)],
       ["Micropigmentação — Retoque até 60 dias", "Retoque até 60 dias", 90, b_(75)],
       ["Micropigmentação — Retoque até 1 ano", "Retoque até 1 ano", 120, b_(179)]
     ] },
-    { id: "hidra", nome: "Hidraglos — Lábios", itens: [
+    { id: "hidra", nome: "Hidraglos — Lábios", off: true, itens: [
       ["Hidraglos com Cor", "Hidraglos com Cor", 45, CONS],
       ["Hidraglos sem Cor", "Hidraglos sem Cor", 45, b_(65)]
     ] },
-    { id: "laser", nome: "Depilação a Laser", itens: [
+    { id: "laser", nome: "Depilação a Laser", off: true, itens: [
       ["Laser — Buço", "Buço", 15, b_(8)],
       ["Laser — Axilas", "Axilas", 15, b_(15)],
       ["Laser — Virilha Normal", "Virilha Normal", 30, b_(20)],
@@ -142,7 +146,7 @@ window.InovaAgenda = (function () {
     ["Threading (rosto)", 30, { f: 4 }]
   ];
   GRUPOS.forEach(function (g) {
-    g.itens = g.itens.map(function (i) { return { v: i[0], l: i[1], d: i[2], p: i[3], ativo: !g.off, grupo: g.nome }; });
+    g.itens = g.itens.map(function (i) { return { v: i[0], l: i[1], d: i[2], p: i[3], ativo: !g.off && i[4] !== false, grupo: g.nome }; });
   });
   var PRECOS = {}, DUR0 = {};
   GRUPOS.forEach(function (g) { g.itens.forEach(function (i) { PRECOS[i.v] = i.p; DUR0[i.v] = i.d; }); });
@@ -211,7 +215,7 @@ window.InovaAgenda = (function () {
   function defaults() {
     var semana = {};
     for (var i = 0; i < 7; i++) semana[i] = { aberto: false, janelas: [] };
-    return { passo: 30, buffer: 0, antecedenciaH: 2, horizonte: 90, semanaOk: false, semana: semana, dias: {}, ativos: {}, duracoes: defaultDurations() };
+    return { passo: 30, buffer: 0, antecedenciaH: 2, horizonte: 90, semanaOk: false, semana: semana, dias: {}, ativos: {}, duracoes: defaultDurations(), catV: CAT_V };
   }
 
   function cleanWins(list) {
@@ -251,7 +255,8 @@ window.InovaAgenda = (function () {
         else d.dias[k] = { aberto: true, janelas: cleanWins(e.janelas) };
       });
     }
-    if (raw.ativos && typeof raw.ativos === "object") {
+    var velha = raw.catV !== CAT_V;   // guardada com um catálogo anterior
+    if (!velha && raw.ativos && typeof raw.ativos === "object") {
       Object.keys(raw.ativos).forEach(function (k) { if (DUR0[k] != null && typeof raw.ativos[k] === "boolean") d.ativos[k] = raw.ativos[k]; });
     }
     if (raw.duracoes) {
@@ -260,6 +265,7 @@ window.InovaAgenda = (function () {
         if (v >= U && v <= 600) d.duracoes[k] = Math.round(v / U) * U;
       });
     }
+    if (velha) ["Lifting de Pestanas", "Lifting + Tintura de Pestanas"].forEach(function (k) { d.duracoes[k] = DUR0[k]; });
     return d;
   }
 
