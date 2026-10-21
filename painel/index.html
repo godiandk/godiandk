@@ -730,7 +730,7 @@
       '<button type="button" class="btn btn-outline" data-act="cancel">Cancelar</button>';
     modal.style.display = "flex";
     var $ = function (id) { return modal.querySelector("#" + id); }, occList = [];
-    IA.fillServiceSelect($("nmServ"), IA.state.cfg, { todos: true, placeholder: false, lang: "pt" });
+    IA.fillServiceSelect($("nmServ"), IA.state.cfg, { placeholder: false, lang: "pt" });
     if (isMove) { var o1 = document.createElement("option"); o1.value = m.servico; o1.textContent = m.servico; $("nmServ").insertBefore(o1, $("nmServ").firstChild); $("nmServ").value = m.servico; }
     function curServ() { return isMove ? m.servico : $("nmServ").value; }
     function setMsg(cls, t) { var e = $("nmMsg"); e.className = "form-msg " + cls; e.textContent = t; }
