@@ -4,7 +4,7 @@ No painel (`/painel/` → **🗓️ Disponibilidade**) define-se:
 
 - os **dias do mês em que atende** e as horas (passo a passo: tocar nos dias, escolher as horas, confirmar), com folgas, vários períodos por dia e escolha de dias seguidos;
 - opcionalmente, um horário fixo semanal (secção "Avançado");
-- **todos os serviços do preçário** (79, por categoria; 32 ligados por omissão): para cada um, a duração e se aparece ou não na marcação;
+- **todos os serviços do preçário** (81, por categoria; 34 ligados por omissão): para cada um, a duração e se aparece ou não na marcação;
 - a pausa entre clientes, a antecedência mínima e até quando se aceitam marcações.
 
 Por omissão **nenhum dia está aberto**: as clientes só conseguem marcar nos dias que a administradora escolher.

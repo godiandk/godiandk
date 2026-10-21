@@ -85,6 +85,10 @@ window.InovaAgenda = (function () {
       ["Lifting + Tintura de Pestanas", "Lifting + Tintura de Pestanas", 90, b_(30)],
       ["Permanente + Tintura de Pestanas", "Permanente + Tintura de Pestanas", 90, b_(49.5), false]
     ] },
+    { id: "lab", nome: "Lábios", itens: [
+      ["Micropigmentação Labial", "Micropigmentação Labial", 90, b_(50)],
+      ["Neutralização", "Neutralização", 90, b_(45)]
+    ] },
     { id: "micro", nome: "Micropigmentação — Sobrancelhas", off: true, itens: [
       ["Micropigmentação — Consulta de Avaliação", "Consulta de Avaliação", 30, b_(35)],
       ["Micropigmentação de Sobrancelhas", "Sobrancelhas", 120, b_(225)],

@@ -564,6 +564,8 @@ window.INOVA_DIC.en = {
 "Técnicas atuais: threading, laminação e lifting": "Up-to-date techniques: threading, lamination and lift",
 "Cada sobrancelha ou pestana é trabalhada ao detalhe, ao seu rosto — nada de moldes iguais para todas.": "Every brow or lash is worked in detail, to suit your face — no one-size-fits-all templates.",
 "Depende do serviço: o threading de sobrancelhas é rápido (cerca de 15 minutos), e os tratamentos de pestanas e a coloração rondam os 30–60 minutos. Indicamos sempre a duração ao confirmar.": "It depends on the service: eyebrow threading is quick (around 15 minutes), and lash treatments and tinting take about 30–60 minutes. We always tell you the duration when confirming.",
-"Por trás da Inova Beauty está a <strong>Thayana</strong> — apaixonada por realçar a beleza natural de cada pessoa. Especializada nas técnicas mais atuais de embelezamento do olhar — threading, laminação de sobrancelhas e lifting de pestanas — entrega resultados precisos, naturais e duradouros.": "Behind Inova Beauty is <strong>Thayana</strong> — passionate about enhancing everyone's natural beauty. Specialised in the latest eye-beautifying techniques — threading, brow lamination and lash lift — she delivers precise, natural and long-lasting results."
+"Por trás da Inova Beauty está a <strong>Thayana</strong> — apaixonada por realçar a beleza natural de cada pessoa. Especializada nas técnicas mais atuais de embelezamento do olhar — threading, laminação de sobrancelhas e lifting de pestanas — entrega resultados precisos, naturais e duradouros.": "Behind Inova Beauty is <strong>Thayana</strong> — passionate about enhancing everyone's natural beauty. Specialised in the latest eye-beautifying techniques — threading, brow lamination and lash lift — she delivers precise, natural and long-lasting results.",
+"Micropigmentação Labial": "Lip Micropigmentation",
+"Neutralização": "Neutralisation"
 
 };
