@@ -558,6 +558,12 @@ window.INOVA_DIC.en = {
 "Lifting de Pestanas*<small>com tintura: +5,00€</small>": "Lash Lift*<small>with tint: +€5.00</small>",
 "Lifting e tintura para um olhar marcante todos os dias, sem esforço.": "Lift and tint for a striking look every day, effortlessly.",
 "A coloração dá cor, preenchimento e definição às sobrancelhas — da henna (que também pigmenta a pele) à tintura dos pelos.": "Colouring adds colour, fullness and definition to the eyebrows — from henna (which also tints the skin) to hair tint.",
-"com tintura: +5,00€": "with tint: +€5.00"
+"com tintura: +5,00€": "with tint: +€5.00",
+"Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas e pestanas. Em Canidelo, Vila Nova de Gaia.": "Beauty, precision and care in every detail. Specialists in eyebrows and lashes. In Canidelo, Vila Nova de Gaia.",
+"Especialistas em sobrancelhas, pestanas e depilação com linha. Realce a sua beleza natural com quem trata cada detalhe como arte.": "Specialists in eyebrows, lashes and threading. Enhance your natural beauty with someone who treats every detail as art.",
+"Técnicas atuais: threading, laminação e lifting": "Up-to-date techniques: threading, lamination and lift",
+"Cada sobrancelha ou pestana é trabalhada ao detalhe, ao seu rosto — nada de moldes iguais para todas.": "Every brow or lash is worked in detail, to suit your face — no one-size-fits-all templates.",
+"Depende do serviço: o threading de sobrancelhas é rápido (cerca de 15 minutos), e os tratamentos de pestanas e a coloração rondam os 30–60 minutos. Indicamos sempre a duração ao confirmar.": "It depends on the service: eyebrow threading is quick (around 15 minutes), and lash treatments and tinting take about 30–60 minutes. We always tell you the duration when confirming.",
+"Por trás da Inova Beauty está a <strong>Thayana</strong> — apaixonada por realçar a beleza natural de cada pessoa. Especializada nas técnicas mais atuais de embelezamento do olhar — threading, laminação de sobrancelhas e lifting de pestanas — entrega resultados precisos, naturais e duradouros.": "Behind Inova Beauty is <strong>Thayana</strong> — passionate about enhancing everyone's natural beauty. Specialised in the latest eye-beautifying techniques — threading, brow lamination and lash lift — she delivers precise, natural and long-lasting results."
 
 };

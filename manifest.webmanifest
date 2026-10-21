@@ -1,7 +1,7 @@
 {
   "name": "Inova Beauty",
   "short_name": "Inova Beauty",
-  "description": "Sobrancelhas, pestanas e micropigmentação. Marque o seu horário, acumule selos de fidelidade e receba cupons.",
+  "description": "Sobrancelhas e pestanas. Marque o seu horário, acumule selos de fidelidade e receba cupons.",
   "start_url": "./app/home/?source=app",
   "scope": "./",
   "display": "standalone",
