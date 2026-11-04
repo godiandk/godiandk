@@ -10,12 +10,12 @@
   display: flex; align-items: center; gap: 6px;
   background: rgba(25, 20, 17, .06);
   border: 1px solid var(--gold-faint, #e9dcc8);
-  color: var(--gold, #b08d57);
+  color: var(--gold-text, #7a5a2b);
   border-radius: 999px; padding: 7px 13px;
   font: inherit; font-size: .72rem; font-weight: 600; letter-spacing: .08em; cursor: pointer;
   transition: .18s; line-height: 1; min-height: 38px;
 }
-.lang-atual:hover { border-color: var(--gold, #b08d57); color: var(--ink, #211a14); background: rgba(176, 141, 87, .1); }
+.lang-atual:hover { border-color: var(--gold-text, #7a5a2b); color: var(--ink, #211a14); background: rgba(176, 141, 87, .1); }
 .lang-atual .la-bandeira { font-style: normal; font-size: 1.05rem; line-height: 1; }
 .lang-atual .la-nome { white-space: nowrap; }
 
@@ -40,8 +40,8 @@
   color: var(--ink-soft, #4a4038); font: inherit; font-size: .84rem; font-weight: 500; cursor: pointer; text-align: left;
 }
 .lang-btn i { font-style: normal; font-size: 1.1rem; line-height: 1; }
-.lang-btn:hover { background: var(--cream-2, #f3ece2); color: var(--gold, #b08d57); }
-.lang-btn.on { background: rgba(176, 141, 87, .14); color: var(--gold, #b08d57); font-weight: 700; }
+.lang-btn:hover { background: var(--cream-2, #f3ece2); color: var(--gold-text, #7a5a2b); }
+.lang-btn.on { background: rgba(176, 141, 87, .14); color: var(--gold-text, #7a5a2b); font-weight: 700; }
 
 /* o pill fica no fim do cabeçalho, à direita do menu */
 .site-header .nav-right { display: flex; align-items: center; margin-left: .7rem; }

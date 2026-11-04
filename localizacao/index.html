@@ -5,18 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Localização — Inova Beauty · Canidelo, Vila Nova de Gaia</title>
 <meta name="description" content="Inova Beauty em Canidelo, Vila Nova de Gaia. Atendimento por marcação — marque online e receba a morada exata ao confirmar. Sobrancelhas e pestanas.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="../i18n.css">
 <link rel="manifest" href="../manifest.webmanifest">
 <meta name="theme-color" content="#191411">
 <link rel="apple-touch-icon" href="../img/icon-192.png">
 <link rel="icon" href="../img/favicon.png">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-app-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-auth-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-firestore-compat.js"></script>
 <script src="../firebase-config.js"></script>
 <script src="../analytics.js"></script>
 <link rel="canonical" href="https://godiandk.github.io/godiandk/localizacao/">
@@ -35,9 +32,10 @@
 <meta name="twitter:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
 </head>
 <body>
+<a class="skip-link" href="#conteudo">Saltar para o conteúdo</a>
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="Inova Beauty">Inova <span>Beauty</span></a>
+    <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="">Inova <span>Beauty</span></a>
     <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -57,7 +55,7 @@
         <li><a class="nav-link" href="../precario/">Preçário</a></li>
         <li><a class="nav-link" href="../processos/">Processos</a></li>
         <li><a class="nav-link" href="../sobre/">Sobre</a></li>
-        <li><a class="nav-link" href="../contato/">Contato</a></li>
+        <li><a class="nav-link" href="../contato/">Contacto</a></li>
         <li class="active"><a class="nav-link" href="../localizacao/">Localização</a></li>
         <li class="nav-auth">
           <a class="btn-login" href="../conta/">👤 Entrar</a>
@@ -68,6 +66,7 @@
     <div class="nav-right" data-sem-traducao></div>
   </div>
 </header>
+<main id="conteudo">
 <section class="page-hero">
   <div class="container">
     <ol class="breadcrumb"><li><a href="../">Home</a></li><li>Localização</li></ol>
@@ -81,26 +80,27 @@
     <div class="info-grid">
       <div class="info-card">
         <div class="icon">📍</div>
-        <h3>Zona</h3>
+        <h2>Zona</h2>
         <p>Canidelo, Vila Nova de Gaia — Rua da Bélgica, mesmo em frente à <strong>Padaria Mirassol</strong>. Espaço reservado, por marcação. A morada exata é enviada ao confirmar.</p>
         <p class="mt-2"><a class="btn btn-outline" style="padding:.55rem 1.3rem;font-size:.74rem" href="../agendar/">✨ Marcar e receber a morada</a></p>
       </div>
       <div class="info-card">
         <div class="icon">🕐</div>
-        <h3>Horário</h3>
+        <h2>Horário</h2>
         <p>Atendimento só por marcação<br>nos dias e horas disponíveis online</p>
       </div>
       <div class="info-card">
         <div class="icon">💬</div>
-        <h3>Marcações</h3>
+        <h2>Marcações</h2>
         <p>Atendemos por marcação para lhe garantir um serviço sem esperas.</p>
         <p class="mt-2"><a class="btn btn-gold" style="padding:.55rem 1.3rem;font-size:.74rem" href="../agendar/">✨ Fazer marcação online</a></p>
       </div>
     </div>
     <p class="text-center" style="margin:2.4rem 0 1rem;color:var(--ink-soft)">Referência: <strong>Padaria Mirassol</strong>, na Rua da Bélgica (Canidelo). Estamos mesmo em frente. A morada exata é reservada e enviada ao confirmar a marcação.</p>
-    <div style="border-radius:14px;overflow:hidden;border:1px solid var(--gold-faint)">
-      <iframe title="Referência: Padaria Mirassol, Rua da Bélgica — Canidelo, Vila Nova de Gaia" src="https://www.google.com/maps?q=Padaria+Mirassol,+R.+da+B%C3%A9lgica+860,+4400-045+Vila+Nova+de+Gaia&z=16&output=embed" width="100%" height="380" style="border:0;display:block" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
+    <div class="map-consent" id="mapBox" data-title="Referência: Padaria Mirassol, Rua da Bélgica — Canidelo, Vila Nova de Gaia" data-src="https://www.google.com/maps?q=Padaria+Mirassol,+R.+da+B%C3%A9lgica+860,+4400-045+Vila+Nova+de+Gaia&amp;z=16&amp;output=embed">
+        <p>O mapa é fornecido pela Google. Ao carregá-lo, o seu navegador liga-se aos servidores da Google, que recebem o seu endereço IP e podem guardar cookies. Só o carregamos se o pedir.</p>
+        <button type="button" class="btn btn-gold" id="mapLoad">Mostrar o mapa</button>
+      </div>
   </div>
 </section>
 <section>
@@ -115,25 +115,26 @@
     </div>
   </div>
 </section>
+</main>
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="Inova Beauty">Inova <span>Beauty</span></a>
-      <p>Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas e pestanas. Em Canidelo, Vila Nova de Gaia.</p>
+      <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="">Inova <span>Beauty</span></a>
+      <p>Beleza, precisão e cuidado em cada detalhe. Sobrancelhas, pestanas e lábios em Canidelo, Vila Nova de Gaia.</p>
     </div>
     <div>
-      <h4>Navegação</h4>
+      <h2 class="footer-title">Navegação</h2>
       <ul>
         <li><a href="../servicos/">Serviços</a></li>
         <li><a href="../precario/">Preçário</a></li>
         <li><a href="../processos/">Processos</a></li>
         <li><a href="../sobre/">Sobre</a></li>
-        <li><a href="../contato/">Contato</a></li>
+        <li><a href="../contato/">Contacto</a></li>
         <li><a href="../localizacao/">Localização</a></li>
       </ul>
     </div>
     <div>
-      <h4>Contactos</h4>
+      <h2 class="footer-title">Contactos</h2>
       <ul>
         <li><a href="../agendar/">✨ Marcar horário online</a></li>
         <li><a href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener">Dúvidas no WhatsApp: +351 919 277 205</a></li>
@@ -142,13 +143,32 @@
         <li><a href="../app/">📱 Instalar a APP</a></li>
       </ul>
     </div>
+    <div>
+      <h2 class="footer-title">Legal</h2>
+      <ul>
+        <li><a href="../privacidade/">Política de Privacidade</a></li>
+        <li><a href="../termos/">Termos e Condições</a></li>
+        <li><a href="../cookies/">Política de Cookies</a></li>
+        <li><a href="../cancelamento/">Cancelamento e reembolso</a></li>
+        <li><a class="lre-link" href="https://www.livroreclamacoes.pt/" target="_blank" rel="noopener">Livro de Reclamações</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-legal">
+    <div class="legal-id">
+      <div><span class="lbl">Prestador de serviços</span> <span class="val" data-sem-traducao>Inova Beauty — <span class="a-preencher" data-campo="nome">A PREENCHER</span></span></div>
+      <div><span class="lbl">NIF</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="nif">A PREENCHER</span></span></div>
+      <div><span class="lbl">Morada</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="morada">A PREENCHER</span></span></div>
+      <div><span class="lbl">Email</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="email">A PREENCHER</span></span></div>
+      <div><span class="lbl">Telemóvel</span> <span class="val" data-sem-traducao>+351 919 277 205</span></div>
+    </div>
   </div>
   <div class="container footer-bottom">
-    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../privacidade/" style="color:inherit">Privacidade</a> · <a href="../termos/" style="color:inherit">Termos</a> · <a href="../painel/" style="color:inherit">Área reservada</a>
+    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../painel/">Área reservada</a>
   </div>
 </footer>
-<a class="app-float" href="../app/home/" aria-label="Abrir a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
-<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener" aria-label="Tirar dúvidas no WhatsApp" title="Dúvidas? Fale connosco"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg><span class="wa-float-tip">Dúvidas?</span></a>
+<nav class="float-nav" aria-label="Atalhos: app e WhatsApp"><a class="app-float" href="../app/home/" aria-label="Abrir a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
+<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener" aria-label="Tirar dúvidas no WhatsApp" title="Dúvidas? Fale connosco"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg><span class="wa-float-tip">Dúvidas?</span></a></nav>
 <script>window.INOVA_PREFIX="../";</script>
 <script src="../auth.js"></script>
 <script src="../main.js"></script>

@@ -1,0 +1,11 @@
+Firebase JavaScript SDK 10.12.2 (pacotes "compat": app, auth e firestore)
+Copyright Google LLC — licença Apache-2.0 (texto em LICENSE-Apache-2.0.txt).
+Origem: pacote npm "firebase@10.12.2" (ficheiros firebase-*-compat.js, sem modificações).
+
+Porque está aqui: ao alojar o SDK no próprio site, o navegador do visitante deixa de contactar
+www.gstatic.com (Google) só por abrir uma página. O SDK só fala com os servidores da Google
+(Firebase Authentication e Cloud Firestore) quando o utilizador usa uma função que precisa deles:
+iniciar sessão, criar conta, ver/pedir horários ou publicar na comunidade.
+
+Para atualizar: descarregar a versão nova do pacote npm "firebase", substituir os 3 ficheiros e a
+pasta (ex.: 10.12.2 -> 10.x.y) e alterar o caminho nos <script> das páginas.

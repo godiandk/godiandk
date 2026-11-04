@@ -1,4 +1,4 @@
-/* INOVA BEAUTY — Sistema de cupons (client-side)
+/* INOVA BEAUTY — Sistema de cupões (client-side)
    Formato do código: INOVA-<T><PCT>-<RAND>-<EXP AAMMDD>-<CHK>
    Ex.: INOVA-D15-8KQ2-261231-A3F9
    T = D (desconto) | A (aniversário)
@@ -77,19 +77,19 @@
     return { code: code, type: type, pct: pct, expiry: expiryDateStr };
   }
 
-  /* Cupom de aniversário determinístico: mesmo telemóvel + mesmo mês
-     => mesmo código (não dá para "gerar de novo" outro cupom). */
+  /* Cupão de aniversário determinístico: mesmo telemóvel + mesmo mês
+     => mesmo código (não dá para "gerar de novo" outro cupão). */
   function fmtDate(d) {
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
 
-  /* Cupom de aniversário: aparece no DIA do aniversário e dura 1 SEMANA.
-     birthdate: "AAAA-MM-DD" da conta. Devolve também a janela de validade. */
+  /* Cupão de aniversário: aparece no DIA do aniversário e dura 1 SEMANA.
+     birthdate: "MM-DD" (só dia e mês; contas antigas podem ter "AAAA-MM-DD"). Devolve também a janela de validade. */
   function birthdayCoupon(phone, birthdate) {
     var now = new Date(); var year = now.getFullYear();
-    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birthdate || "");
-    var bMonth = m ? parseInt(m[2], 10) - 1 : now.getMonth();
-    var bDay = m ? parseInt(m[3], 10) : now.getDate();
+    var m = /^(?:\d{4}-)?(\d{2})-(\d{2})$/.exec(birthdate || "");
+    var bMonth = m ? parseInt(m[1], 10) - 1 : now.getMonth();
+    var bDay = m ? parseInt(m[2], 10) : now.getDate();
     var bday = new Date(year, bMonth, bDay);
     var end = new Date(year, bMonth, bDay + 7); // 1 semana
     var expStr = fmtDate(end);
@@ -104,9 +104,9 @@
   /* A janela do aniversário está ativa? (do dia do aniversário +7 dias) */
   function birthdayActive(birthdate) {
     var now = new Date(); now.setHours(0, 0, 0, 0);
-    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(birthdate || "");
+    var m = /^(?:\d{4}-)?(\d{2})-(\d{2})$/.exec(birthdate || "");
     if (!m) return false;
-    var bMonth = parseInt(m[2], 10) - 1, bDay = parseInt(m[3], 10);
+    var bMonth = parseInt(m[1], 10) - 1, bDay = parseInt(m[2], 10);
     var bday = new Date(now.getFullYear(), bMonth, bDay); bday.setHours(0, 0, 0, 0);
     var end = new Date(now.getFullYear(), bMonth, bDay + 7); end.setHours(23, 59, 59, 0);
     return now >= bday && now <= end;
@@ -144,7 +144,7 @@
     return { code: code, expiry: expiryDateStr };
   }
 
-  /* Prémio dos 10 selos: cupom 100% determinístico por telefone+ciclo
+  /* Prémio dos 10 selos: cupão 100% determinístico por telefone+ciclo
      (não é possível "gerar de novo" outro código para o mesmo ciclo). */
   function rewardCoupon(phone, cycle) {
     var d = new Date();

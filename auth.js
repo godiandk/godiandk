@@ -1,7 +1,7 @@
 /* INOVA BEAUTY — Contas de cliente
    Backend: Firebase (Authentication + Firestore) quando disponível;
    caso contrário, guarda no próprio dispositivo (localStorage).
-   As senhas nunca ficam no nosso código — o Firebase trata disso;
+   As palavras-passe nunca ficam no nosso código — o Firebase trata disso;
    no modo local, guardamos apenas um hash SHA-256 com salt. */
 (function () {
   "use strict";
@@ -31,11 +31,12 @@
     return CHARS.map(function (id) { return { id: id, path: charPath(id), url: withPrefix(charPath(id)) }; });
   }
 
-  function defaultAvatar(gender, name) {
-    var isF = gender === "F";
+  // Já não se pergunta o sexo (minimização de dados, RGPD art. 5.º, n.º 1, al. c)): o avatar por omissão é a
+  // inicial do nome ou uma silhueta neutra. O 1.º parâmetro mantém-se só para não partir chamadas antigas; é ignorado.
+  function defaultAvatar(_ignorado, name) {
     var bg = "#f3ece2", fg = "#b08d57";
-    if (!gender && name) {
-      var letter = (name.trim()[0] || "?").toUpperCase();
+    if (name && String(name).trim()) {
+      var letter = (String(name).trim()[0] || "?").toUpperCase();
       var svgL =
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
         '<circle cx="50" cy="50" r="50" fill="' + fg + '"/>' +
@@ -43,13 +44,9 @@
         '</svg>';
       return "data:image/svg+xml;utf8," + encodeURIComponent(svgL);
     }
-    var hair = isF
-      ? '<path d="M50 16C33 16 21 29 21 46v11c0 4 2 8 6 10l2-15c1-9 10-16 21-16s20 7 21 16l2 15c4-2 6-6 6-10V46C79 29 67 16 50 16z" fill="' + fg + '"/>'
-      : "";
     var svg =
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
       '<circle cx="50" cy="50" r="50" fill="' + bg + '"/>' +
-      hair +
       '<circle cx="50" cy="42" r="17" fill="' + fg + '"/>' +
       '<path d="M50 62c-19 0-32 13-32 28v10h64V90c0-15-13-28-32-28z" fill="' + fg + '"/>' +
       '</svg>';
@@ -57,10 +54,10 @@
   }
 
   function avatarUrl(acc) {
-    if (!acc) return defaultAvatar("M");
+    if (!acc) return defaultAvatar("", "");
     if (acc.photo) return acc.photo;
     if (acc.avatarChar) return withPrefix(acc.avatarChar);
-    return defaultAvatar(acc.gender || "", acc.name || "");
+    return defaultAvatar("", acc.name || "");
   }
 
   function fileToAvatar(file) {
@@ -136,6 +133,7 @@
           var data = res[0].exists ? res[0].data() : {};
           currentAcc = Object.assign({ uid: user.uid, email: user.email }, data);
           currentAcc._admin = !!(res[1] && res[1].exists);
+          slimAccount(currentAcc, user.uid);
           notify(); markReady();
         }).catch(function () {
           currentAcc = { uid: user.uid, email: user.email, name: user.displayName || "" };
@@ -144,6 +142,26 @@
       });
       return true;
     } catch (e) { return false; }
+  }
+
+  // Minimização: as contas antigas guardavam o sexo e a data de nascimento completa. Já não são precisos:
+  // apaga-se o sexo e deixa-se só o dia e o mês. Se a gravação falhar, repete-se na próxima sessão.
+  function slimAccount(acc, uid) {
+    if (!acc) return false;
+    var hadGender = false, birthChanged = false, nb = null;
+    if (acc.gender !== undefined) { delete acc.gender; hadGender = true; }
+    if (acc.birth !== undefined && acc.birth !== null && !/^\d{2}-\d{2}$/.test(String(acc.birth))) {
+      nb = normBirth(acc.birth); acc.birth = nb; birthChanged = true;
+    }
+    if ((hadGender || birthChanged) && uid && backend === "firebase") {
+      try {
+        var patch = {};
+        if (hadGender) patch.gender = firebase.firestore.FieldValue.delete();
+        if (birthChanged) patch.birth = nb;
+        fbDb.collection("clientes").doc(uid).update(patch).catch(function () {});
+      } catch (e) { /* tenta-se de novo na próxima sessão */ }
+    }
+    return hadGender || birthChanged;
   }
 
   function reloadCurrent() {
@@ -160,30 +178,43 @@
   function fbErr(e) {
     var c = (e && e.code) || "";
     var map = {
-      "auth/email-already-in-use": "Este email já está registado. Faça login.",
+      "auth/email-already-in-use": "Este email já está registado. Inicie sessão.",
       "auth/invalid-email": "Email inválido.",
-      "auth/weak-password": "A senha é demasiado fraca (mínimo 6 caracteres).",
+      "auth/weak-password": "A palavra-passe é demasiado fraca (mínimo 6 caracteres).",
       "auth/user-not-found": "Não existe conta com este email.",
-      "auth/wrong-password": "Senha incorreta.",
-      "auth/invalid-credential": "Email ou senha incorretos.",
+      "auth/wrong-password": "Palavra-passe incorreta.",
+      "auth/invalid-credential": "Email ou palavra-passe incorretos.",
       "auth/too-many-requests": "Demasiadas tentativas. Tente novamente mais tarde.",
       "auth/network-request-failed": "Sem ligação à internet. Tente novamente.",
-      "auth/configuration-not-found": "Falta ativar o login por Email/Senha no Firebase (Authentication → Sign-in method → Email/Password).",
-      "auth/operation-not-allowed": "O login por Email/Senha ainda não está ativado no Firebase (Authentication → Sign-in method).",
+      "auth/configuration-not-found": "Falta ativar o início de sessão por Email/Palavra-passe no Firebase (Authentication → Sign-in method → Email/Password).",
+      "auth/operation-not-allowed": "O início de sessão por Email/Palavra-passe ainda não está ativado no Firebase (Authentication → Sign-in method).",
       "auth/admin-restricted-operation": "Operação restrita. Verifique as definições de Authentication no Firebase."
     };
     return map[c] || (e && e.message) || "Ocorreu um erro. Tente novamente.";
   }
 
   /* ---------------- API pública ---------------- */
+  // Aniversário: guardamos só o dia e o mês ("MM-DD"). O ano não é preciso para o cupão de aniversário.
+  function normBirth(b) {
+    var m = /^(?:\d{4}-)?(\d{2})-(\d{2})$/.exec(String(b || "").trim());
+    if (!m) return null;
+    var mo = parseInt(m[1], 10), d = parseInt(m[2], 10);
+    var max = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][mo - 1];
+    if (!(mo >= 1 && mo <= 12 && d >= 1 && d <= max)) return null;
+    return m[1] + "-" + m[2];
+  }
+
+  function birthLabel(b) { var n = normBirth(b); return n ? n.slice(3, 5) + "/" + n.slice(0, 2) : ""; }
+  function birthParts(b) { var n = normBirth(b); return n ? { m: n.slice(0, 2), d: n.slice(3, 5) } : { m: "", d: "" }; }
+  function birthFrom(d, m) { return (d && m) ? m + "-" + d : ""; }
+
   function validate(data) {
     if (!data.name || !data.name.trim()) return "Indique o seu nome.";
     if (digits(data.phone).length < 9) return "Número de telemóvel inválido (mínimo 9 dígitos).";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email || "")) return "Indique um email válido.";
-    if (!data.birth) return "Indique a sua data de nascimento.";
-    if (data.gender !== "M" && data.gender !== "F") return "Selecione o sexo (Masculino ou Feminino).";
-    if (!data.pass || data.pass.length < 6) return "A senha deve ter pelo menos 6 caracteres.";
-    if (data.pass !== data.pass2) return "As senhas não coincidem — verifique a confirmação.";
+    if (data.birth && !normBirth(data.birth)) return "O dia e o mês de aniversário não são válidos.";
+    if (!data.pass || data.pass.length < 6) return "A palavra-passe deve ter pelo menos 6 caracteres.";
+    if (data.pass !== data.pass2) return "As palavras-passe não coincidem — verifique a confirmação.";
     return null;
   }
 
@@ -195,7 +226,7 @@
       return fbAuth.createUserWithEmailAndPassword(data.email.trim(), data.pass).then(function (cred) {
         var acc = {
           name: data.name.trim(), email: data.email.trim(), phone: digits(data.phone),
-          birth: data.birth, gender: data.gender, photo: data.photo || null,
+          birth: normBirth(data.birth), photo: data.photo || null,
           avatarChar: data.avatarChar || null,
           stamps: [], cycle: 0, rewards: [],
           criadoEm: firebase.firestore.FieldValue.serverTimestamp()
@@ -214,8 +245,8 @@
     var salt = randomSalt();
     return sha256(salt + "|" + data.pass).then(function (hash) {
       accs[phone] = {
-        name: data.name.trim(), phone: phone, email: data.email.trim(), birth: data.birth,
-        gender: data.gender, photo: data.photo || null, avatarChar: data.avatarChar || null,
+        name: data.name.trim(), phone: phone, email: data.email.trim(), birth: normBirth(data.birth),
+        photo: data.photo || null, avatarChar: data.avatarChar || null,
         salt: salt, passHash: hash,
         created: new Date().toISOString(), stamps: [], cycle: 0, rewards: []
       };
@@ -235,7 +266,7 @@
     var acc = findLocalByEmail(email);
     if (!acc) return Promise.resolve({ error: "Não existe conta com este email neste dispositivo." });
     return sha256(acc.salt + "|" + (pass || "")).then(function (hash) {
-      if (hash !== acc.passHash) return { error: "Senha incorreta." };
+      if (hash !== acc.passHash) return { error: "Palavra-passe incorreta." };
       try { localStorage.setItem(LS_SES, acc.phone); } catch (e) {}
       currentAcc = acc; notify();
       return { ok: true };
@@ -254,7 +285,7 @@
     // local: recuperar da sessão guardada
     if (currentAcc) return currentAcc;
     var p = null; try { p = localStorage.getItem(LS_SES); } catch (e) {}
-    if (p) { currentAcc = readAccounts()[p] || null; }
+    if (p) { currentAcc = readAccounts()[p] || null; if (currentAcc && slimAccount(currentAcc)) saveLocal(currentAcc); }
     return currentAcc;
   }
 
@@ -343,6 +374,8 @@
   function update(changes) {
     var acc = current();
     if (!acc) return Promise.resolve({ error: "Sessão não iniciada." });
+    delete changes.gender;                                   // já não se recolhe o sexo
+    if (Object.prototype.hasOwnProperty.call(changes, "birth")) changes.birth = normBirth(changes.birth);
     Object.assign(acc, changes);
     if (backend === "firebase") {
       var p = Promise.resolve();
@@ -360,20 +393,62 @@
         .then(function () { return { ok: true }; })
         .catch(function (e) { return { error: fbErr(e) }; });
     }
-    return Promise.resolve({ error: "A alteração de senha por email só funciona com a base de dados online." });
+    return Promise.resolve({ error: "A alteração da palavra-passe por email só funciona com a base de dados online." });
+  }
+
+  // Apagar a conta apaga também o que a pessoa publicou na comunidade (RGPD art. 17.º). É feito «o melhor possível»:
+  // se alguma remoção for recusada pelas regras do Firestore, a conta apaga-se na mesma e o resto remove-se a pedido.
+  function eraseCommunity(uid) {
+    var posts = fbDb.collection("publicacoes");
+    function delDocs(snap) { var j = []; snap.forEach(function (d) { j.push(d.ref.delete().catch(function () {})); }); return Promise.all(j); }
+    // 1) as minhas publicações (com os comentários que as regras me deixam apagar: os meus)
+    var mine = posts.where("autorUid", "==", uid).get().then(function (snap) {
+      var jobs = [];
+      snap.forEach(function (d) {
+        jobs.push(d.ref.collection("comentarios").get().then(delDocs).catch(function () {})
+          .then(function () { return d.ref.delete().catch(function () {}); }));
+      });
+      return Promise.all(jobs);
+    }).catch(function () {});
+    // 2) os meus «gostos» e comentários nas publicações recentes das outras pessoas
+    var others = posts.orderBy("criadoEm", "desc").limit(60).get().then(function (snap) {
+      var jobs = [];
+      snap.forEach(function (d) {
+        var data = d.data() || {};
+        if (data.autorUid === uid) return;
+        if ((data.likes || []).indexOf(uid) >= 0) jobs.push(d.ref.update({ likes: firebase.firestore.FieldValue.arrayRemove(uid) }).catch(function () {}));
+        jobs.push(d.ref.collection("comentarios").where("autorUid", "==", uid).get().then(delDocs).catch(function () {}));
+      });
+      return Promise.all(jobs);
+    }).catch(function () {});
+    return Promise.all([mine, others]);
   }
 
   function removeCurrent() {
     if (backend === "firebase") {
       var u = fbAuth.currentUser;
-      if (!u) return Promise.resolve();
+      if (!u) return Promise.resolve({ ok: true });
       var uid = u.uid;
-      return fbDb.collection("clientes").doc(uid).delete().catch(function () {})
-        .then(function () { return u.delete().catch(function () { return logout(); }); });
+      // O Firebase só deixa apagar o utilizador se a sessão foi iniciada há poucos minutos. Verifica-se ANTES de apagar
+      // seja o que for, para não deixar a conta a meio (dados apagados e utilizador ainda existente).
+      return u.getIdTokenResult().then(function (r) {
+        var recente = Date.now() - Date.parse(r.authTime) < 4 * 60 * 1000;
+        if (!recente) return { error: "Por segurança, só pode apagar a conta logo a seguir a iniciar sessão. Saia, volte a entrar e tente de novo." };
+        return eraseCommunity(uid).then(function () { return fbDb.collection("clientes").doc(uid).delete().catch(function () {}); })
+          .then(function () { return u.delete().then(function () { return { ok: true }; }); })
+          .catch(function () { logout(); return { error: "Os seus dados foram apagados, mas não conseguimos fechar o acesso. Contacte-nos para concluir." }; });
+      }).catch(function () { return { error: "Não foi possível confirmar a sessão. Tente novamente." }; });
     }
     var p = null; try { p = localStorage.getItem(LS_SES); } catch (e) {}
-    if (p) { var accs = readAccounts(); delete accs[p]; writeAccounts(accs); }
-    logout(); return Promise.resolve();
+    if (p) {
+      var accs = readAccounts(); delete accs[p]; writeAccounts(accs);
+      writePosts(readPosts().filter(function (x) { return x.autorUid !== p; }).map(function (x) {
+        x.likes = (x.likes || []).filter(function (u2) { return u2 !== p; });
+        x.comentarios = (x.comentarios || []).filter(function (c) { return c.autorUid !== p; });
+        return x;
+      }));
+    }
+    logout(); return Promise.resolve({ ok: true });
   }
 
   function isAdmin(acc) {
@@ -456,7 +531,6 @@
     var rec = {
       nome: (data.nome || (acc && acc.name) || "").trim(),
       telefone: (data.telefone || (acc && acc.phone) || "").trim(),
-      email: (acc && acc.email) || "",
       servico: data.servico || "",
       dia: data.dia || "",
       hora: data.hora || "",
@@ -469,7 +543,7 @@
       estado: "pendente"
     };
     if (data.manual) {            // feita pela administradora a pedido da cliente (WhatsApp, telefone…)
-      rec.clienteUid = null; rec.email = ""; rec.origem = "manual"; rec.nome = (data.nome || "").trim();
+      rec.clienteUid = null; rec.origem = "manual"; rec.nome = (data.nome || "").trim();
     }
     if (backend === "firebase") {
       // guarda mesmo sem sessão (a regra do Firestore permite criar marcações)
@@ -765,6 +839,9 @@
     removeCurrent: removeCurrent,
     isAdmin: isAdmin,
     avatarUrl: avatarUrl,
+    birthLabel: birthLabel,
+    birthParts: birthParts,
+    birthFrom: birthFrom,
     defaultAvatar: defaultAvatar,
     fileToAvatar: fileToAvatar,
     charList: charList,

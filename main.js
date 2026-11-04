@@ -65,25 +65,25 @@
     servicos: 'Fazemos threading (depilação com linha), coloração e tratamentos de sobrancelhas (brow lamination, alisamento) e lifting e tintura de pestanas. Veja tudo em <a href="' + P + 'servicos/">Serviços</a>.',
     local: 'Envie-nos mensagem no WhatsApp e partilhamos logo a localização exata 📍 <a href="' + WA + '" target="_blank" rel="noopener">Pedir localização</a>',
     marcar: 'Perfeito! Pode marcar já: <a href="' + WA + '" target="_blank" rel="noopener">clique aqui para agendar no WhatsApp</a> ou use a nossa <a href="' + P + 'agendar/">marcação online</a> 💛',
-    fallback: 'Obrigada pela sua mensagem! 💛 Para uma resposta rápida e personalizada, fale connosco no <a href="' + WA + '" target="_blank" rel="noopener">WhatsApp</a> — respondemos em minutos.'
+    fallback: 'Não consegui perceber a sua pergunta. Este chat é automático e não envia mensagens ao estúdio. Para uma resposta personalizada, fale connosco no <a href="' + WA + '" target="_blank" rel="noopener">WhatsApp</a>.'
   };
 
   function buildChat() {
     var fab = document.createElement("button");
     fab.className = "chat-fab";
     fab.type = "button";
-    fab.setAttribute("aria-label", "Abrir chat online");
-    fab.innerHTML = '💬 <span class="fab-label">Chat online</span>';
+    fab.setAttribute("aria-label", "Abrir assistente automático");
+    fab.innerHTML = '💬 <span class="fab-label">Assistente</span>';
 
     var panel = document.createElement("div");
     panel.className = "chat-panel";
     panel.innerHTML =
       '<div class="chat-head">' +
-      '  <div class="ch-id"><img class="ch-avatar" src="' + P + 'img/thayana-avatar.jpg" alt="Thayana — Inova Beauty">' +
-      '  <div><div class="ch-title">Inova Beauty</div><div class="ch-status">● Online — respondemos já</div></div></div>' +
-      '  <button type="button" aria-label="Fechar chat">✕</button>' +
+      '  <div class="ch-id"><img class="ch-avatar" src="' + P + 'img/mark.png" alt="">' +
+      '  <div><div class="ch-title">Inova Beauty</div><div class="ch-status">Assistente automático</div></div></div>' +
+      '  <button type="button" aria-label="Fechar assistente">✕</button>' +
       '</div>' +
-      '<div class="chat-body"></div>' +
+      '<div class="chat-body" role="log" aria-live="polite"></div>' +
       '<div class="chat-quick">' +
       '  <button data-q="precos">💶 Preços</button>' +
       '  <button data-q="horario">🕐 Horário</button>' +
@@ -92,9 +92,10 @@
       '  <button data-q="marcar">📅 Marcar horário</button>' +
       '</div>' +
       '<div class="chat-input">' +
-      '  <input type="text" placeholder="Escreva a sua mensagem…" aria-label="Mensagem">' +
+      '  <input type="text" placeholder="Escreva a sua pergunta…" aria-label="A sua pergunta">' +
       '  <button type="button" aria-label="Enviar">➤</button>' +
-      '</div>';
+      '</div>' +
+      '<p class="chat-note">Assistente automático: o que escrever aqui não é guardado nem enviado a ninguém.</p>';
 
     document.body.appendChild(fab);
     document.body.appendChild(panel);
@@ -116,7 +117,7 @@
     fab.addEventListener("click", function () {
       var open = panel.classList.toggle("open");
       if (open && !body.hasChildNodes()) {
-        addMsg("Olá! 👋 Bem-vinda à Inova Beauty. Em que posso ajudar? Escolha uma opção abaixo ou escreva a sua pergunta.", "bot");
+        addMsg("Olá! 👋 Sou o assistente automático da Inova Beauty e dou respostas rápidas sobre preços, serviços, localização e marcações. As mensagens escritas aqui não são enviadas ao estúdio: para falar com uma pessoa, use o WhatsApp.", "bot");
       }
     });
     panel.querySelector(".chat-head button").addEventListener("click", function () {
@@ -152,8 +153,28 @@
 
   if (!document.body.hasAttribute("data-no-chat")) buildChat();
 
+  /* ---------- Mapa da Google: só carrega quando o visitante o pede ---------- */
+  var mapBtn = document.getElementById("mapLoad");
+  if (mapBtn) {
+    mapBtn.addEventListener("click", function () {
+      var box = document.getElementById("mapBox");
+      if (!box) return;
+      var f = document.createElement("iframe");
+      f.title = box.getAttribute("data-title") || "Mapa";
+      f.src = box.getAttribute("data-src");
+      f.width = "100%"; f.height = "380"; f.loading = "lazy";
+      f.setAttribute("referrerpolicy", "no-referrer");
+      f.style.cssText = "border:0;display:block";
+      box.className = "map-frame";
+      box.style.cssText = "border-radius:14px;overflow:hidden;border:1px solid var(--gold-faint)";
+      box.innerHTML = "";
+      box.appendChild(f);
+    });
+  }
+
   /* ---------- App (PWA): service worker + botão flutuante ---------- */
-  if ("serviceWorker" in navigator && location.protocol === "https:") {
+  // O service worker (cache para funcionar sem rede) só é registado nas páginas da app instalável.
+  if ("serviceWorker" in navigator && location.protocol === "https:" && location.pathname.indexOf("/app/") !== -1) {
     navigator.serviceWorker.register(P + "sw.js").catch(function () {});
   }
   if (window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone) {
@@ -167,12 +188,15 @@
     var slides = slider.querySelectorAll(".hs-slide");
     var dotsWrap = slider.querySelector(".hs-dots");
     var idx = 0, timer = null, DELAY = 5500;
+    // WCAG 2.2.2: a rotação automática tem de poder parar. Não arranca se a pessoa pediu menos movimento.
+    var paused = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    var pauseBtn = slider.querySelector(".hs-pause");
 
     slides.forEach(function (_, i) {
       var d = document.createElement("button");
       d.type = "button";
       d.setAttribute("aria-label", "Ir para o slide " + (i + 1));
-      if (i === 0) d.classList.add("active");
+      if (i === 0) { d.classList.add("active"); d.setAttribute("aria-current", "true"); }
       d.addEventListener("click", function () { go(i); restart(); });
       dotsWrap.appendChild(d);
     });
@@ -181,13 +205,26 @@
     function go(i) {
       idx = (i + slides.length) % slides.length;
       slides.forEach(function (s, n) { s.classList.toggle("active", n === idx); });
-      dots.forEach(function (d, n) { d.classList.toggle("active", n === idx); });
+      dots.forEach(function (d, n) {
+        d.classList.toggle("active", n === idx);
+        if (n === idx) d.setAttribute("aria-current", "true"); else d.removeAttribute("aria-current");
+      });
     }
     function next() { go(idx + 1); }
     function restart() {
       clearInterval(timer);
-      timer = setInterval(next, DELAY);
+      if (!paused) timer = setInterval(next, DELAY);
     }
+    function paintPause() {
+      if (!pauseBtn) return;
+      pauseBtn.textContent = paused ? "▶" : "❚❚";
+      pauseBtn.setAttribute("aria-pressed", paused ? "true" : "false");
+      pauseBtn.setAttribute("aria-label", paused ? "Retomar a rotação automática" : "Pausar a rotação automática");
+    }
+    if (pauseBtn) pauseBtn.addEventListener("click", function () { paused = !paused; paintPause(); restart(); });
+    slider.addEventListener("focusin", function () { clearInterval(timer); });
+    slider.addEventListener("focusout", restart);
+    paintPause();
 
     slider.querySelector(".hs-arrow.prev").addEventListener("click", function () { go(idx - 1); restart(); });
     slider.querySelector(".hs-arrow.next").addEventListener("click", function () { go(idx + 1); restart(); });

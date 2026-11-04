@@ -4,19 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A Minha Conta — Inova Beauty</title>
-<meta name="description" content="Crie a sua conta Inova Beauty: cartão de fidelidade com selos, cupom de aniversário e vantagens exclusivas.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="description" content="Crie a sua conta Inova Beauty: cartão de fidelidade com selos, cupão de aniversário e vantagens exclusivas.">
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="../i18n.css">
 <link rel="manifest" href="../manifest.webmanifest">
 <meta name="theme-color" content="#191411">
 <link rel="apple-touch-icon" href="../img/icon-192.png">
 <link rel="icon" href="../img/favicon.png">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-app-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-auth-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-firestore-compat.js"></script>
 <script src="../firebase-config.js"></script>
 <script src="../analytics.js"></script>
 <link rel="canonical" href="https://godiandk.github.io/godiandk/conta/">
@@ -24,20 +21,21 @@
 <meta property="og:site_name" content="Inova Beauty">
 <meta property="og:locale" content="pt_PT">
 <meta property="og:title" content="A Minha Conta — Inova Beauty">
-<meta property="og:description" content="Crie a sua conta Inova Beauty: cartão de fidelidade com selos, cupom de aniversário e vantagens exclusivas.">
+<meta property="og:description" content="Crie a sua conta Inova Beauty: cartão de fidelidade com selos, cupão de aniversário e vantagens exclusivas.">
 <meta property="og:url" content="https://godiandk.github.io/godiandk/conta/">
 <meta property="og:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A Minha Conta — Inova Beauty">
-<meta name="twitter:description" content="Crie a sua conta Inova Beauty: cartão de fidelidade com selos, cupom de aniversário e vantagens exclusivas.">
+<meta name="twitter:description" content="Crie a sua conta Inova Beauty: cartão de fidelidade com selos, cupão de aniversário e vantagens exclusivas.">
 <meta name="twitter:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
 </head>
 <body>
+<a class="skip-link" href="#conteudo">Saltar para o conteúdo</a>
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="Inova Beauty">Inova <span>Beauty</span></a>
+    <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="">Inova <span>Beauty</span></a>
     <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -57,7 +55,7 @@
         <li><a class="nav-link" href="../precario/">Preçário</a></li>
         <li><a class="nav-link" href="../processos/">Processos</a></li>
         <li><a class="nav-link" href="../sobre/">Sobre</a></li>
-        <li><a class="nav-link" href="../contato/">Contato</a></li>
+        <li><a class="nav-link" href="../contato/">Contacto</a></li>
         <li><a class="nav-link" href="../localizacao/">Localização</a></li>
         <li class="nav-auth">
           <a class="btn-login" href="../conta/">👤 Entrar</a>
@@ -68,6 +66,7 @@
     <div class="nav-right" data-sem-traducao></div>
   </div>
 </header>
+<main id="conteudo">
 <section class="page-hero">
   <div class="container">
     <ol class="breadcrumb"><li><a href="../">Home</a></li><li>A minha conta</li></ol>
@@ -88,13 +87,14 @@
               <input id="lEmail" type="email" required placeholder="o.seu@email.com" autocomplete="email">
             </div>
             <div class="form-field">
-              <label for="lPass">Senha</label>
-              <input id="lPass" type="password" required placeholder="A sua senha" autocomplete="current-password">
+              <label for="lPass">Palavra-passe</label>
+              <input id="lPass" type="password" required placeholder="A sua palavra-passe" autocomplete="current-password">
             </div>
           </div>
           <div class="form-msg" id="loginMsg"></div>
           <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Entrar</button></div>
-          <p class="text-center mt-2"><a href="#" id="forgotLink" class="link-gold" style="font-size:.85rem;color:var(--gold)">Esqueci a minha senha</a></p>
+          <p class="text-center mt-2"><a href="#" id="forgotLink" class="link-gold" style="font-size:.85rem;color:var(--gold-text)">Esqueci a minha palavra-passe</a></p>
+          <!--legal:entrar--><div class="form-legal"><p>Usamos o email e a palavra-passe só para iniciar a sua sessão (execução do contrato; art. 6.º, n.º 1, al. b) do RGPD). Responsável: Inova Beauty. Mais informação: <a href="../privacidade/">Política de Privacidade</a>.</p></div><!--/legal:entrar-->
         </form>
         <div class="auth-sep"><span>ainda não tem conta?</span></div>
         <div class="center-actions"><button type="button" class="btn btn-outline btn-block" id="showSignupBtn">Criar conta</button></div>
@@ -117,13 +117,6 @@
               </div>
               <div class="char-grid" id="sCharGrid"></div>
             </div>
-            <div class="form-field full">
-              <label>Sexo*</label>
-              <div class="gender-picker">
-                <label id="genderMLabel"><input type="radio" name="sGender" value="M" required> Masculino</label>
-                <label id="genderFLabel"><input type="radio" name="sGender" value="F" required> Feminino</label>
-              </div>
-            </div>
             <div class="form-field">
               <label for="sName">Nome*</label>
               <input id="sName" type="text" required placeholder="O seu nome" autocomplete="name">
@@ -137,26 +130,28 @@
               <label for="sEmail">Email*</label>
               <input id="sEmail" type="email" required placeholder="o.seu@email.com" autocomplete="email">
             </div>
-            <div class="form-field">
-              <label for="sBirth">Data de nascimento*</label>
-              <input id="sBirth" type="date" required>
-              <span class="form-hint">Para o seu cupom de aniversário 🎁</span>
+            <div class="form-field" role="group" aria-labelledby="sBirthLbl">
+              <span class="form-label" id="sBirthLbl">Aniversário (opcional)</span>
+              <div class="birth-pick">
+                <select id="sBirthDay" aria-label="Dia"><option value="">Dia</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
+                <select id="sBirthMonth" aria-label="Mês"><option value="">Mês</option><option value="01">janeiro</option><option value="02">fevereiro</option><option value="03">março</option><option value="04">abril</option><option value="05">maio</option><option value="06">junho</option><option value="07">julho</option><option value="08">agosto</option><option value="09">setembro</option><option value="10">outubro</option><option value="11">novembro</option><option value="12">dezembro</option></select>
+              </div>
+              <span class="form-hint">Só o dia e o mês, para o seu cupão de aniversário 🎁</span>
             </div>
             <div class="form-field">
-              <label for="sPass">Senha* (mín. 6 caracteres)</label>
+              <label for="sPass">Palavra-passe* (mín. 6 caracteres)</label>
               <input id="sPass" type="password" required autocomplete="new-password">
             </div>
             <div class="form-field">
-              <label for="sPass2">Confirmar senha*</label>
+              <label for="sPass2">Confirmar palavra-passe*</label>
               <input id="sPass2" type="password" required autocomplete="new-password">
             </div>
           </div>
           <div class="form-msg" id="signupMsg"></div>
           <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Criar a minha conta</button></div>
-          <p class="form-hint text-center mt-2">🔒 A sua senha é protegida com criptografia (SHA-256 + salt) e os dados ficam guardados apenas neste dispositivo — nunca são enviados para terceiros.</p>
-          <p class="form-hint text-center mt-2" style="font-size:.72rem;opacity:.75">Ao criar conta, aceita a nossa <a href="../privacidade/" style="color:var(--gold)">Política de Privacidade</a> e os <a href="../termos/" style="color:var(--gold)">Termos</a>.</p>
+          <!--legal:registo--><div class="form-legal"><p><strong>Para que usamos os seus dados:</strong> o nome, o telemóvel e o email servem para criar e gerir a sua conta e o cartão de fidelidade (execução do contrato; art. 6.º, n.º 1, al. b) do RGPD). A palavra-passe é tratada pelo serviço Firebase Authentication, da Google; nós não a vemos.</p><p>O aniversário (só o dia e o mês) e a foto são opcionais. Só os usamos para lhe dar o cupão de aniversário e para mostrar o seu avatar; ao preenchê-los, dá-nos o seu consentimento, que pode retirar quando quiser (art. 6.º, n.º 1, al. a) do RGPD).</p><p>Responsável: Inova Beauty. É preciso ter 13 anos ou mais. Prazos, destinatários e direitos: <a href="../privacidade/">Política de Privacidade</a>.</p></div><!--/legal:registo-->
         </form>
-        <p class="text-center mt-2"><a href="#" id="backToLogin" class="link-gold" style="font-size:.85rem;color:var(--gold)">Já tem conta? Iniciar sessão</a></p>
+        <p class="text-center mt-2"><a href="#" id="backToLogin" class="link-gold" style="font-size:.85rem;color:var(--gold-text)">Já tem conta? Iniciar sessão</a></p>
       </div>
     </div>
 
@@ -203,19 +198,20 @@
           <div class="form-grid" style="margin-top:1rem">
             <div class="form-field"><label for="setName">Nome</label><input id="setName" type="text"></div>
             <div class="form-field"><label for="setPhone">Telemóvel</label><input id="setPhone" type="tel"></div>
-            <div class="form-field full">
-              <label>Sexo</label>
-              <div class="gender-picker">
-                <label id="setGenderM"><input type="radio" name="setGender" value="M"> Masculino</label>
-                <label id="setGenderF"><input type="radio" name="setGender" value="F"> Feminino</label>
+            <div class="form-field" role="group" aria-labelledby="setBirthLbl">
+              <span class="form-label" id="setBirthLbl">Aniversário (opcional)</span>
+              <div class="birth-pick">
+                <select id="setBirthDay" aria-label="Dia"><option value="">Dia</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
+                <select id="setBirthMonth" aria-label="Mês"><option value="">Mês</option><option value="01">janeiro</option><option value="02">fevereiro</option><option value="03">março</option><option value="04">abril</option><option value="05">maio</option><option value="06">junho</option><option value="07">julho</option><option value="08">agosto</option><option value="09">setembro</option><option value="10">outubro</option><option value="11">novembro</option><option value="12">dezembro</option></select>
               </div>
             </div>
           </div>
           <div class="form-msg" id="setMsg"></div>
           <div class="center-actions" style="justify-content:flex-start">
             <button type="button" class="btn btn-gold" id="setSaveBtn">Guardar alterações</button>
-            <button type="button" class="btn btn-outline" id="setPassBtn">Alterar senha (por email)</button>
+            <button type="button" class="btn btn-outline" id="setPassBtn">Alterar palavra-passe (por email)</button>
           </div>
+          <!--legal:conta--><div class="form-legal"><p>As alterações ficam guardadas na sua conta. Pode corrigir aqui os seus dados ou apagá-los em «Apagar conta». Responsável: Inova Beauty. Direitos e prazos: <a href="../privacidade/">Política de Privacidade</a>.</p></div><!--/legal:conta-->
         </div>
 
         <div class="center-actions">
@@ -257,21 +253,13 @@
     el.textContent = text;
   }
 
-  /* Foto de perfil / personagem e sexo no registo */
+  /* Foto de perfil / personagem no registo */
   var sPhoto = null, sChar = null;
   function updateAvatarPreview() {
-    var checked = document.querySelector('input[name="sGender"]:checked');
-    var gender = checked ? checked.value : "";
-    var url = sPhoto || (sChar ? ((window.INOVA_PREFIX || "") + sChar) : window.InovaAuth.defaultAvatar(gender, document.getElementById("sName").value));
+    var url = sPhoto || (sChar ? ((window.INOVA_PREFIX || "") + sChar) : window.InovaAuth.defaultAvatar("", document.getElementById("sName").value));
     document.getElementById("sAvatarPreview").src = url;
   }
-  document.querySelectorAll('input[name="sGender"]').forEach(function (r) {
-    r.addEventListener("change", function () {
-      document.getElementById("genderMLabel").classList.toggle("picked", r.value === "M" && r.checked);
-      document.getElementById("genderFLabel").classList.toggle("picked", r.value === "F" && r.checked);
-      updateAvatarPreview();
-    });
-  });
+  document.getElementById("sName").addEventListener("input", function () { if (!sPhoto && !sChar) updateAvatarPreview(); });
   document.getElementById("sPhotoFile").addEventListener("change", function (e) {
     var f = e.target.files[0];
     if (!f) return;
@@ -311,10 +299,9 @@
     profileArea.style.display = "block";
     document.getElementById("helloName").textContent = "Olá, " + acc.name.split(" ")[0] + "! 💛";
     document.getElementById("profileAvatar").src = window.InovaAuth.avatarUrl(acc);
-    var b = new Date(acc.birth + "T12:00:00");
+    var bl = window.InovaAuth.birthLabel(acc.birth);
     document.getElementById("profileInfo").textContent =
-      "Telemóvel: " + acc.phone + " · Email: " + acc.email +
-      " · Aniversário: " + String(b.getDate()).padStart(2, "0") + "/" + String(b.getMonth() + 1).padStart(2, "0");
+      "Telemóvel: " + acc.phone + " · Email: " + acc.email + (bl ? " · Aniversário: " + bl : "");
 
     var bdayArea = document.getElementById("bdayArea");
     if (window.InovaCoupon.birthdayActive(acc.birth)) {
@@ -336,10 +323,9 @@
     document.getElementById("setAvatar").src = window.InovaAuth.avatarUrl(acc);
     document.getElementById("setName").value = acc.name || "";
     document.getElementById("setPhone").value = acc.phone || "";
-    document.getElementById("setGenderM").querySelector("input").checked = acc.gender === "M";
-    document.getElementById("setGenderF").querySelector("input").checked = acc.gender === "F";
-    document.getElementById("setGenderM").classList.toggle("picked", acc.gender === "M");
-    document.getElementById("setGenderF").classList.toggle("picked", acc.gender === "F");
+    var bp = window.InovaAuth.birthParts(acc.birth);
+    document.getElementById("setBirthDay").value = bp.d;
+    document.getElementById("setBirthMonth").value = bp.m;
 
     // acesso admin
     var al = document.getElementById("adminLinkArea");
@@ -363,21 +349,21 @@
     if (!email) { msg(lm, "Escreva o seu email acima e clique novamente para receber o link.", false); return; }
     window.InovaAuth.resetPassword(email).then(function (r) {
       if (r.error) return msg(lm, r.error, false);
-      msg(lm, "✅ Se existir uma conta com " + email + ", enviámos um link para criar uma nova senha. Veja também o spam (lixo eletrónico).", true);
+      msg(lm, "✅ Se existir uma conta com " + email + ", enviámos um link para criar uma nova palavra-passe. Veja também o spam (lixo eletrónico).", true);
     });
   });
 
   signupForm.addEventListener("submit", function (e) {
     e.preventDefault();
-    var genderChecked = document.querySelector('input[name="sGender"]:checked');
     var btn = signupForm.querySelector('button[type=submit]');
+    var bd = document.getElementById("sBirthDay").value, bm = document.getElementById("sBirthMonth").value;
+    if ((bd && !bm) || (!bd && bm)) { msg(document.getElementById("signupMsg"), "Escolha o dia e o mês do aniversário, ou deixe os dois em branco.", false); return; }
     btn.disabled = true;
     window.InovaAuth.register({
       name: document.getElementById("sName").value,
       phone: document.getElementById("sPhone").value,
       email: document.getElementById("sEmail").value,
-      birth: document.getElementById("sBirth").value,
-      gender: genderChecked ? genderChecked.value : null,
+      birth: window.InovaAuth.birthFrom(bd, bm),
       photo: sPhoto, avatarChar: sChar,
       pass: document.getElementById("sPass").value,
       pass2: document.getElementById("sPass2").value
@@ -468,8 +454,10 @@
     window.InovaAuth.logout();
   });
   document.getElementById("deleteBtn").addEventListener("click", function () {
-    if (confirm("Apagar a sua conta? Os selos e prémios serão perdidos definitivamente.")) {
-      window.InovaAuth.removeCurrent();
+    if (confirm("Apagar a sua conta? Os selos, os prémios e as suas publicações e comentários serão apagados definitivamente.")) {
+      window.InovaAuth.removeCurrent().then(function (r) {
+        if (r && r.error) msg(document.getElementById("setMsg"), r.error, false);
+      });
     }
   });
 
@@ -490,15 +478,6 @@
     setGrid.querySelectorAll("img").forEach(function (im) { im.classList.toggle("picked", im.dataset.path === setChar); });
   }
   document.getElementById("setCharBtn").addEventListener("click", function () { setGrid.classList.toggle("open"); });
-  document.querySelectorAll('input[name="setGender"]').forEach(function (r) {
-    r.addEventListener("change", function () {
-      document.getElementById("setGenderM").classList.toggle("picked", r.value === "M" && r.checked);
-      document.getElementById("setGenderF").classList.toggle("picked", r.value === "F" && r.checked);
-      var acc0 = window.InovaAuth.current();
-      if ((setPhoto === undefined || setPhoto === null) && !setChar && (!acc0 || (!acc0.photo && !acc0.avatarChar)))
-        document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar(r.value, "");
-    });
-  });
   document.getElementById("setPhotoFile").addEventListener("change", function (e) {
     var f = e.target.files[0];
     if (!f) return;
@@ -509,16 +488,16 @@
   });
   document.getElementById("setPhotoRemove").addEventListener("click", function () {
     setPhoto = null; setChar = null; markSetChar();
-    var g = document.querySelector('input[name="setGender"]:checked');
-    document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar(g ? g.value : "", "");
+    document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar("", document.getElementById("setName").value);
   });
   document.getElementById("setSaveBtn").addEventListener("click", function () {
     var sm = document.getElementById("setMsg");
-    var g = document.querySelector('input[name="setGender"]:checked');
+    var bd = document.getElementById("setBirthDay").value, bm = document.getElementById("setBirthMonth").value;
+    if ((bd && !bm) || (!bd && bm)) { msg(sm, "Escolha o dia e o mês do aniversário, ou deixe os dois em branco.", false); return; }
     var changes = {
       name: document.getElementById("setName").value.trim(),
       phone: document.getElementById("setPhone").value.trim(),
-      gender: g ? g.value : ""
+      birth: window.InovaAuth.birthFrom(bd, bm)
     };
     if (setChar !== undefined) changes.avatarChar = setChar;
     if (setPhoto !== undefined) changes.photo = setPhoto;
@@ -536,7 +515,7 @@
     if (!acc || !acc.email) return;
     window.InovaAuth.resetPassword(acc.email).then(function (r) {
       if (r.error) return msg(sm, r.error, false);
-      msg(sm, "✅ Enviámos um link para alterar a senha para " + acc.email + ".", true);
+      msg(sm, "✅ Enviámos um link para alterar a palavra-passe para " + acc.email + ".", true);
     });
   });
 
@@ -555,25 +534,26 @@
     </div>
   </div>
 </section>
+</main>
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="Inova Beauty">Inova <span>Beauty</span></a>
-      <p>Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas e pestanas. Em Canidelo, Vila Nova de Gaia.</p>
+      <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="">Inova <span>Beauty</span></a>
+      <p>Beleza, precisão e cuidado em cada detalhe. Sobrancelhas, pestanas e lábios em Canidelo, Vila Nova de Gaia.</p>
     </div>
     <div>
-      <h4>Navegação</h4>
+      <h2 class="footer-title">Navegação</h2>
       <ul>
         <li><a href="../servicos/">Serviços</a></li>
         <li><a href="../precario/">Preçário</a></li>
         <li><a href="../processos/">Processos</a></li>
         <li><a href="../sobre/">Sobre</a></li>
-        <li><a href="../contato/">Contato</a></li>
+        <li><a href="../contato/">Contacto</a></li>
         <li><a href="../localizacao/">Localização</a></li>
       </ul>
     </div>
     <div>
-      <h4>Contactos</h4>
+      <h2 class="footer-title">Contactos</h2>
       <ul>
         <li><a href="../agendar/">✨ Marcar horário online</a></li>
         <li><a href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener">Dúvidas no WhatsApp: +351 919 277 205</a></li>
@@ -582,13 +562,32 @@
         <li><a href="../app/">📱 Instalar a APP</a></li>
       </ul>
     </div>
+    <div>
+      <h2 class="footer-title">Legal</h2>
+      <ul>
+        <li><a href="../privacidade/">Política de Privacidade</a></li>
+        <li><a href="../termos/">Termos e Condições</a></li>
+        <li><a href="../cookies/">Política de Cookies</a></li>
+        <li><a href="../cancelamento/">Cancelamento e reembolso</a></li>
+        <li><a class="lre-link" href="https://www.livroreclamacoes.pt/" target="_blank" rel="noopener">Livro de Reclamações</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-legal">
+    <div class="legal-id">
+      <div><span class="lbl">Prestador de serviços</span> <span class="val" data-sem-traducao>Inova Beauty — <span class="a-preencher" data-campo="nome">A PREENCHER</span></span></div>
+      <div><span class="lbl">NIF</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="nif">A PREENCHER</span></span></div>
+      <div><span class="lbl">Morada</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="morada">A PREENCHER</span></span></div>
+      <div><span class="lbl">Email</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="email">A PREENCHER</span></span></div>
+      <div><span class="lbl">Telemóvel</span> <span class="val" data-sem-traducao>+351 919 277 205</span></div>
+    </div>
   </div>
   <div class="container footer-bottom">
-    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../privacidade/" style="color:inherit">Privacidade</a> · <a href="../termos/" style="color:inherit">Termos</a> · <a href="../painel/" style="color:inherit">Área reservada</a>
+    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../painel/">Área reservada</a>
   </div>
 </footer>
-<a class="app-float" href="../app/home/" aria-label="Abrir a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
-<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener" aria-label="Tirar dúvidas no WhatsApp" title="Dúvidas? Fale connosco"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg><span class="wa-float-tip">Dúvidas?</span></a>
+<nav class="float-nav" aria-label="Atalhos: app e WhatsApp"><a class="app-float" href="../app/home/" aria-label="Abrir a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
+<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener" aria-label="Tirar dúvidas no WhatsApp" title="Dúvidas? Fale connosco"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg><span class="wa-float-tip">Dúvidas?</span></a></nav>
 <script>window.INOVA_PREFIX="../";</script>
 <script src="../auth.js"></script>
 <script src="../main.js"></script>
