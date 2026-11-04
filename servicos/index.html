@@ -5,18 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Serviços — Inova Beauty</title>
 <meta name="description" content="Todos os serviços da Inova Beauty: sobrancelhas, pestanas e threading. Clique em cada serviço para ver detalhes e preços em €.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="../i18n.css">
 <link rel="manifest" href="../manifest.webmanifest">
 <meta name="theme-color" content="#191411">
 <link rel="apple-touch-icon" href="../img/icon-192.png">
 <link rel="icon" href="../img/favicon.png">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-app-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-auth-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-firestore-compat.js"></script>
 <script src="../firebase-config.js"></script>
 <script src="../analytics.js"></script>
 <link rel="canonical" href="https://godiandk.github.io/godiandk/servicos/">
@@ -35,9 +32,10 @@
 <meta name="twitter:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
 </head>
 <body>
+<a class="skip-link" href="#conteudo">Saltar para o conteúdo</a>
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="Inova Beauty">Inova <span>Beauty</span></a>
+    <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="">Inova <span>Beauty</span></a>
     <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -57,7 +55,7 @@
         <li><a class="nav-link" href="../precario/">Preçário</a></li>
         <li><a class="nav-link" href="../processos/">Processos</a></li>
         <li><a class="nav-link" href="../sobre/">Sobre</a></li>
-        <li><a class="nav-link" href="../contato/">Contato</a></li>
+        <li><a class="nav-link" href="../contato/">Contacto</a></li>
         <li><a class="nav-link" href="../localizacao/">Localização</a></li>
         <li class="nav-auth">
           <a class="btn-login" href="../conta/">👤 Entrar</a>
@@ -68,6 +66,7 @@
     <div class="nav-right" data-sem-traducao></div>
   </div>
 </header>
+<main id="conteudo">
 <section class="page-hero">
   <div class="container">
     <ol class="breadcrumb"><li><a href="../">Home</a></li><li>Serviços</li></ol>
@@ -79,24 +78,24 @@
 <section>
   <div class="container">
     <div class="cards-grid"><article class="service-card">
-  <button type="button" class="card-media" data-card-toggle aria-expanded="false" aria-label="Mostrar sub-serviços de Sobrancelhas"><svg viewBox="0 0 200 120" fill="none" stroke="#c9ab7c" stroke-linecap="round" aria-hidden="true"><path d="M20 82 Q62 30 112 38 Q162 46 182 72" stroke-width="5"/><path d="M32 72 L40 86 M52 58 L60 78 M74 48 L80 72 M98 44 L102 68 M122 44 L124 66 M146 50 L146 70 M166 60 L164 76" stroke-width="3"/></svg><span class="tap-hint">Toque para abrir</span></button>
+  <button type="button" class="card-media" data-card-toggle aria-expanded="false" aria-labelledby="cm1h cm1t"><svg viewBox="0 0 200 120" fill="none" stroke="#c9ab7c" stroke-linecap="round" aria-hidden="true"><path d="M20 82 Q62 30 112 38 Q162 46 182 72" stroke-width="5"/><path d="M32 72 L40 86 M52 58 L60 78 M74 48 L80 72 M98 44 L102 68 M122 44 L124 66 M146 50 L146 70 M166 60 L164 76" stroke-width="3"/></svg><span class="tap-hint" id="cm1h">Toque para abrir</span></button>
   <div class="card-body">
-    <h3>Sobrancelhas</h3>
+    <h2 id="cm1t">Sobrancelhas</h2>
     <p>Design com linha, laminação, coloração e tratamentos de nutrição para umas sobrancelhas perfeitas.</p>
     <div class="sub-panel"><div class="sub-panel-inner"><a class="sub-link" href="../servicos/sobrancelhas/threading/">Threading</a><a class="sub-link" href="../servicos/sobrancelhas/brow-lamination/">Brow Lamination</a><a class="sub-link" href="../servicos/sobrancelhas/coloracao/">Coloração de Sobrancelhas</a><a class="sub-link" href="../servicos/sobrancelhas/alisamento/">Alisamento</a><a class="sub-link sub-link-main" href="../servicos/sobrancelhas/">Ver tudo em Sobrancelhas</a></div></div>
   </div>
 </article><article class="service-card">
-  <button type="button" class="card-media" data-card-toggle aria-expanded="false" aria-label="Mostrar sub-serviços de Pestanas"><svg viewBox="0 0 200 130" fill="none" stroke="#c9ab7c" stroke-linecap="round" aria-hidden="true"><path d="M25 78 Q100 22 175 78 Q100 118 25 78 Z" stroke-width="4"/><circle cx="100" cy="72" r="17" stroke-width="4"/><path d="M52 46 L42 30 M74 36 L68 18 M100 32 L100 12 M126 36 L132 18 M148 46 L158 30" stroke-width="3"/></svg><span class="tap-hint">Toque para abrir</span></button>
+  <button type="button" class="card-media" data-card-toggle aria-expanded="false" aria-labelledby="cm2h cm2t"><svg viewBox="0 0 200 130" fill="none" stroke="#c9ab7c" stroke-linecap="round" aria-hidden="true"><path d="M25 78 Q100 22 175 78 Q100 118 25 78 Z" stroke-width="4"/><circle cx="100" cy="72" r="17" stroke-width="4"/><path d="M52 46 L42 30 M74 36 L68 18 M100 32 L100 12 M126 36 L132 18 M148 46 L158 30" stroke-width="3"/></svg><span class="tap-hint" id="cm2h">Toque para abrir</span></button>
   <div class="card-body">
-    <h3>Pestanas</h3>
+    <h2 id="cm2t">Pestanas</h2>
     <p>Lifting e tintura para um olhar marcante todos os dias, sem esforço.</p>
     <div class="sub-panel"><div class="sub-panel-inner"><a class="sub-link" href="../servicos/pestanas/lifting/">Lifting de Pestanas</a><a class="sub-link" href="../servicos/pestanas/tintura/">Tintura de Pestanas</a><a class="sub-link sub-link-main" href="../servicos/pestanas/">Ver tudo em Pestanas</a></div></div>
   </div>
 </article><article class="service-card">
-  <a class="card-media" href="../servicos/threading/" aria-label="Threading"><svg viewBox="0 0 200 130" fill="none" stroke="#c9ab7c" stroke-linecap="round" aria-hidden="true"><path d="M28 100 L172 34 M28 34 L172 100" stroke-width="3.5"/><circle cx="100" cy="67" r="13" stroke-width="4"/><path d="M100 30 L100 20 M100 114 L100 104" stroke-width="3"/></svg><span class="tap-hint">Ver preços</span></a>
+  <a class="card-media" href="../servicos/threading/" aria-labelledby="cm3h cm3t"><svg viewBox="0 0 200 130" fill="none" stroke="#c9ab7c" stroke-linecap="round" aria-hidden="true"><path d="M28 100 L172 34 M28 34 L172 100" stroke-width="3.5"/><circle cx="100" cy="67" r="13" stroke-width="4"/><path d="M100 30 L100 20 M100 114 L100 104" stroke-width="3"/></svg><span class="tap-hint" id="cm3h">Ver preços</span></a>
   <div class="card-body">
-    <h3>Threading</h3>
-    <p>Depilação com linha para rosto e sobrancelhas — precisão total, sem químicos e ideal para peles sensíveis.</p>
+    <h2 id="cm3t">Threading</h2>
+    <p>Depilação com linha para rosto e sobrancelhas — sem cera nem químicos na remoção do pelo.</p>
     
   </div>
 </article></div>
@@ -114,25 +113,26 @@
     </div>
   </div>
 </section>
+</main>
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="Inova Beauty">Inova <span>Beauty</span></a>
-      <p>Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas e pestanas. Em Canidelo, Vila Nova de Gaia.</p>
+      <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="">Inova <span>Beauty</span></a>
+      <p>Beleza, precisão e cuidado em cada detalhe. Sobrancelhas, pestanas e lábios em Canidelo, Vila Nova de Gaia.</p>
     </div>
     <div>
-      <h4>Navegação</h4>
+      <h2 class="footer-title">Navegação</h2>
       <ul>
         <li><a href="../servicos/">Serviços</a></li>
         <li><a href="../precario/">Preçário</a></li>
         <li><a href="../processos/">Processos</a></li>
         <li><a href="../sobre/">Sobre</a></li>
-        <li><a href="../contato/">Contato</a></li>
+        <li><a href="../contato/">Contacto</a></li>
         <li><a href="../localizacao/">Localização</a></li>
       </ul>
     </div>
     <div>
-      <h4>Contactos</h4>
+      <h2 class="footer-title">Contactos</h2>
       <ul>
         <li><a href="../agendar/">✨ Marcar horário online</a></li>
         <li><a href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener">Dúvidas no WhatsApp: +351 919 277 205</a></li>
@@ -141,13 +141,32 @@
         <li><a href="../app/">📱 Instalar a APP</a></li>
       </ul>
     </div>
+    <div>
+      <h2 class="footer-title">Legal</h2>
+      <ul>
+        <li><a href="../privacidade/">Política de Privacidade</a></li>
+        <li><a href="../termos/">Termos e Condições</a></li>
+        <li><a href="../cookies/">Política de Cookies</a></li>
+        <li><a href="../cancelamento/">Cancelamento e reembolso</a></li>
+        <li><a class="lre-link" href="https://www.livroreclamacoes.pt/" target="_blank" rel="noopener">Livro de Reclamações</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-legal">
+    <div class="legal-id">
+      <div><span class="lbl">Prestador de serviços</span> <span class="val" data-sem-traducao>Inova Beauty — <span class="a-preencher" data-campo="nome">A PREENCHER</span></span></div>
+      <div><span class="lbl">NIF</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="nif">A PREENCHER</span></span></div>
+      <div><span class="lbl">Morada</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="morada">A PREENCHER</span></span></div>
+      <div><span class="lbl">Email</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="email">A PREENCHER</span></span></div>
+      <div><span class="lbl">Telemóvel</span> <span class="val" data-sem-traducao>+351 919 277 205</span></div>
+    </div>
   </div>
   <div class="container footer-bottom">
-    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../privacidade/" style="color:inherit">Privacidade</a> · <a href="../termos/" style="color:inherit">Termos</a> · <a href="../painel/" style="color:inherit">Área reservada</a>
+    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../painel/">Área reservada</a>
   </div>
 </footer>
-<a class="app-float" href="../app/home/" aria-label="Abrir a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
-<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener" aria-label="Tirar dúvidas no WhatsApp" title="Dúvidas? Fale connosco"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg><span class="wa-float-tip">Dúvidas?</span></a>
+<nav class="float-nav" aria-label="Atalhos: app e WhatsApp"><a class="app-float" href="../app/home/" aria-label="Abrir a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
+<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener" aria-label="Tirar dúvidas no WhatsApp" title="Dúvidas? Fale connosco"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg><span class="wa-float-tip">Dúvidas?</span></a></nav>
 <script>window.INOVA_PREFIX="../";</script>
 <script src="../auth.js"></script>
 <script src="../main.js"></script>

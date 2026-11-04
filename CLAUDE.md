@@ -14,3 +14,14 @@ define preços e tempos: Thayana (mulher do Wesley). Falar em português de Port
 - Não editar o `README.md` (é o perfil do GitHub). Documentação em `docs/`.
 
 Detalhes das regras de disponibilidade e do catálogo: `docs/disponibilidade-e-regras.md`.
+
+## Revisão jurídica (4 de novembro de 2026) — o que não se pode desfazer sem querer
+- As páginas **`privacidade/`, `termos/`, `cookies/`, `cancelamento/`** e `idiomas/legal-*.js` são **geradas**: editar `scripts/legal/*.py` e correr
+  `python3 scripts/legal/build_all.py`. Não editar o HTML à mão (a próxima geração apagava a alteração).
+- O que só o titular sabe aparece como **«A PREENCHER»** (nome, NIF, morada, email, IVA, meios de pagamento, prazos de cancelamento, RAL, região do Firestore).
+  Preenche-se com `python3 scripts/preencher_dados_legais.py`. **Nunca inventar** NIF, morada, nome ou regras do estúdio.
+- **Nada de terceiros ao abrir uma página**: letras em `fonts/`, SDK Firebase em `vendor/`; o mapa da Google só a pedido; `analytics.js` só com consentimento.
+- **Minimização**: não se pede sexo; aniversário é opcional e só dia/mês; a marcação não guarda o email.
+- Textos de publicidade: sem «melhor», «garantido», «permanente», «ideal para…», «100 %». O que foi reescrito e porquê está em
+  `docs/auditoria-juridica/alteracoes-antes-depois.md`. Origem de imagens e letras: `CREDITOS.md`. Acessibilidade: `docs/ACESSIBILIDADE.md`.
+- Visão geral dos 23 pontos, riscos e decisões: `docs/AUDITORIA_JURIDICA.md`.

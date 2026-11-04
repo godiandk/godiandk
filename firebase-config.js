@@ -7,8 +7,9 @@ window.INOVA_FIREBASE_CONFIG = {
   projectId: "inova-beauty",
   storageBucket: "inova-beauty.firebasestorage.app",
   messagingSenderId: "296094956902",
-  appId: "1:296094956902:web:d2cb6529edb0cf6fbc1ca7",
-  measurementId: "G-22GQ9LXJG9"
+  appId: "1:296094956902:web:d2cb6529edb0cf6fbc1ca7"
+  // measurementId (Google Analytics) retirado de propósito: o site não usa o Analytics do Firebase.
+  // Se um dia for ativado, tem de ficar atrás do consentimento (ver analytics.js).
 };
 
 /* Email(s) com acesso ao painel de administração. */
