@@ -54,6 +54,11 @@ def main():
     if cruzados:
         print("AVISO — mesma chave com traduções diferentes entre os dicionários partilhado e legal:", cruzados[:5])
     print("páginas:", ", ".join(paginas))
+    # as páginas legais saem do molde com os dados estruturados (migalhas) da Privacidade: o SEO volta a pô-los certos em cada página
+    r = subprocess.run([sys.executable, "scripts/seo/aplicar_seo.py"], capture_output=True, text=True)
+    print((r.stdout.strip().splitlines() or ["(sem resposta do SEO)"])[0])
+    if r.returncode:
+        print("AVISO — aplicar_seo.py encontrou problemas:\n" + r.stdout[-600:])
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ from common import *
 def build():
     pg = Page("privacidade",
         "Política de Privacidade",
-        "Como a Inova Beauty trata os seus dados pessoais (RGPD e Lei n.º 58/2019): quem é o responsável, que dados recolhemos campo a campo, porquê, durante quanto tempo, com quem os partilhamos e os seus direitos.",
+        "Como a Inova Beauty trata os seus dados pessoais (RGPD e Lei n.º 58/2019): que dados recolhemos, porquê, por quanto tempo, com quem os partilhamos e os seus direitos.",
         T("Política de Privacidade", "Privacy Policy", "Política de Privacidad"),
         T("Explicamos, em linguagem simples, que dados pessoais recolhemos, porquê, durante quanto tempo os guardamos e quais são os seus direitos.",
           "In plain language: what personal data we collect, why, how long we keep it and what your rights are.",

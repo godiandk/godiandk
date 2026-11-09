@@ -159,7 +159,8 @@ def escrever(pg, template_path="privacidade/index.html", baseline=None):
     main = main.replace('<p class="legal-meta">', '<p class="legal-meta">', 1)
     tpl = tpl[:a] + main + tpl[b:]
     # 2) <head>: título, descrições, canonical
-    url = f"https://godiandk.github.io/godiandk/{pg.slug}/"
+    base = json.load(open("scripts/seo/site.json", encoding="utf-8"))["base_url"]   # o endereço do site fica num só sítio (scripts/seo/site.json)
+    url = f"{base}{pg.slug}/"
     tpl = re.sub(r"<title>.*?</title>", f"<title>{pg.title} — Inova Beauty</title>", tpl, count=1, flags=re.S)
     tpl = re.sub(r'(<meta name="description" content=")[^"]*(")', lambda m: m.group(1) + pg.desc + m.group(2), tpl, count=1)
     tpl = re.sub(r'(<meta property="og:description" content=")[^"]*(")', lambda m: m.group(1) + pg.desc + m.group(2), tpl, count=1)
@@ -170,8 +171,10 @@ def escrever(pg, template_path="privacidade/index.html", baseline=None):
     tpl = re.sub(r'(<meta property="og:url" content=")[^"]*(")', lambda m: m.group(1) + url + m.group(2), tpl, count=1)
     # 3) dicionários legais
     if "legal-en.js" not in tpl:
-        tpl = tpl.replace('<script src="../idiomas/en.js"></script>', '<script src="../idiomas/en.js"></script>\n<script src="../idiomas/legal-en.js"></script>')
-        tpl = tpl.replace('<script src="../idiomas/es.js"></script>', '<script src="../idiomas/es.js"></script>\n<script src="../idiomas/legal-es.js"></script>')
+        # as páginas públicas carregam os scripts com «defer»; o molde pode ou não tê-lo
+        for lang in ("en", "es"):
+            tpl = re.sub(rf'(<script(?: defer)? src="\.\./idiomas/{lang}\.js"></script>)',
+                         lambda m, lang=lang: m.group(1) + f'\n<script defer src="../idiomas/legal-{lang}.js"></script>', tpl, count=1)
     os.makedirs(pg.slug, exist_ok=True)
     open(f"{pg.slug}/index.html", "w", encoding="utf-8").write(tpl)
 

@@ -121,7 +121,7 @@ Guardar a resposta da cliente (captura ou exportação da conversa).
 | **Novo:** páginas legais em PT/EN/ES (traduções completas, âncoras, sem rolagem horizontal) | OK |
 | axe-core (WCAG 2.0/2.1 A e AA e boas práticas), 41 páginas × 2 ecrãs | 0 violações; 15 estados interativos: 0 |
 | Contraste real (7 042 textos medidos) | 0 falhas reais |
-| Primeira visita: o que fica no dispositivo | nada (sem cookies, sem localStorage, sem pedidos a terceiros, exceto Firebase na marcação e na app) |
+| Primeira visita: o que fica no dispositivo | nada (sem cookies, sem localStorage, sem pedidos a terceiros, exceto Firebase na marcação e na app). **Em computador.** Em telemóvel havia um pedido à Google que este teste não via: ver a adenda (secção 9) |
 
 ## 8. Anexos
 
@@ -130,3 +130,19 @@ Guardar a resposta da cliente (captura ou exportação da conversa).
 - `docs/ACESSIBILIDADE.md` — falhas, correções e a conta de cada par de cores.
 - `CREDITOS.md` — origem de imagens, letras e código de terceiros.
 - `scripts/legal/` — gerador das 4 páginas legais (`build_all.py`); `scripts/preencher_dados_legais.py` — preenchimento dos dados.
+- `docs/SEO-E-CLIENTES.md` — plano para ser encontrado no Google e ter mais clientes (adenda de 9 de novembro).
+
+## 9. Adenda — 9 de novembro de 2026: o que a medição da velocidade revelou
+
+Ao medir a velocidade do site para o plano de SEO ([docs/SEO-E-CLIENTES.md](SEO-E-CLIENTES.md)) apareceram três coisas que a vistoria
+de 4 de novembro tinha deixado passar. Estão corrigidas no mesmo pedido de alterações (PR #57); o antes → depois está em
+`docs/auditoria-juridica/alteracoes-antes-depois.md`.
+
+| # | O que se encontrou | Pontos | Correção |
+|---|---|---|---|
+| 1 | **Pedido à Google ao abrir qualquer página em telemóvel e no Safari.** Nestes navegadores o SDK do Firebase Auth pede `apis.google.com/js/api.js` (e prepara uma moldura de autenticação) ao arrancar, mesmo sem ninguém ter iniciado sessão. A vistoria só testou em computador, onde isso não acontece. Por isso a frase da Política de Privacidade «o site não carrega recursos de terceiros ao abrir uma página» estava **certa no computador e errada nos telemóveis**. | 5, 7, 8 | Uma linha alterada no SDK alojado no site (aviso na 1.ª linha do ficheiro; `vendor/firebase/LEIA-ME.txt` e `CREDITOS.md` atualizados). O site só usa email e palavra-passe, por isso essa preparação não faz falta. O teste `scripts/testes/terceiros_ao_abrir.js` corre agora em **computador, Android e iPhone** e falha se houver um pedido inesperado: 40 páginas × 3 perfis, só `firestore.googleapis.com` em `/agendar/` e `/app/home/`. O início de sessão continua a arrancar (verificado nos três perfis com o SDK verdadeiro). |
+| 2 | **«efeito de máscara permanente»** na página do lifting (só tinha sido reescrito na página de pestanas). | 16 | «efeito de máscara de pestanas». |
+| 3 | Descrições das páginas (as que o Google mostra) com promessas: «ideal para peles sensíveis» (threading), «precisão total», «especialistas», «oficial». | 16, 17 | Todas as descrições das páginas indexáveis são agora geradas por `scripts/seo/aplicar_seo.py`, que **falha** se aparecer «melhor», «garantido», «permanente», «ideal para», «100 %» ou «certificado». |
+
+**Em aberto (não alterei):** as páginas dos serviços mostram uma «Duração média» escrita à mão e a pergunta frequente da página
+inicial dá tempos. A regra do projeto é que os tempos só vêm do painel da Thayana: decidir se se retiram ou se passam a ser lidos do painel.

@@ -79,7 +79,7 @@
     panel.className = "chat-panel";
     panel.innerHTML =
       '<div class="chat-head">' +
-      '  <div class="ch-id"><img class="ch-avatar" src="' + P + 'img/mark.png" alt="">' +
+      '  <div class="ch-id"><img class="ch-avatar" src="' + P + 'img/mark-96.webp" alt="">' +
       '  <div><div class="ch-title">Inova Beauty</div><div class="ch-status">Assistente automático</div></div></div>' +
       '  <button type="button" aria-label="Fechar assistente">✕</button>' +
       '</div>' +

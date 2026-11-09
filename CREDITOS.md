@@ -21,6 +21,8 @@ O site não tem fotografias de pessoas reais. As imagens abaixo são logótipo, 
 | `img/icon-192.png`, `img/icon-512.png` | 192×192, 512×512 | ícone da app instalável e `manifest.webmanifest` | `95f6a2c`, 2026-07-21, autor «Claude»: «Fidelização com selos… app instalável (PWA)…» | **origem desconhecida — confirmar** | **a confirmar** | CONFIRMAR |
 | `img/og-image.jpg` | 1200×630 | pré-visualização ao partilhar o site (redes sociais, WhatsApp) | refeita nesta revisão (a versão anterior, `03d2253`, 2026-08-20, anunciava «Micropigmentação» e «Laser», serviços que ainda não se fazem) | composição de texto sobre o logótipo (letra Cormorant Garamond, licença OFL) | o logótipo: ver `img/logo.png` | CONFIRMAR (por causa do logótipo) |
 | `img/thayana-cutout.png` | 692×820 | página inicial, «Sobre», ecrã inicial da app | `95f6a2c`, 2026-07-21, autor «Claude»: «…recorte da personagem» | ilustração em estilo de desenho animado 3D de uma mulher de cabelo encaracolado (a «personagem» da Thayana). **origem desconhecida — confirmar** | **a confirmar** | CONFIRMAR |
+| `img/thayana-cutout.webp`, `img/thayana-cutout-480.webp` | 692×820, 480×569 | as mesmas páginas (substituem o PNG para a página abrir mais depressa) | criadas a 9 de novembro de 2026 a partir de `img/thayana-cutout.png` (só conversão e redução de tamanho; o desenho não foi alterado) | **a mesma do original — origem desconhecida — confirmar** | **a confirmar** | CONFIRMAR |
+| `img/mark-96.webp` | 96×96 | cabeçalho e rodapé de todas as páginas, balão do chat (substitui `img/mark.png`, que tem 151 KB, para mostrar 42 px) | criada a 9 de novembro de 2026 a partir de `img/mark.png` (só conversão e redução) | **a mesma do original — origem desconhecida — confirmar** | **a confirmar** | CONFIRMAR |
 | `img/thayana-avatar.jpg` | 240×240 | avatar da barra superior da app | `ace5254`, 2026-07-21, autor «Claude»: «Adicionar carrossel na home e personagem da Thayana» | a mesma personagem — **origem desconhecida — confirmar** | **a confirmar** | CONFIRMAR |
 | `img/thayana.jpg` | 800×800 | **não é usada em nenhuma página** | `ace5254`, 2026-07-21 | a mesma personagem — **origem desconhecida — confirmar** | **a confirmar** | NÃO USADA (pode apagar-se) |
 | `img/avatares/av1.jpg` … `av8.jpg` | 240×240 cada | escolha de «personagem» ao criar conta ou editar o perfil (carregadas por JavaScript) | `a817845`, 2026-07-24, autor «Claude»: «Adicionar 8 avatares/personagens ilustrados para as clientes escolherem» | 8 ilustrações em estilo de desenho animado 3D (6 mulheres, 2 homens). **origem desconhecida — confirmar** | **a confirmar** | CONFIRMAR |
@@ -54,7 +56,7 @@ A licença OFL permite o uso comercial e a redistribuição, desde que a licenç
 
 | Peça | Licença | Origem | Onde |
 |---|---|---|---|
-| Firebase JavaScript SDK 10.12.2 («compat»: app, auth, firestore) | Apache-2.0 | Google LLC; pacote npm `firebase@10.12.2`, sem alterações | `vendor/firebase/10.12.2/` e `vendor/firebase/LICENSE-Apache-2.0.txt` |
+| Firebase JavaScript SDK 10.12.2 («compat»: app, auth, firestore) | Apache-2.0 | Google LLC; pacote npm `firebase@10.12.2`; **1 alteração** em `firebase-auth-compat.js` (não contactar a Google ao abrir a página em telemóvel/Safari; ver `vendor/firebase/LEIA-ME.txt`) | `vendor/firebase/10.12.2/` e `vendor/firebase/LICENSE-Apache-2.0.txt` |
 
 O restante código (HTML, CSS e JavaScript) foi escrito para a Inova Beauty, a pedido do Wesley, com apoio do assistente de IA
 Claude (Anthropic). Não há ficheiro de licença no repositório: por omissão, os direitos ficam reservados ao titular.

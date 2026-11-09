@@ -4,7 +4,7 @@ from common import *
 def build():
     pg = Page("cancelamento",
         "Cancelamento e Reembolso",
-        "Como cancelar ou remarcar uma marcação na Inova Beauty, o seu direito de desistir em 14 dias nas marcações feitas à distância (DL 24/2014), quando esse direito não se aplica e como pedir um reembolso.",
+        "Como cancelar ou remarcar uma marcação na Inova Beauty, o direito de desistir em 14 dias (DL 24/2014), quando não se aplica e como pedir um reembolso.",
         T("Cancelamento e Reembolso", "Cancellation and Refunds", "Cancelación y Reembolso"),
         T("Como cancelar ou remarcar, em que casos pode desistir no prazo de 14 dias e como pedir um reembolso.",
           "How to cancel or reschedule, when you can withdraw within 14 days and how to ask for a refund.",

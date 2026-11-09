@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>APP — Inova Beauty</title>
 <meta name="description" content="A app Inova Beauty: marcações, cartão de fidelidade e conta.">
 <link rel="stylesheet" href="../../styles.css">
+<link rel="preload" href="../../fonts/Jost-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../fonts/CormorantGaramond-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../i18n.css">
 <link rel="manifest" href="../../manifest.webmanifest">
 <meta name="theme-color" content="#191411">
@@ -16,6 +18,7 @@
 <script src="../../vendor/firebase/10.12.2/firebase-firestore-compat.js"></script>
 <script src="../../firebase-config.js"></script>
 <script src="../../analytics.js"></script>
+<meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://godiandk.github.io/godiandk/app/home/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Inova Beauty">
@@ -42,7 +45,7 @@
 <!-- ===== INÍCIO ===== -->
 <main class="app-screen active" id="scr-inicio">
   <div class="app-hero-mini">
-    <img src="../../img/thayana-cutout.png" alt="Thayana">
+    <img src="../../img/thayana-cutout-480.webp" width="84" height="100" alt="Personagem ilustrada da Inova Beauty, a acenar">
     <div>
       <h1 class="ahm-title" id="homeGreet">Olá! 👋</h1>
       <div class="ahm-sub">Bem-vinda à Inova Beauty.<br>Beleza, precisão e cuidado.</div>

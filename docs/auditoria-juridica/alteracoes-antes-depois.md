@@ -214,3 +214,83 @@ O Wesley pediu: «não apagues conteúdo sem me mostrares primeiro o que vais ap
 - **Substituídos por completo:** `privacidade/index.html` e `termos/index.html` (texto antigo guardado em `docs/auditoria-juridica/`), `img/og-image.jpg` (a anterior anunciava Micropigmentação e Laser; está no histórico do Git, commit `03d2253`).
 - **Apagados:** nenhum ficheiro do repositório foi apagado.
 
+---
+
+## Adenda — 9 de novembro de 2026 (SEO, velocidade e três correções tardias)
+
+Tudo o que mudou **depois** do primeiro commit deste pedido de alterações (PR #57), antes → depois. Continua a não ter sido
+apagado nenhum ficheiro: as imagens PNG originais ficam no repositório (só deixaram de ser usadas nas páginas).
+
+### Textos visíveis
+
+| Onde | Antes | Depois | Porquê |
+|---|---|---|---|
+| `servicos/pestanas/lifting/index.html` | «… com um efeito de máscara **permanente** — sem extensões.» | «… com um efeito de máscara de pestanas — sem extensões.» | «permanente» está na lista de palavras a evitar; a mesma frase já tinha sido corrigida na página de pestanas e escapou aqui. |
+| `index.html` (primeira imagem do carrossel, texto pequeno por cima do título) | «Marcação online» | «Marcação online · Canidelo, Vila Nova de Gaia» (traduzido em `idiomas/en.js` e `es.js`) | A zona passa a estar no texto da página inicial. |
+| `index.html` (perguntas frequentes) | 5 perguntas | **+2 perguntas, nada apagado:** «Onde fica a Inova Beauty?» (mesmo nível de pormenor da página Localização) e «Que serviços fazem?» («Sobrancelhas, pestanas e lábios…»), com tradução EN/ES | Respostas diretas a pesquisas locais; entram nos dados estruturados. |
+| `alt` da imagem da personagem (4 páginas) | «Thayana — a especialista da Inova Beauty», «Thayana — Inova Beauty», «Thayana — a profissional por trás da Inova Beauty», «Thayana» | «Personagem ilustrada da Inova Beauty, a acenar» | É um desenho (ver `CREDITOS.md`), não uma fotografia da Thayana; «especialista» é uma qualificação que não se prova. |
+
+### Títulos e descrições das páginas (`<title>` e `meta description`; as de og/twitter acompanham)
+
+Criados e mantidos por `scripts/seo/aplicar_seo.py` a partir de `scripts/seo/site.json`. Retiraram-se os preços das descrições
+(vêm do catálogo; evita números desatualizados) e as promessas que lá estavam: «especialistas», «precisão total, sem químicos»,
+«ideal para peles sensíveis» (threading), «oficial» (preçário), «durante semanas». Os termos novos vêm do Google Keyword Planner
+(Portugal): «depilação à linha», «o que é a brow lamination», «preços», micropigmentação labial (ver `docs/SEO-E-CLIENTES.md`, secção 2b).
+As descrições das páginas legais foram encurtadas no gerador (`scripts/legal/*.py`) porque o Google corta por volta dos 160 caracteres.
+
+| Página | Antes (título · descrição) | Depois (título · descrição) |
+|---|---|---|
+| `index.html` | **Inova Beauty — Sobrancelhas e Pestanas** · Inova Beauty: especialistas em threading, sobrancelhas e pestanas. Beleza, precisão e cuidado em cada detalhe. Marque online em 1 minuto. | **Sobrancelhas e Pestanas em Vila Nova de Gaia — Inova Beauty** · Threading, brow lamination, lifting de pestanas e micropigmentação labial em Canidelo, Vila Nova de Gaia. Atendimento por marcação: escolha o dia e a hora online. |
+| `agendar/index.html` | **Marcação Online — Inova Beauty** · Marque o seu horário na Inova Beauty: escolha o serviço, o dia e a hora e confirme. A marcação fica registada diretamente para o estúdio. | **Marcação online — Inova Beauty, Vila Nova de Gaia** · Marque online na Inova Beauty, em Canidelo (Vila Nova de Gaia): escolha o serviço, o dia e a hora e confirme o seu horário. |
+| `cancelamento/index.html` | **Cancelamento e Reembolso — Inova Beauty** · Como cancelar ou remarcar uma marcação na Inova Beauty, o seu direito de desistir em 14 dias nas marcações feitas à distância (DL 24/2014), quando esse direito não se aplica e como pedir um reembolso. | **Cancelamento e Reembolso — Inova Beauty** · Como cancelar ou remarcar uma marcação na Inova Beauty, o direito de desistir em 14 dias (DL 24/2014), quando não se aplica e como pedir um reembolso. |
+| `contato/index.html` | **Contacto — Inova Beauty** · Contacte a Inova Beauty: marque online em 1 minuto. WhatsApp +351 919 277 205 para dúvidas. Sobrancelhas e pestanas. | **Contacto — Inova Beauty, Vila Nova de Gaia** · Fale com a Inova Beauty, em Canidelo (Vila Nova de Gaia): marque online ou use o WhatsApp +351 919 277 205 para tirar dúvidas. |
+| `localizacao/index.html` | **Localização — Inova Beauty · Canidelo, Vila Nova de Gaia** · Inova Beauty em Canidelo, Vila Nova de Gaia. Atendimento por marcação — marque online e receba a morada exata ao confirmar. Sobrancelhas e pestanas. | **Localização — Inova Beauty · Canidelo, Vila Nova de Gaia** · Inova Beauty em Canidelo, Vila Nova de Gaia. Atendimento por marcação — marque online e receba a morada exata ao confirmar. Sobrancelhas, pestanas e lábios. |
+| `precario/index.html` | **Preçário — Inova Beauty** · Preçário oficial da Inova Beauty com todos os serviços em euro (€): threading, coloração e tratamentos de sobrancelhas, lifting e tintura de pestanas, micropigmentação labial e neutralização. | **Preços de Sobrancelhas, Pestanas e Lábios em Gaia — Inova Beauty** · Preços em euros dos serviços da Inova Beauty, em Canidelo, Vila Nova de Gaia: sobrancelhas, pestanas, micropigmentação labial e neutralização. |
+| `privacidade/index.html` | **Política de Privacidade — Inova Beauty** · Como a Inova Beauty trata os seus dados pessoais (RGPD e Lei n.º 58/2019): quem é o responsável, que dados recolhemos campo a campo, porquê, durante quanto tempo, com quem os partilhamos e os seus direitos. | **Política de Privacidade — Inova Beauty** · Como a Inova Beauty trata os seus dados pessoais (RGPD e Lei n.º 58/2019): que dados recolhemos, porquê, por quanto tempo, com quem os partilhamos e os seus direitos. |
+| `processos/brow-lamination/index.html` | **Como é feito: Brow Lamination — Inova Beauty** · Passo a passo de Brow Lamination na Inova Beauty: O tratamento que disciplina e realinha os pelos das sobrancelhas, criando o efeito cheio e penteado que dura semanas. | **Brow Lamination: o que é e como é feita — Inova Beauty** · O que é a brow lamination e como é feita, passo a passo, na Inova Beauty, em Canidelo, Vila Nova de Gaia. |
+| `processos/lifting-pestanas/index.html` | **Como é feito: Lifting de Pestanas — Inova Beauty** · Passo a passo de Lifting de Pestanas na Inova Beauty: A curvatura das suas pestanas naturais elevada desde a raiz — efeito de máscara e olhar aberto, sem extensões. | **Lifting de Pestanas: o que é e como é feito — Inova Beauty** · O que é o lifting de pestanas e como é feito, passo a passo, na Inova Beauty, em Canidelo, Vila Nova de Gaia. |
+| `processos/threading/index.html` | **Como é feito: Threading (Depilação com Linha) — Inova Beauty** · Passo a passo de Threading (Depilação com Linha) na Inova Beauty: Uma técnica milenar que usa apenas uma linha de algodão torcida para remover os pelos pela raiz, com precisão fio a fio. | **Threading (Depilação à Linha): como é feito — Inova Beauty** · Veja como é feito o threading (depilação à linha) na Inova Beauty: uma linha de algodão torcida remove os pelos pela raiz, passo a passo. |
+| `servicos/index.html` | **Serviços — Inova Beauty** · Todos os serviços da Inova Beauty: sobrancelhas, pestanas e threading. Clique em cada serviço para ver detalhes e preços em €. | **Serviços de Sobrancelhas e Pestanas — Inova Beauty** · Serviços da Inova Beauty, em Canidelo, Vila Nova de Gaia: threading, brow lamination, alisamento e coloração de sobrancelhas; lifting e tintura de pestanas. |
+| `servicos/pestanas/index.html` | **Pestanas — Serviços — Inova Beauty** · Pestanas na Inova Beauty: Lifting e tintura para um olhar marcante todos os dias, sem esforço. | **Pestanas em Vila Nova de Gaia — Inova Beauty** · Lifting e tintura de pestanas na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja os serviços e marque online. |
+| `servicos/pestanas/lifting/index.html` | **Lifting de Pestanas — Inova Beauty** · Lifting de pestanas na Inova Beauty: curvatura natural e olhar aberto durante semanas. 25,00€ com lash care incluído. | **Lifting de Pestanas em Gaia — Inova Beauty** · Lifting de pestanas na Inova Beauty, em Canidelo, Vila Nova de Gaia: curvatura das pestanas naturais, sem extensões. Veja o preço e marque online. |
+| `servicos/pestanas/tintura/index.html` | **Tintura de Pestanas — Inova Beauty** · Tintura de pestanas na Inova Beauty: pestanas mais escuras e visíveis sem máscara. 15,00€. | **Tintura de Pestanas em Gaia — Inova Beauty** · Tintura de pestanas na Inova Beauty, em Canidelo, Vila Nova de Gaia: pestanas mais escuras, sem máscara. Veja o preço e marque online. |
+| `servicos/sobrancelhas/index.html` | **Sobrancelhas — Serviços — Inova Beauty** · Sobrancelhas na Inova Beauty: Design com linha, laminação, coloração e tratamentos de nutrição para umas sobrancelhas perfeitas. | **Sobrancelhas em Vila Nova de Gaia — Inova Beauty** · Threading, brow lamination, alisamento e coloração de sobrancelhas na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja os serviços e marque online. |
+| `servicos/sobrancelhas/alisamento/index.html` | **Alisamento de Sobrancelhas — Inova Beauty** · Alisamento de sobrancelhas na Inova Beauty: pelos disciplinados e alinhados com brow care incluído. 20,00€. | **Alisamento de Sobrancelhas em Gaia — Inova Beauty** · Alisamento de sobrancelhas na Inova Beauty, em Canidelo, Vila Nova de Gaia: pelos disciplinados e alinhados. Veja o preço e marque online. |
+| `servicos/sobrancelhas/brow-lamination/index.html` | **Brow Lamination — Inova Beauty** · Brow Lamination na Inova Beauty: sobrancelhas alinhadas, cheias e com efeito penteado durante semanas. 20,00€ com brow care incluído. | **Brow Lamination em Gaia — Inova Beauty** · Brow lamination na Inova Beauty, em Canidelo, Vila Nova de Gaia: pelos das sobrancelhas alinhados e com efeito penteado. Veja o preço e marque online. |
+| `servicos/sobrancelhas/coloracao/index.html` | **Coloração de Sobrancelhas — Inova Beauty** · Coloração de sobrancelhas na Inova Beauty: henna e tintura para cor, preenchimento e definição natural. Desde 10,00€. | **Coloração de Sobrancelhas em Gaia — Inova Beauty** · Coloração de sobrancelhas (henna e tintura) na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja o preço e marque online. |
+| `servicos/sobrancelhas/threading/index.html` | **Threading de Sobrancelhas — Inova Beauty** · Design de sobrancelhas com técnica de linha (threading) na Inova Beauty. Precisão total, sem químicos. Desde 10,00€. | **Threading de Sobrancelhas em Gaia — Inova Beauty** · Threading (depilação à linha) de sobrancelhas na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja o preço e marque online o dia e a hora. |
+| `servicos/threading/index.html` | **Threading — Serviços — Inova Beauty** · Threading na Inova Beauty: Depilação com linha para rosto e sobrancelhas — precisão total, sem químicos e ideal para peles sensíveis. | **Depilação à Linha (Threading) em Gaia — Inova Beauty** · Depilação à linha (threading) para rosto e sobrancelhas na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja os preços e marque online. |
+| `sobre/index.html` | **Sobre — Inova Beauty** · Conheça a Inova Beauty: especialistas em sobrancelhas e pestanas. Beleza, precisão e cuidado em cada detalhe. | **Sobre a Inova Beauty — Canidelo, Vila Nova de Gaia** · Conheça a Inova Beauty, o estúdio da Thayana em Canidelo, Vila Nova de Gaia: sobrancelhas, pestanas e lábios, com atendimento por marcação. |
+| `termos/index.html` | **Termos e Condições — Inova Beauty** · Termos e Condições da Inova Beauty: como fazer uma marcação, preços e pagamento, cancelamentos, cartão de fidelidade, conta, comunidade, responsabilidade, resolução de litígios, lei aplicável e foro. | **Termos e Condições — Inova Beauty** · Termos e Condições da Inova Beauty: marcações, preços e pagamento, cancelamentos, cartão de fidelidade, conta, responsabilidade, lei aplicável e foro. |
+
+### Dados estruturados da página inicial
+
+| O quê | Antes | Depois |
+|---|---|---|
+| `BeautySalon.description` | «Estúdio de beleza **especialista** em sobrancelhas, pestanas e threading.» | «Estúdio de sobrancelhas, pestanas e lábios em Canidelo, Vila Nova de Gaia, com atendimento por marcação.» |
+| `BeautySalon.priceRange` | «€€» | retirado (não há base para classificar os preços) |
+| `BeautySalon` | sem `@id`, `logo`; `sameAs` vazio | acrescentados `@id` e `logo`; `sameAs` só aparece quando houver redes preenchidas |
+| `FAQPage` | texto escrito à parte (ex.: «Sim. Se precisar…»), diferente do visível | gerado a partir das perguntas **visíveis** (o Google exige que coincidam): agora 7 |
+| `BreadcrumbList` | não existia | 25 páginas, a partir das migalhas visíveis |
+| Rua e código postal | «Rua da Bélgica», «4400-045» (já estavam publicados) | iguais; a página Localização mostra a rua mas não o código postal. `"mostrar_rua_no_google": false` em `scripts/seo/site.json` retira os dois |
+
+### Outros
+
+| Ficheiro | Alteração |
+|---|---|
+| `sitemap.xml` | 29 → 27 endereços: saem só `app/home/` e `conta/` (agora `noindex`); as páginas dos serviços escondidos já lá não estavam; `tecnova/` mantém-se (é outro projeto); sem `lastmod` nem `priority` (estavam desatualizados: 2026-08-20). |
+| `llms.txt` | **novo**: resumo do site para assistentes de IA, gerado por `aplicar_seo.py` (só factos públicos, sem preços nem tempos). |
+| `vendor/firebase/10.12.2/firebase-auth-compat.js` | **1 alteração** (+1 linha de aviso): o SDK deixa de preparar a autenticação por janela ao arrancar em telemóvel/Safari. Ver `vendor/firebase/LEIA-ME.txt`. |
+| `img/` | novos: `thayana-cutout.webp`, `thayana-cutout-480.webp`, `mark-96.webp` (derivados dos PNG originais, que ficam). |
+| `<script src>` das páginas públicas | passam a `defer` (a ordem de execução mantém-se). Em `agendar/` o script da própria página passou a esperar pelo `DOMContentLoaded` (os `defer` só correm depois de a página estar lida). `conta/`, `app/home/` e `painel/` ficam como estavam por terem scripts grandes na própria página. |
+| `styles.css` | `height: auto` nas imagens da personagem (o HTML passou a trazer `width`/`height` para reservar espaço); pontos do carrossel da página inicial com área de toque de 24 px (o ponto continua a ter 10 px). |
+| `<head>` de 40 páginas | `<link rel="preload">` das duas letras principais (`Jost` e `Cormorant Garamond`, as mesmas que já estavam em `fonts/`), para a página não «saltar» quando a letra de reserva é trocada. Geradas por `scripts/seo/aplicar_seo.py`. |
+| `docs/` | novos: `SEO-E-CLIENTES.md` (plano) e `KIT-DIVULGACAO.md` (textos prontos para o Perfil no Google, redes e WhatsApp). |
+
+### Em aberto — para o Wesley decidir (não alterei)
+
+- As páginas de cada serviço mostram uma «**Duração média**» escrita à mão (ex.: «≈ 15–20 minutos») e a pergunta frequente da
+  página inicial dá tempos (15 min, 30–60 min). A regra do projeto é que **os tempos só vêm do painel da Thayana**. Decidam se
+  se tiram esses textos ou se passam a ser lidos do painel.
+- A **micropigmentação labial** (e a neutralização) estão no preçário e na marcação, mas o site não tem página para elas
+  (a página `servicos/labios/` é a do Hidraglos, escondido). Precisa de texto da Thayana: ver `docs/SEO-E-CLIENTES.md`, secção 3.7.

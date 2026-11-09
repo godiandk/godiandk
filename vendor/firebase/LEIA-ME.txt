@@ -1,6 +1,12 @@
 Firebase JavaScript SDK 10.12.2 (pacotes "compat": app, auth e firestore)
 Copyright Google LLC — licença Apache-2.0 (texto em LICENSE-Apache-2.0.txt).
-Origem: pacote npm "firebase@10.12.2" (ficheiros firebase-*-compat.js, sem modificações).
+Origem: pacote npm "firebase@10.12.2" (ficheiros firebase-*-compat.js).
+ALTERAÇÃO (uma só, em firebase-auth-compat.js): em «get _shouldInitProactively» devolve-se sempre falso.
+  Porquê: em telemóvel e no Safari o SDK, por omissão, pede https://apis.google.com/js/api.js e abre uma moldura da Google
+  logo ao abrir QUALQUER página, mesmo sem ninguém ter iniciado sessão — o que contradiz a Política de Privacidade.
+  O site só usa email + palavra-passe (sem janela/redirecionamento da Google), por isso essa preparação não faz falta.
+  O ficheiro tem um aviso na 1.ª linha (Apache-2.0, secção 4(b)). Os outros dois ficheiros estão sem alterações.
+  Teste que o confirma: node scripts/testes/terceiros_ao_abrir.js (computador, Android e iPhone).
 
 Porque está aqui: ao alojar o SDK no próprio site, o navegador do visitante deixa de contactar
 www.gstatic.com (Google) só por abrir uma página. O SDK só fala com os servidores da Google

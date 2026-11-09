@@ -4,7 +4,7 @@ from common import *
 def build():
     pg = Page("termos",
         "Termos e Condições",
-        "Termos e Condições da Inova Beauty: como fazer uma marcação, preços e pagamento, cancelamentos, cartão de fidelidade, conta, comunidade, responsabilidade, resolução de litígios, lei aplicável e foro.",
+        "Termos e Condições da Inova Beauty: marcações, preços e pagamento, cancelamentos, cartão de fidelidade, conta, responsabilidade, lei aplicável e foro.",
         T("Termos e Condições", "Terms and Conditions", "Términos y Condiciones"),
         T("As regras de utilização do site e da app e da marcação dos serviços da Inova Beauty.",
           "The rules for using the website and app and for booking Inova Beauty's services.",
