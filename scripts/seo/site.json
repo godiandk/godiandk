@@ -1,0 +1,106 @@
+{
+  "_nota": "Fonte única do SEO técnico. Editar aqui e correr: python3 scripts/seo/aplicar_seo.py  (não editar à mão títulos, descrições, canonical, sitemap nem os dados estruturados: a próxima execução repõe).",
+  "base_url": "https://godiandk.github.io/godiandk/",
+  "nome": "Inova Beauty",
+  "telefone": "+351919277205",
+  "localidade": "Canidelo",
+  "concelho": "Vila Nova de Gaia",
+  "rua": "Rua da Bélgica",
+  "codigo_postal": "4400-045",
+  "mostrar_rua_no_google": true,
+  "descricao_curta": "Estúdio de sobrancelhas, pestanas e lábios em Canidelo, Vila Nova de Gaia, com atendimento por marcação.",
+  "areas_servidas": [
+    "Vila Nova de Gaia",
+    "Porto"
+  ],
+  "redes": [],
+  "nao_indexar": [
+    "conta/",
+    "app/home/"
+  ],
+  "paginas": {
+    "": {
+      "title": "Sobrancelhas e Pestanas em Vila Nova de Gaia — Inova Beauty",
+      "description": "Threading, brow lamination, lifting de pestanas e micropigmentação labial em Canidelo, Vila Nova de Gaia. Atendimento por marcação: escolha o dia e a hora online."
+    },
+    "agendar/": {
+      "title": "Marcação online — Inova Beauty, Vila Nova de Gaia",
+      "description": "Marque online na Inova Beauty, em Canidelo (Vila Nova de Gaia): escolha o serviço, o dia e a hora e confirme o seu horário."
+    },
+    "contato/": {
+      "title": "Contacto — Inova Beauty, Vila Nova de Gaia",
+      "description": "Fale com a Inova Beauty, em Canidelo (Vila Nova de Gaia): marque online ou use o WhatsApp +351 919 277 205 para tirar dúvidas."
+    },
+    "precario/": {
+      "title": "Preços de Sobrancelhas, Pestanas e Lábios em Gaia — Inova Beauty",
+      "description": "Preços em euros dos serviços da Inova Beauty, em Canidelo, Vila Nova de Gaia: sobrancelhas, pestanas, micropigmentação labial e neutralização."
+    },
+    "servicos/": {
+      "title": "Serviços de Sobrancelhas e Pestanas — Inova Beauty",
+      "description": "Serviços da Inova Beauty, em Canidelo, Vila Nova de Gaia: threading, brow lamination, alisamento e coloração de sobrancelhas; lifting e tintura de pestanas."
+    },
+    "servicos/sobrancelhas/": {
+      "title": "Sobrancelhas em Vila Nova de Gaia — Inova Beauty",
+      "description": "Threading, brow lamination, alisamento e coloração de sobrancelhas na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja os serviços e marque online."
+    },
+    "servicos/sobrancelhas/threading/": {
+      "title": "Threading de Sobrancelhas em Gaia — Inova Beauty",
+      "description": "Threading (depilação à linha) de sobrancelhas na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja o preço e marque online o dia e a hora."
+    },
+    "servicos/sobrancelhas/brow-lamination/": {
+      "title": "Brow Lamination em Gaia — Inova Beauty",
+      "description": "Brow lamination na Inova Beauty, em Canidelo, Vila Nova de Gaia: pelos das sobrancelhas alinhados e com efeito penteado. Veja o preço e marque online."
+    },
+    "servicos/sobrancelhas/alisamento/": {
+      "title": "Alisamento de Sobrancelhas em Gaia — Inova Beauty",
+      "description": "Alisamento de sobrancelhas na Inova Beauty, em Canidelo, Vila Nova de Gaia: pelos disciplinados e alinhados. Veja o preço e marque online."
+    },
+    "servicos/sobrancelhas/coloracao/": {
+      "title": "Coloração de Sobrancelhas em Gaia — Inova Beauty",
+      "description": "Coloração de sobrancelhas (henna e tintura) na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja o preço e marque online."
+    },
+    "servicos/pestanas/": {
+      "title": "Pestanas em Vila Nova de Gaia — Inova Beauty",
+      "description": "Lifting e tintura de pestanas na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja os serviços e marque online."
+    },
+    "servicos/pestanas/lifting/": {
+      "title": "Lifting de Pestanas em Gaia — Inova Beauty",
+      "description": "Lifting de pestanas na Inova Beauty, em Canidelo, Vila Nova de Gaia: curvatura das pestanas naturais, sem extensões. Veja o preço e marque online."
+    },
+    "servicos/pestanas/tintura/": {
+      "title": "Tintura de Pestanas em Gaia — Inova Beauty",
+      "description": "Tintura de pestanas na Inova Beauty, em Canidelo, Vila Nova de Gaia: pestanas mais escuras, sem máscara. Veja o preço e marque online."
+    },
+    "servicos/threading/": {
+      "title": "Depilação à Linha (Threading) em Gaia — Inova Beauty",
+      "description": "Depilação à linha (threading) para rosto e sobrancelhas na Inova Beauty, em Canidelo, Vila Nova de Gaia. Veja os preços e marque online."
+    },
+    "sobre/": {
+      "title": "Sobre a Inova Beauty — Canidelo, Vila Nova de Gaia",
+      "description": "Conheça a Inova Beauty, o estúdio da Thayana em Canidelo, Vila Nova de Gaia: sobrancelhas, pestanas e lábios, com atendimento por marcação."
+    },
+    "processos/threading/": {
+      "title": "Threading (Depilação à Linha): como é feito — Inova Beauty",
+      "description": "Veja como é feito o threading (depilação à linha) na Inova Beauty: uma linha de algodão torcida remove os pelos pela raiz, passo a passo."
+    },
+    "processos/brow-lamination/": {
+      "title": "Brow Lamination: o que é e como é feita — Inova Beauty",
+      "description": "O que é a brow lamination e como é feita, passo a passo, na Inova Beauty, em Canidelo, Vila Nova de Gaia."
+    },
+    "processos/lifting-pestanas/": {
+      "title": "Lifting de Pestanas: o que é e como é feito — Inova Beauty",
+      "description": "O que é o lifting de pestanas e como é feito, passo a passo, na Inova Beauty, em Canidelo, Vila Nova de Gaia."
+    },
+    "localizacao/": {
+      "title": "Localização — Inova Beauty · Canidelo, Vila Nova de Gaia",
+      "description": "Inova Beauty em Canidelo, Vila Nova de Gaia. Atendimento por marcação — marque online e receba a morada exata ao confirmar. Sobrancelhas, pestanas e lábios."
+    }
+  },
+  "urls_extra": [
+    "tecnova/"
+  ],
+  "google_site_verification": "",
+  "_google_site_verification": "Colar aqui o código que o Google Search Console dá no método «Etiqueta HTML» (só o valor de content). Fica vazio até existir.",
+  "bing_site_verification": "",
+  "_bing_site_verification": "Colar aqui o código «msvalidate.01» do Bing Webmaster Tools (só o valor de content). Fica vazio até existir."
+}

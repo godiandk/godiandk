@@ -200,12 +200,14 @@ window.InovaI18N = (function () {
     observador.observe(document.body, { childList: true, subtree: true, characterData: true });
   }
 
-  function definir(codigo) {
+  // `guardar` só é verdadeiro quando a pessoa escolhe o idioma no seletor. Escolher sozinho (pelo navegador)
+  // não grava nada no dispositivo: a Lei 41/2004 (art. 5.º) só dispensa o consentimento para o que a pessoa pediu.
+  function definir(codigo, guardar) {
     if (!IDIOMAS[codigo]) return;
     idioma = codigo;
     dic = (window.INOVA_DIC && window.INOVA_DIC[codigo]) || {};
     document.documentElement.lang = IDIOMAS[codigo].htmlLang;
-    try { localStorage.setItem('inova-idioma', codigo); } catch (e) {}
+    if (guardar) { try { localStorage.setItem('inova-idioma', codigo); } catch (e) {} }
     aplicar();
     pintarSeletor();
     document.dispatchEvent(new CustomEvent('inova:idioma', { detail: codigo }));
@@ -222,7 +224,7 @@ window.InovaI18N = (function () {
       atual.innerHTML = '<i class="la-bandeira"></i><span class="la-nome"></span>';
       atual.querySelector('.la-bandeira').textContent = IDIOMAS[idioma].bandeira;
       atual.querySelector('.la-nome').textContent = IDIOMAS[idioma].curto;
-      atual.setAttribute('aria-label', 'Idioma: ' + IDIOMAS[idioma].nome);
+      atual.setAttribute('aria-label', IDIOMAS[idioma].curto + ' — Idioma: ' + IDIOMAS[idioma].nome);   // o nome acessível começa pelo texto visível (WCAG 2.5.3)
     }
   }
 
@@ -233,10 +235,10 @@ window.InovaI18N = (function () {
     w.className = 'lang';
     w.setAttribute('data-sem-traducao', '');
     w.innerHTML =
-      '<button class="lang-atual" id="langAtual" aria-haspopup="true" aria-expanded="false"></button>' +
+      '<button type="button" class="lang-atual" id="langAtual" aria-haspopup="true" aria-expanded="false"></button>' +
       '<div class="lang-menu" id="langMenu">' +
         Object.keys(IDIOMAS).map(function (k) {
-          return '<button class="lang-btn" data-lang="' + k + '">' +
+          return '<button type="button" class="lang-btn" data-lang="' + k + '">' +
             '<i>' + IDIOMAS[k].bandeira + '</i><span>' + IDIOMAS[k].nome + '</span></button>';
         }).join('') +
       '</div>';
@@ -266,7 +268,7 @@ window.InovaI18N = (function () {
     });
     w.querySelector('#langMenu').addEventListener('click', function (e) {
       var b = e.target.closest('.lang-btn'); if (!b) return;
-      definir(b.dataset.lang);
+      definir(b.dataset.lang, true);
       w.classList.remove('aberto');
       atual.setAttribute('aria-expanded', 'false');
     });

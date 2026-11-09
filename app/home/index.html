@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>APP — Inova Beauty</title>
 <meta name="description" content="A app Inova Beauty: marcações, cartão de fidelidade e conta.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../../styles.css">
+<link rel="preload" href="../../fonts/Jost-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../fonts/CormorantGaramond-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../i18n.css">
 <link rel="manifest" href="../../manifest.webmanifest">
 <meta name="theme-color" content="#191411">
 <link rel="apple-touch-icon" href="../../img/icon-192.png">
 <link rel="icon" href="../../img/icon-192.png">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../../vendor/firebase/10.12.2/firebase-app-compat.js"></script>
+<script src="../../vendor/firebase/10.12.2/firebase-auth-compat.js"></script>
+<script src="../../vendor/firebase/10.12.2/firebase-firestore-compat.js"></script>
 <script src="../../firebase-config.js"></script>
 <script src="../../analytics.js"></script>
+<meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://godiandk.github.io/godiandk/app/home/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Inova Beauty">
@@ -35,6 +35,7 @@
 <meta name="twitter:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
 </head>
 <body class="app-shell" data-no-chat>
+<a class="skip-link" href="#scr-inicio" id="skipLink">Saltar para o conteúdo</a>
 
 <header class="app-bar">
   <a href="../../" aria-label="Ver site completo" style="font-size:1.1rem">🌐</a>
@@ -44,9 +45,9 @@
 <!-- ===== INÍCIO ===== -->
 <main class="app-screen active" id="scr-inicio">
   <div class="app-hero-mini">
-    <img src="../../img/thayana-cutout.png" alt="Thayana">
+    <img src="../../img/thayana-cutout-480.webp" width="84" height="100" alt="Personagem ilustrada da Inova Beauty, a acenar">
     <div>
-      <div class="ahm-title" id="homeGreet">Olá! 👋</div>
+      <h1 class="ahm-title" id="homeGreet">Olá! 👋</h1>
       <div class="ahm-sub">Bem-vinda à Inova Beauty.<br>Beleza, precisão e cuidado.</div>
     </div>
   </div>
@@ -68,6 +69,16 @@
     <div class="qa-card" data-goto="comunidade"><span class="qa-icon">📸</span>Comunidade</div>
     <a class="qa-card" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20beauty.%20Desejo%20marcar%20um%20hor%C3%A1rio%2C%20pode%20ajudar%3F" target="_blank" rel="noopener" style="display:block"><span class="qa-icon">💬</span>WhatsApp</a>
   </div>
+  <footer class="app-legal" aria-label="Informação legal">
+    <div class="legal-id">
+      <div><span class="lbl">Prestador de serviços</span> <span class="val" data-sem-traducao>Inova Beauty — <span class="a-preencher" data-campo="nome">A PREENCHER</span></span></div>
+      <div><span class="lbl">NIF</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="nif">A PREENCHER</span></span></div>
+      <div><span class="lbl">Morada</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="morada">A PREENCHER</span></span></div>
+      <div><span class="lbl">Email</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="email">A PREENCHER</span></span></div>
+      <div><span class="lbl">Telemóvel</span> <span class="val" data-sem-traducao>+351 919 277 205</span></div>
+    </div>
+    <p><a href="../../privacidade/">Política de Privacidade</a> · <a href="../../termos/">Termos e Condições</a> · <a href="../../cookies/">Política de Cookies</a> · <a href="../../cancelamento/">Cancelamento e reembolso</a> · <a href="https://www.livroreclamacoes.pt/" target="_blank" rel="noopener">Livro de Reclamações</a></p>
+  </footer>
 </main>
 
 <!-- ===== MARCAR ===== -->
@@ -96,10 +107,11 @@
           <div id="bkInfo" class="form-hint bk-info" aria-live="polite"></div>
           <div id="bkDays"></div>
         </div>
-        <div class="form-field"><label for="bCoupon">Cupom (opcional)</label><input id="bCoupon" type="text" placeholder="INOVA-…"><span class="form-hint" id="couponHint"></span></div>
+        <div class="form-field"><label for="bCoupon">Cupão (opcional)</label><input id="bCoupon" type="text" placeholder="INOVA-…"><span class="form-hint" id="couponHint"></span></div>
       </div>
       <div class="form-msg" id="bookMsg"></div>
       <div class="center-actions"><button type="submit" class="btn btn-gold">✨ Confirmar marcação</button></div>
+      <!--legal:marcacao--><div class="form-legal"><p><strong>Para que usamos os seus dados:</strong> o nome e o telemóvel servem só para tratar desta marcação e para o contactar sobre ela (execução do contrato; art. 6.º, n.º 1, al. b) do RGPD). Não escreva dados de saúde nas observações. Responsável: Inova Beauty. Prazos, destinatários e direitos: <a href="../../privacidade/">Política de Privacidade</a>.</p><p>Isto é um pedido de marcação: só fica confirmada quando lhe respondermos. Antes de marcar, veja o <a href="../../precario/">Preçário</a>, os <a href="../../termos/">Termos e Condições</a> e o <a href="../../cancelamento/">Cancelamento e reembolso</a> (inclui o direito de desistir em 14 dias).</p></div><!--/legal:marcacao-->
     </form>
   </div>
 </main>
@@ -137,11 +149,12 @@
       <form id="loginForm" novalidate>
         <div class="form-grid" style="grid-template-columns:1fr">
           <div class="form-field"><label for="lEmail">Email</label><input id="lEmail" type="email" autocomplete="email"></div>
-          <div class="form-field"><label for="lPass">Senha</label><input id="lPass" type="password" autocomplete="current-password"></div>
+          <div class="form-field"><label for="lPass">Palavra-passe</label><input id="lPass" type="password" autocomplete="current-password"></div>
         </div>
         <div class="form-msg" id="loginMsg"></div>
         <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Entrar</button></div>
-        <p class="text-center mt-2"><a href="#" id="forgotLink" style="font-size:.85rem;color:var(--gold)">Esqueci a minha senha</a></p>
+        <p class="text-center mt-2"><a href="#" id="forgotLink" style="font-size:.85rem;color:var(--gold-text)">Esqueci a minha palavra-passe</a></p>
+        <!--legal:entrar--><div class="form-legal"><p>Usamos o email e a palavra-passe só para iniciar a sua sessão (execução do contrato; art. 6.º, n.º 1, al. b) do RGPD). Responsável: Inova Beauty. Mais informação: <a href="../../privacidade/">Política de Privacidade</a>.</p></div><!--/legal:entrar-->
       </form>
       <div class="auth-sep"><span>ainda não tem conta?</span></div>
       <div class="center-actions"><button type="button" class="btn btn-outline btn-block" id="showSignupBtn">Criar conta</button></div>
@@ -164,26 +177,25 @@
             </div>
             <div class="char-grid" id="sCharGrid"></div>
           </div>
-          <div class="form-field">
-            <label>Sexo*</label>
-            <div class="gender-picker">
-              <label id="genderMLabel"><input type="radio" name="sGender" value="M" required> Masculino</label>
-              <label id="genderFLabel"><input type="radio" name="sGender" value="F" required> Feminino</label>
-            </div>
-          </div>
           <div class="form-field"><label for="sName">Nome*</label><input id="sName" type="text" autocomplete="name"></div>
           <div class="form-field"><label for="sPhone">Telemóvel* (obrigatório)</label><input id="sPhone" type="tel" autocomplete="tel"><span class="form-hint">1 conta por número.</span></div>
           <div class="form-field"><label for="sEmail">Email*</label><input id="sEmail" type="email" autocomplete="email"></div>
-          <div class="form-field"><label for="sBirth">Data de nascimento* (obrigatória)</label><input id="sBirth" type="date"><span class="form-hint">Para receber o seu voucher de aniversário 🎁</span></div>
-          <div class="form-field"><label for="sPass">Senha* (mín. 6)</label><input id="sPass" type="password" autocomplete="new-password"></div>
-          <div class="form-field"><label for="sPass2">Confirmar senha*</label><input id="sPass2" type="password" autocomplete="new-password"></div>
+          <div class="form-field" role="group" aria-labelledby="sBirthLbl">
+            <span class="form-label" id="sBirthLbl">Aniversário (opcional)</span>
+            <div class="birth-pick">
+              <select id="sBirthDay" aria-label="Dia"><option value="">Dia</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
+              <select id="sBirthMonth" aria-label="Mês"><option value="">Mês</option><option value="01">janeiro</option><option value="02">fevereiro</option><option value="03">março</option><option value="04">abril</option><option value="05">maio</option><option value="06">junho</option><option value="07">julho</option><option value="08">agosto</option><option value="09">setembro</option><option value="10">outubro</option><option value="11">novembro</option><option value="12">dezembro</option></select>
+            </div>
+            <span class="form-hint">Só o dia e o mês, para o seu cupão de aniversário 🎁</span>
+          </div>
+          <div class="form-field"><label for="sPass">Palavra-passe* (mín. 6)</label><input id="sPass" type="password" autocomplete="new-password"></div>
+          <div class="form-field"><label for="sPass2">Confirmar palavra-passe*</label><input id="sPass2" type="password" autocomplete="new-password"></div>
         </div>
         <div class="form-msg" id="signupMsg"></div>
         <div class="center-actions"><button type="submit" class="btn btn-gold btn-block">Criar a minha conta</button></div>
-        <p class="form-hint text-center mt-2">🔒 Senha protegida com criptografia (SHA-256 + salt), guardada só neste dispositivo.</p>
-        <p class="form-hint text-center mt-2" style="font-size:.72rem;opacity:.75">Ao criar conta, aceita a nossa <a href="../../privacidade/" style="color:var(--gold)">Política de Privacidade</a> e os <a href="../../termos/" style="color:var(--gold)">Termos</a>.</p>
+        <!--legal:registo--><div class="form-legal"><p><strong>Para que usamos os seus dados:</strong> o nome, o telemóvel e o email servem para criar e gerir a sua conta e o cartão de fidelidade (execução do contrato; art. 6.º, n.º 1, al. b) do RGPD). A palavra-passe é tratada pelo serviço Firebase Authentication, da Google; nós não a vemos.</p><p>O aniversário (só o dia e o mês) e a foto são opcionais. Só os usamos para lhe dar o cupão de aniversário e para mostrar o seu avatar; ao preenchê-los, dá-nos o seu consentimento, que pode retirar quando quiser (art. 6.º, n.º 1, al. a) do RGPD).</p><p>Responsável: Inova Beauty. É preciso ter 13 anos ou mais. Prazos, destinatários e direitos: <a href="../../privacidade/">Política de Privacidade</a>.</p></div><!--/legal:registo-->
       </form>
-      <p class="text-center mt-2"><a href="#" id="backToLogin" style="font-size:.85rem;color:var(--gold)">Já tem conta? Iniciar sessão</a></p>
+      <p class="text-center mt-2"><a href="#" id="backToLogin" style="font-size:.85rem;color:var(--gold-text)">Já tem conta? Iniciar sessão</a></p>
     </div>
   </div>
   <div id="profileArea" style="display:none">
@@ -212,19 +224,20 @@
       <div class="form-grid" style="grid-template-columns:1fr;margin-top:1rem">
         <div class="form-field"><label for="setName">Nome</label><input id="setName" type="text"></div>
         <div class="form-field"><label for="setPhone">Telemóvel</label><input id="setPhone" type="tel"></div>
-        <div class="form-field">
-          <label>Sexo</label>
-          <div class="gender-picker">
-            <label id="setGenderM"><input type="radio" name="setGender" value="M"> Masculino</label>
-            <label id="setGenderF"><input type="radio" name="setGender" value="F"> Feminino</label>
+        <div class="form-field" role="group" aria-labelledby="setBirthLbl">
+          <span class="form-label" id="setBirthLbl">Aniversário (opcional)</span>
+          <div class="birth-pick">
+            <select id="setBirthDay" aria-label="Dia"><option value="">Dia</option><option value="01">1</option><option value="02">2</option><option value="03">3</option><option value="04">4</option><option value="05">5</option><option value="06">6</option><option value="07">7</option><option value="08">8</option><option value="09">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select>
+            <select id="setBirthMonth" aria-label="Mês"><option value="">Mês</option><option value="01">janeiro</option><option value="02">fevereiro</option><option value="03">março</option><option value="04">abril</option><option value="05">maio</option><option value="06">junho</option><option value="07">julho</option><option value="08">agosto</option><option value="09">setembro</option><option value="10">outubro</option><option value="11">novembro</option><option value="12">dezembro</option></select>
           </div>
         </div>
       </div>
       <div class="form-msg" id="setMsg"></div>
       <div class="center-actions" style="justify-content:flex-start">
         <button type="button" class="btn btn-gold" id="setSaveBtn">Guardar</button>
-        <button type="button" class="btn btn-outline" id="setPassBtn">Alterar senha</button>
+        <button type="button" class="btn btn-outline" id="setPassBtn">Alterar palavra-passe</button>
       </div>
+      <!--legal:conta--><div class="form-legal"><p>As alterações ficam guardadas na sua conta. Pode corrigir aqui os seus dados ou apagá-los em «Apagar conta». Responsável: Inova Beauty. Direitos e prazos: <a href="../../privacidade/">Política de Privacidade</a>.</p></div><!--/legal:conta-->
     </div>
 
     <div class="center-actions">
@@ -232,6 +245,16 @@
       <button type="button" class="btn btn-outline" id="deleteBtn" style="border-color:#a33;color:#a33">Apagar conta</button>
     </div>
   </div>
+  <footer class="app-legal" aria-label="Informação legal">
+    <div class="legal-id">
+      <div><span class="lbl">Prestador de serviços</span> <span class="val" data-sem-traducao>Inova Beauty — <span class="a-preencher" data-campo="nome">A PREENCHER</span></span></div>
+      <div><span class="lbl">NIF</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="nif">A PREENCHER</span></span></div>
+      <div><span class="lbl">Morada</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="morada">A PREENCHER</span></span></div>
+      <div><span class="lbl">Email</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="email">A PREENCHER</span></span></div>
+      <div><span class="lbl">Telemóvel</span> <span class="val" data-sem-traducao>+351 919 277 205</span></div>
+    </div>
+    <p><a href="../../privacidade/">Política de Privacidade</a> · <a href="../../termos/">Termos e Condições</a> · <a href="../../cookies/">Política de Cookies</a> · <a href="../../cancelamento/">Cancelamento e reembolso</a> · <a href="https://www.livroreclamacoes.pt/" target="_blank" rel="noopener">Livro de Reclamações</a></p>
+  </footer>
 </main>
 
 <!-- ===== COMUNIDADE ===== -->
@@ -263,6 +286,7 @@
       <div class="center-actions" style="justify-content:flex-start">
         <button type="button" class="btn btn-gold" id="postBtn">Publicar</button>
       </div>
+      <!--legal:publicar--><div class="form-legal"><p><strong>Antes de publicar:</strong> a publicação (foto, descrição, o seu nome e o seu avatar) e os seus comentários ficam visíveis para as outras clientes com sessão iniciada na app (consentimento; art. 6.º, n.º 1, al. a) do RGPD), até os apagar. Não publique fotografias de outras pessoas sem a autorização delas, nem dados de saúde. Responsável: Inova Beauty. <a href="../../privacidade/">Política de Privacidade</a> · <a href="../../termos/">Termos e Condições</a>.</p></div><!--/legal:publicar-->
     </div>
     <div id="feedList"></div>
   </div>
@@ -299,6 +323,12 @@
   document.querySelectorAll("[data-goto]").forEach(function (b) {
     b.addEventListener("click", function () { show(b.getAttribute("data-goto")); });
   });
+  // «Saltar para o conteúdo»: leva o foco ao ecrã que está aberto
+  document.getElementById("skipLink").addEventListener("click", function (e) {
+    e.preventDefault();
+    var m = document.querySelector(".app-screen.active");
+    if (m) { m.setAttribute("tabindex", "-1"); m.focus(); }
+  });
 
   function render() {
     var acc = window.InovaAuth.current();
@@ -318,7 +348,7 @@
     if (acc) {
       var n = (acc.stamps || []).length;
       hs.innerHTML = '<div class="form-card" style="padding:.9rem 1.1rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer" id="hsCard">' +
-        '<span>💛 Selos: <strong>' + n + ' / 10</strong></span><span style="color:var(--gold)">Ver cartão →</span></div>';
+        '<span>💛 Selos: <strong>' + n + ' / 10</strong></span><span style="color:var(--gold-text)">Ver cartão →</span></div>';
       document.getElementById("hsCard").addEventListener("click", function () { show("cartao"); });
     } else {
       hs.innerHTML = '<div class="form-card" style="padding:.9rem 1.1rem;text-align:center;cursor:pointer" id="hsCard">👤 <strong>Entre ou registe-se</strong> para juntar selos e ganhar prémios</div>';
@@ -336,9 +366,8 @@
     if (acc) {
       document.getElementById("helloName").textContent = "Olá, " + acc.name.split(" ")[0] + "! 💛";
       document.getElementById("profileAvatar").src = window.InovaAuth.avatarUrl(acc);
-      var b = new Date(acc.birth + "T12:00:00");
-      document.getElementById("profileInfo").textContent = "Telemóvel: " + acc.phone + " · Email: " + acc.email +
-        " · Aniversário: " + String(b.getDate()).padStart(2, "0") + "/" + String(b.getMonth() + 1).padStart(2, "0");
+      var bl = window.InovaAuth.birthLabel(acc.birth);
+      document.getElementById("profileInfo").textContent = "Telemóvel: " + acc.phone + " · Email: " + acc.email + (bl ? " · Aniversário: " + bl : "");
       var bd = document.getElementById("bdayArea");
       if (window.InovaCoupon.birthdayActive(acc.birth)) {
         var c = window.InovaCoupon.birthdayCoupon(acc.phone, acc.birth);
@@ -365,10 +394,9 @@
       document.getElementById("setAvatar").src = window.InovaAuth.avatarUrl(acc);
       document.getElementById("setName").value = acc.name || "";
       document.getElementById("setPhone").value = acc.phone || "";
-      document.getElementById("setGenderM").querySelector("input").checked = acc.gender === "M";
-      document.getElementById("setGenderF").querySelector("input").checked = acc.gender === "F";
-      document.getElementById("setGenderM").classList.toggle("picked", acc.gender === "M");
-      document.getElementById("setGenderF").classList.toggle("picked", acc.gender === "F");
+      var bp = window.InovaAuth.birthParts(acc.birth);
+      document.getElementById("setBirthDay").value = bp.d;
+      document.getElementById("setBirthMonth").value = bp.m;
     } else {
       document.getElementById("appBarAvatar").src = window.InovaAuth.avatarUrl(null);
     }
@@ -387,20 +415,12 @@
   document.getElementById("backToLogin").addEventListener("click", function (e) { e.preventDefault(); showAuth("login"); });
   function msg(el, text) { el.className = "form-msg err"; el.textContent = text; }
 
-  /* Foto de perfil / personagem e sexo no registo */
+  /* Foto de perfil / personagem no registo */
   var sPhoto = null, sChar = null;
   function updateAvatarPreview() {
-    var checked = document.querySelector('input[name="sGender"]:checked');
-    var gender = checked ? checked.value : "";
-    document.getElementById("sAvatarPreview").src = sPhoto || (sChar ? ((window.INOVA_PREFIX || "") + sChar) : window.InovaAuth.defaultAvatar(gender, document.getElementById("sName").value));
+    document.getElementById("sAvatarPreview").src = sPhoto || (sChar ? ((window.INOVA_PREFIX || "") + sChar) : window.InovaAuth.defaultAvatar("", document.getElementById("sName").value));
   }
-  document.querySelectorAll('input[name="sGender"]').forEach(function (r) {
-    r.addEventListener("change", function () {
-      document.getElementById("genderMLabel").classList.toggle("picked", r.value === "M" && r.checked);
-      document.getElementById("genderFLabel").classList.toggle("picked", r.value === "F" && r.checked);
-      updateAvatarPreview();
-    });
-  });
+  document.getElementById("sName").addEventListener("input", function () { if (!sPhoto && !sChar) updateAvatarPreview(); });
   document.getElementById("sPhotoFile").addEventListener("change", function (e) {
     var f = e.target.files[0];
     if (!f) return;
@@ -435,19 +455,20 @@
     if (!email) { msg(lm, "Escreva o email acima e clique novamente."); return; }
     window.InovaAuth.resetPassword(email).then(function (r) {
       if (r.error) return msg(lm, r.error);
-      lm.className = "form-msg ok"; lm.textContent = "✅ Se existir uma conta com " + email + ", enviámos um link para criar uma nova senha. Veja também o spam (lixo eletrónico).";
+      lm.className = "form-msg ok"; lm.textContent = "✅ Se existir uma conta com " + email + ", enviámos um link para criar uma nova palavra-passe. Veja também o spam (lixo eletrónico).";
     });
   });
   document.getElementById("signupForm").addEventListener("submit", function (e) {
     e.preventDefault();
-    var genderChecked = document.querySelector('input[name="sGender"]:checked');
-    var sb = e.target.querySelector('button[type=submit]'); sb.disabled = true;
+    var sb = e.target.querySelector('button[type=submit]');
+    var bd = document.getElementById("sBirthDay").value, bm = document.getElementById("sBirthMonth").value;
+    if ((bd && !bm) || (!bd && bm)) { msg(document.getElementById("signupMsg"), "Escolha o dia e o mês do aniversário, ou deixe os dois em branco."); return; }
+    sb.disabled = true;
     window.InovaAuth.register({
       name: document.getElementById("sName").value,
       phone: document.getElementById("sPhone").value,
       email: document.getElementById("sEmail").value,
-      birth: document.getElementById("sBirth").value,
-      gender: genderChecked ? genderChecked.value : null,
+      birth: window.InovaAuth.birthFrom(bd, bm),
       photo: sPhoto, avatarChar: sChar,
       pass: document.getElementById("sPass").value,
       pass2: document.getElementById("sPass2").value
@@ -455,7 +476,9 @@
   });
   document.getElementById("logoutBtn").addEventListener("click", function () { window.InovaAuth.logout(); });
   document.getElementById("deleteBtn").addEventListener("click", function () {
-    if (confirm("Apagar a conta? Selos e prémios serão perdidos definitivamente.")) { window.InovaAuth.removeCurrent(); }
+    if (confirm("Apagar a conta? Os selos, os prémios e as suas publicações e comentários serão apagados definitivamente.")) {
+      window.InovaAuth.removeCurrent().then(function (r) { if (r && r.error) msg(document.getElementById("setMsg"), r.error); });
+    }
   });
 
   /* avatar do topo → aba conta */
@@ -475,15 +498,6 @@
   });
   function markSetChar() { setGrid.querySelectorAll("img").forEach(function (im) { im.classList.toggle("picked", im.dataset.path === setChar); }); }
   document.getElementById("setCharBtn").addEventListener("click", function () { setGrid.classList.toggle("open"); });
-  document.querySelectorAll('input[name="setGender"]').forEach(function (r) {
-    r.addEventListener("change", function () {
-      document.getElementById("setGenderM").classList.toggle("picked", r.value === "M" && r.checked);
-      document.getElementById("setGenderF").classList.toggle("picked", r.value === "F" && r.checked);
-      var a0 = window.InovaAuth.current();
-      if ((setPhoto === undefined || setPhoto === null) && !setChar && (!a0 || (!a0.photo && !a0.avatarChar)))
-        document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar(r.value, "");
-    });
-  });
   document.getElementById("setPhotoFile").addEventListener("change", function (e) {
     var f = e.target.files[0]; if (!f) return;
     window.InovaAuth.fileToAvatar(f).then(function (d) { setPhoto = d; setChar = null; markSetChar(); document.getElementById("setAvatar").src = d; })
@@ -491,13 +505,13 @@
   });
   document.getElementById("setPhotoRemove").addEventListener("click", function () {
     setPhoto = null; setChar = null; markSetChar();
-    var g = document.querySelector('input[name="setGender"]:checked');
-    document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar(g ? g.value : "", "");
+    document.getElementById("setAvatar").src = window.InovaAuth.defaultAvatar("", document.getElementById("setName").value);
   });
   document.getElementById("setSaveBtn").addEventListener("click", function () {
     var sm = document.getElementById("setMsg");
-    var g = document.querySelector('input[name="setGender"]:checked');
-    var changes = { name: document.getElementById("setName").value.trim(), phone: document.getElementById("setPhone").value.trim(), gender: g ? g.value : "" };
+    var bd = document.getElementById("setBirthDay").value, bm = document.getElementById("setBirthMonth").value;
+    if ((bd && !bm) || (!bd && bm)) { msg(sm, "Escolha o dia e o mês do aniversário, ou deixe os dois em branco."); return; }
+    var changes = { name: document.getElementById("setName").value.trim(), phone: document.getElementById("setPhone").value.trim(), birth: window.InovaAuth.birthFrom(bd, bm) };
     if (setChar !== undefined) changes.avatarChar = setChar;
     if (setPhoto !== undefined) changes.photo = setPhoto;
     if (setChar) changes.photo = null;
@@ -513,7 +527,7 @@
     if (!acc || !acc.email) return;
     window.InovaAuth.resetPassword(acc.email).then(function (r) {
       if (r.error) return msg(sm, r.error);
-      sm.className = "form-msg ok"; sm.textContent = "✅ Link para alterar senha enviado para " + acc.email + ".";
+      sm.className = "form-msg ok"; sm.textContent = "✅ Link para alterar a palavra-passe enviado para " + acc.email + ".";
     });
   });
 
@@ -588,7 +602,7 @@
     var v = couponInput.value.trim();
     if (!v) return;
     var r = window.InovaCoupon.parse(v);
-    hint.textContent = !r.valid ? "⚠️ " + r.reason : (r.expired ? "⚠️ Cupom expirado." : "✅ Válido: " + r.pct + "% de desconto.");
+    hint.textContent = !r.valid ? "⚠️ " + r.reason : (r.expired ? "⚠️ Cupão expirado." : "✅ Válido: " + r.pct + "% de desconto.");
   });
   document.getElementById("useReward").addEventListener("change", function () {
     var sel = document.getElementById("bService");

@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel — Inova Beauty</title>
-<meta name="description" content="Área reservada Inova Beauty: marcações, geração e validação de cupons.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="description" content="Área reservada Inova Beauty: marcações, geração e validação de cupões.">
 <link rel="stylesheet" href="../styles.css">
+<link rel="preload" href="../fonts/Jost-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/CormorantGaramond-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../i18n.css">
 <link rel="manifest" href="../manifest.webmanifest">
 <meta name="theme-color" content="#191411">
 <link rel="apple-touch-icon" href="../img/icon-192.png">
 <link rel="icon" href="../img/favicon.png">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-app-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-auth-compat.js"></script>
+<script src="../vendor/firebase/10.12.2/firebase-firestore-compat.js"></script>
 <script src="../firebase-config.js"></script>
 <script src="../analytics.js"></script>
 <meta name="robots" content="noindex,nofollow">
@@ -25,21 +24,22 @@
 <meta property="og:site_name" content="Inova Beauty">
 <meta property="og:locale" content="pt_PT">
 <meta property="og:title" content="Painel — Inova Beauty">
-<meta property="og:description" content="Área reservada Inova Beauty: marcações, geração e validação de cupons.">
+<meta property="og:description" content="Área reservada Inova Beauty: marcações, geração e validação de cupões.">
 <meta property="og:url" content="https://godiandk.github.io/godiandk/painel/">
 <meta property="og:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Painel — Inova Beauty">
-<meta name="twitter:description" content="Área reservada Inova Beauty: marcações, geração e validação de cupons.">
+<meta name="twitter:description" content="Área reservada Inova Beauty: marcações, geração e validação de cupões.">
 <meta name="twitter:image" content="https://godiandk.github.io/godiandk/img/og-image.jpg">
 <style>.app-float,.wa-float,.chat-fab,.chat-panel{display:none!important}</style>
 </head>
 <body data-no-chat>
+<a class="skip-link" href="#conteudo">Saltar para o conteúdo</a>
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="Inova Beauty">Inova <span>Beauty</span></a>
+    <a class="brand" href="../"><img class="brand-mark" src="../img/mark-96.webp" alt="" width="96" height="96">Inova <span>Beauty</span></a>
     <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -59,7 +59,7 @@
         <li><a class="nav-link" href="../precario/">Preçário</a></li>
         <li><a class="nav-link" href="../processos/">Processos</a></li>
         <li><a class="nav-link" href="../sobre/">Sobre</a></li>
-        <li><a class="nav-link" href="../contato/">Contato</a></li>
+        <li><a class="nav-link" href="../contato/">Contacto</a></li>
         <li><a class="nav-link" href="../localizacao/">Localização</a></li>
         <li class="nav-auth">
           <a class="btn-login" href="../conta/">👤 Entrar</a>
@@ -70,12 +70,13 @@
     <div class="nav-right" data-sem-traducao></div>
   </div>
 </header>
+<main id="conteudo">
 <section class="page-hero">
   <div class="container">
     
     <span class="eyebrow-label">Área reservada</span>
     <h1>Painel do estúdio</h1>
-    <p class="lead">Marcações das clientes, geração e validação de cupons e selos.</p>
+    <p class="lead">Marcações das clientes, geração e validação de cupões e selos.</p>
   </div>
 </section>
 <section>
@@ -83,14 +84,14 @@
 
     <div class="form-card" id="loginGate">
       <h2 style="margin-bottom:.4rem">Acesso reservado</h2>
-      <p class="form-hint" style="margin-bottom:1rem">Entre com o email e senha de administradora.</p>
+      <p class="form-hint" style="margin-bottom:1rem">Entre com o email e a palavra-passe de administradora.</p>
       <div class="form-grid">
         <div class="form-field"><label for="aEmail">Email</label><input id="aEmail" type="email" autocomplete="email" placeholder="o.seu@email.com"></div>
-        <div class="form-field"><label for="aPass">Senha</label><input id="aPass" type="password" autocomplete="current-password"></div>
+        <div class="form-field"><label for="aPass">Palavra-passe</label><input id="aPass" type="password" autocomplete="current-password"></div>
       </div>
       <div class="form-msg" id="loginMsg"></div>
       <div class="center-actions"><button type="button" class="btn btn-gold" id="loginBtn">Entrar</button></div>
-      <p class="text-center mt-2"><a href="#" id="forgotLink" style="font-size:.85rem;color:var(--gold)">Esqueci a senha</a></p>
+      <p class="text-center mt-2"><a href="#" id="forgotLink" style="font-size:.85rem;color:var(--gold-text)">Esqueci a palavra-passe</a></p>
     </div>
 
     <div id="panelArea" style="display:none">
@@ -98,9 +99,9 @@
         <button type="button" class="panel-tab active" data-tab="agenda">📅 Agenda</button>
         <button type="button" class="panel-tab" data-tab="disp">🗓️ Disponibilidade</button>
         <button type="button" class="panel-tab" data-tab="marc">📋 Marcações</button>
-        <button type="button" class="panel-tab" data-tab="fat">💰 Faturamento</button>
-        <button type="button" class="panel-tab" data-tab="gen">🎟️ Gerar cupom</button>
-        <button type="button" class="panel-tab" data-tab="val">✅ Validar cupom</button>
+        <button type="button" class="panel-tab" data-tab="fat">💰 Faturação</button>
+        <button type="button" class="panel-tab" data-tab="gen">🎟️ Gerar cupão</button>
+        <button type="button" class="panel-tab" data-tab="val">✅ Validar cupão</button>
         <button type="button" class="panel-tab" data-tab="hist">📒 Histórico</button>
         <button type="button" class="panel-tab" data-tab="usu">👥 Utilizadores</button>
         <button type="button" class="panel-tab" data-tab="conf">⚙️ Conta</button>
@@ -153,6 +154,11 @@
           <p class="form-hint mt-1">As marcações feitas na Marcação Online aparecem aqui automaticamente. Horários de 30 em 30 minutos.</p>
           <div class="form-msg" id="marcMsg"></div>
           <div id="marcList" class="mt-2"></div>
+          <div class="mt-2" style="border-top:1px solid var(--gold-faint);padding-top:.9rem">
+            <p class="form-hint" style="margin:0 0 .5rem"><strong>Privacidade:</strong> a Política de Privacidade promete guardar as marcações durante 24 meses. Use este botão de tempos a tempos para cumprir o prazo.</p>
+            <button type="button" class="btn btn-outline" id="purgeOld" style="padding:.45rem 1rem;font-size:.72rem">🧹 Apagar marcações com mais de 24 meses</button>
+            <span class="form-hint" id="purgeMsg" role="status" style="margin-left:.6rem"></span>
+          </div>
         </div>
       </div>
 
@@ -176,7 +182,7 @@
             <label>até <input type="date" id="fatTo" class="ag-datepick"></label>
           </div>
           <label class="ag-check"><input type="checkbox" id="fatOnlyDone"> Contar só marcações concluídas</label>
-          <p class="form-hint">Valores calculados pelo preçário (com descontos de cupom aplicados). Serviços "sob consulta" são contados à parte, sem somar.</p>
+          <p class="form-hint">Valores calculados pelo preçário (com descontos de cupão aplicados). Serviços "sob consulta" são contados à parte, sem somar.</p>
           <div class="form-msg" id="fatMsg"></div>
           <div id="fatSummary" class="mt-2"></div>
           <div id="fatByService" class="mt-2 table-scroll"></div>
@@ -185,7 +191,7 @@
 
       <div class="panel-section" id="tab-gen">
         <div class="form-card">
-          <h3 style="margin-bottom:1rem">Gerar novo cupom</h3>
+          <h3 style="margin-bottom:1rem">Gerar novo cupão</h3>
           <div class="form-grid">
             <div class="form-field">
               <label for="gType">Tipo</label>
@@ -203,29 +209,29 @@
             <div class="form-field full"><label for="gExp">Válido até</label><input id="gExp" type="date"></div>
           </div>
           <div class="form-msg" id="genMsg"></div>
-          <div class="center-actions"><button type="button" class="btn btn-gold" id="genBtn">Gerar cupom</button></div>
+          <div class="center-actions"><button type="button" class="btn btn-gold" id="genBtn">Gerar cupão</button></div>
           <div id="genResult" class="mt-2"></div>
         </div>
       </div>
 
       <div class="panel-section" id="tab-val">
         <div class="form-card">
-          <h3 style="margin-bottom:1rem">Validar cupom da cliente</h3>
-          <div class="form-grid"><div class="form-field full"><label for="vCode">Código do cupom</label><input id="vCode" type="text" placeholder="INOVA-…"></div></div>
+          <h3 style="margin-bottom:1rem">Validar cupão da cliente</h3>
+          <div class="form-grid"><div class="form-field full"><label for="vCode">Código do cupão</label><input id="vCode" type="text" placeholder="INOVA-…"></div></div>
           <div class="form-msg" id="valMsg"></div>
           <div class="center-actions">
             <button type="button" class="btn btn-outline" id="valBtn">Verificar</button>
             <button type="button" class="btn btn-gold" id="useBtn" style="display:none">Marcar como usado</button>
           </div>
-          <p class="form-hint text-center mt-2">Um cupom marcado como usado nunca mais valida — garante a utilização única.</p>
+          <p class="form-hint text-center mt-2">Um cupão marcado como usado nunca mais valida — garante a utilização única.</p>
         </div>
       </div>
 
       <div class="panel-section" id="tab-hist">
         <div class="form-card">
-          <h3>Cupons gerados</h3>
+          <h3>Cupões gerados</h3>
           <div class="coupon-log table-scroll" id="genLog"></div>
-          <h3 class="mt-2">Cupons usados</h3>
+          <h3 class="mt-2">Cupões usados</h3>
           <div class="coupon-log table-scroll" id="usedLog"></div>
         </div>
       </div>
@@ -249,7 +255,7 @@
           <div class="center-actions" style="justify-content:flex-start">
             <button type="button" class="btn btn-outline" id="logoutBtn">Sair</button>
           </div>
-          <p class="form-hint mt-2">⚠️ O histórico de cupons usados/gerados fica guardado neste dispositivo. As marcações ficam na base de dados (nuvem) e aparecem em qualquer dispositivo onde faça login.</p>
+          <p class="form-hint mt-2">⚠️ O histórico de cupões usados/gerados fica guardado neste dispositivo. As marcações ficam na base de dados (nuvem) e aparecem em qualquer dispositivo onde inicie sessão.</p>
         </div>
       </div>
     </div>
@@ -290,7 +296,7 @@
     if (!em) return lmsg(document.getElementById("loginMsg"), "Escreva o email acima e clique novamente.", false);
     window.InovaAuth.resetPassword(em).then(function (r) {
       if (r.error) return lmsg(document.getElementById("loginMsg"), r.error, false);
-      lmsg(document.getElementById("loginMsg"), "Se existir uma conta com " + em + ", enviámos um link para criar uma nova senha. Veja também o spam (lixo eletrónico).", true);
+      lmsg(document.getElementById("loginMsg"), "Se existir uma conta com " + em + ", enviámos um link para criar uma nova palavra-passe. Veja também o spam (lixo eletrónico).", true);
     });
   });
   document.getElementById("logoutBtn").addEventListener("click", function () { window.InovaAuth.logout(); });
@@ -374,17 +380,33 @@
       if (r.valid && !r.expired) {
         var desc = base * r.pct / 100;
         fin = base - desc;
-        rows += '<div class="bk-charge-row desc"><span>Desconto cupom (' + r.pct + '%)</span><span>−' + eur(desc) + '</span></div>';
+        rows += '<div class="bk-charge-row desc"><span>Desconto cupão (' + r.pct + '%)</span><span>−' + eur(desc) + '</span></div>';
       } else if (r.valid && r.expired) {
-        note = '<div class="bk-charge-note warn">⚠️ Cupom expirado — não aplicar desconto.</div>';
+        note = '<div class="bk-charge-note warn">⚠️ Cupão expirado — não aplicar desconto.</div>';
       } else {
-        note = '<div class="bk-charge-note warn">⚠️ Cupom inválido — cobrar o valor normal.</div>';
+        note = '<div class="bk-charge-note warn">⚠️ Cupão inválido — cobrar o valor normal.</div>';
       }
     }
     rows += '<div class="bk-charge-row final"><span>💰 Valor a cobrar' + (isFrom ? " (mín.)" : "") + '</span><span>' + eur(fin) + '</span></div>';
     return '<div class="bk-charge">' + rows + note + '</div>';
   }
 
+  /* Prazo de conservação: apagar as marcações com mais de 24 meses (Política de Privacidade, secção 6) */
+  document.getElementById("purgeOld").addEventListener("click", function () {
+    var out = document.getElementById("purgeMsg");
+    var lim = new Date(); lim.setMonth(lim.getMonth() - 24);
+    var corte = lim.getFullYear() + "-" + String(lim.getMonth() + 1).padStart(2, "0") + "-" + String(lim.getDate()).padStart(2, "0");
+    out.textContent = "A verificar…";
+    window.InovaAuth.listBookings().then(function (list) {
+      var velhas = list.filter(function (m) { return m.dia && m.dia < corte; });
+      if (!velhas.length) { out.textContent = "Não há marcações anteriores a " + corte + "."; return; }
+      if (!confirm("Apagar " + velhas.length + " marcação(ões) anteriores a " + corte + "? Não dá para desfazer.")) { out.textContent = ""; return; }
+      var n = 0, p = Promise.resolve();
+      velhas.forEach(function (m) { p = p.then(function () { return window.InovaAuth.deleteBooking(m.id).then(function () { n++; }); }); });
+      p.then(function () { out.textContent = "Apagadas " + n + " marcação(ões)."; renderMarc(); })
+       .catch(function () { out.textContent = "Não foi possível apagar tudo (" + n + " apagadas). Tente outra vez."; });
+    }).catch(function () { out.textContent = "Não foi possível ler as marcações."; });
+  });
   document.getElementById("marcRefresh").addEventListener("click", renderMarc);
   document.getElementById("marcFilter").addEventListener("change", renderMarc);
   document.getElementById("marcSearch").addEventListener("input", renderMarc);
@@ -409,7 +431,7 @@
       if (!list.length) { box.innerHTML = '<p class="form-hint">Sem marcações para mostrar.</p>'; return; }
       box.innerHTML = list.map(function (m) {
         var done = m.estado === "concluida";
-        var wa = m.telefone ? '<a class="link-gold" style="color:var(--gold)" href="https://wa.me/' + m.telefone.replace(/\D/g, "") + '" target="_blank" rel="noopener">' + m.telefone + '</a>' : "—";
+        var wa = m.telefone ? '<a class="link-gold" style="color:var(--gold-text)" href="https://wa.me/' + m.telefone.replace(/\D/g, "") + '" target="_blank" rel="noopener">' + m.telefone + '</a>' : "—";
         return '<div class="booking-card' + (done ? " done" : "") + (m.gratuito ? " free" : "") + '">' +
           '<div class="bk-head"><span class="bk-when">📅 ' + fmtDia(m.dia) + ' · 🕐 ' + (m.hora || "—") + '</span>' +
           (m.gratuito ? '<span class="badge free-badge">🎁 GRÁTIS</span> ' : "") +
@@ -419,7 +441,7 @@
           '<div>💅 ' + (m.servico || "—") + '</div>' +
           '<div>📞 ' + wa + '</div>' +
           (m.gratuito ? '<div style="color:#1c7d46;font-weight:500">🎁 Prémio de fidelidade — ' + (m.motivo || "10 selos completos") + (m.voucher ? " · Voucher " + m.voucher : "") + '</div>' : "") +
-          (m.cupom ? '<div>🎟️ Cupom: ' + m.cupom + '</div>' : "") +
+          (m.cupom ? '<div>🎟️ Cupão: ' + m.cupom + '</div>' : "") +
           (m.observacoes ? '<div>📝 ' + m.observacoes + '</div>' : "") +
           chargeBlock(m) +
           '</div>' +
@@ -443,7 +465,7 @@
     }).catch(function (e) { box.innerHTML = '<p class="form-msg err">Erro ao carregar marcações: ' + (e.message || e) + '</p>'; });
   }
 
-  /* ---- cupons ---- */
+  /* ---- cupões ---- */
   var d = new Date(); d.setDate(d.getDate() + 30);
   document.getElementById("gExp").value = d.toISOString().slice(0, 10);
   document.getElementById("gType").addEventListener("change", function () {
@@ -465,7 +487,7 @@
         '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · uso único · 1 código por procedimento</div></div>';
     } else {
       document.getElementById("genResult").innerHTML =
-        '<div class="coupon-card"><div class="c-label">' + (r.type === "aniversario" ? "🎂 Cupom de aniversário" : "🎟️ Cupom de desconto") + '</div>' +
+        '<div class="coupon-card"><div class="c-label">' + (r.type === "aniversario" ? "🎂 Cupão de aniversário" : "🎟️ Cupão de desconto") + '</div>' +
         '<div class="c-pct">' + r.pct + '% de desconto</div><div>Envie este código à cliente:</div><span class="c-code">' + r.code + '</span>' +
         '<div class="c-exp">Válido até ' + exp[2] + "/" + exp[1] + "/" + exp[0] + ' · uso único</div></div>';
     }
@@ -477,16 +499,16 @@
     useBtn.style.display = "none"; lastChecked = null;
     var r = window.InovaCoupon.parse(document.getElementById("vCode").value);
     if (!r.valid) { msg.className = "form-msg err"; msg.textContent = "❌ " + r.reason; return; }
-    if (r.expired) { msg.className = "form-msg err"; msg.textContent = "❌ Cupom expirado."; return; }
-    if (r.used) { msg.className = "form-msg err"; msg.textContent = "❌ Este cupom JÁ FOI UTILIZADO."; return; }
+    if (r.expired) { msg.className = "form-msg err"; msg.textContent = "❌ Cupão expirado."; return; }
+    if (r.used) { msg.className = "form-msg err"; msg.textContent = "❌ Este cupão JÁ FOI UTILIZADO."; return; }
     msg.className = "form-msg ok";
-    msg.textContent = "✅ Cupom VÁLIDO: " + r.pct + "% de desconto" + (r.type === "aniversario" ? " (aniversário)" : "") + ".";
+    msg.textContent = "✅ Cupão VÁLIDO: " + r.pct + "% de desconto" + (r.type === "aniversario" ? " (aniversário)" : "") + ".";
     lastChecked = r.code; useBtn.style.display = "inline-flex";
   });
   document.getElementById("useBtn").addEventListener("click", function () {
     var msg = document.getElementById("valMsg");
     if (lastChecked && window.InovaCoupon.markUsed(lastChecked)) {
-      msg.className = "form-msg ok"; msg.textContent = "✅ Cupom aplicado e marcado como usado.";
+      msg.className = "form-msg ok"; msg.textContent = "✅ Cupão aplicado e marcado como usado.";
       document.getElementById("useBtn").style.display = "none"; renderLogs();
     }
   });
@@ -650,7 +672,7 @@
     if (view === "dia") {
       var wins = IA.windowsFor(cfg, ymd(anchor)).map(function (w) { return IA.fromMin(w.de) + " às " + IA.fromMin(w.ate); });
       return wins.length ? '<span class="ag-on">🟢 Atende: ' + wins.join(" e ") + '</span>'
-        : '<span class="ag-offtxt">⚪ Folga — as clientes não conseguem marcar neste dia.</span> <a href="#" data-goto-disp style="color:var(--gold)">Abrir este dia para atender</a>';
+        : '<span class="ag-offtxt">⚪ Folga — as clientes não conseguem marcar neste dia.</span> <a href="#" data-goto-disp style="color:var(--gold-text)">Abrir este dia para atender</a>';
     }
     var mon = mondayOf(anchor), n = 0;
     for (var i = 0; i < 7; i++) { var d = new Date(mon); d.setDate(mon.getDate() + i); if (IA.windowsFor(cfg, ymd(d)).length) n++; }
@@ -692,7 +714,7 @@
       '<h3>' + esc(m.nome || "Cliente") + '</h3>' +
       '<p class="agm-line">📅 ' + dfmt(m.dia) + ' · 🕐 ' + (m.hora || "") + "–" + endStr(m) + '</p>' +
       '<p class="agm-line">💅 ' + esc(m.servico || "—") + '</p>' +
-      (m.telefone ? '<p class="agm-line">📞 <a href="https://wa.me/' + m.telefone.replace(/\D/g,"") + '" target="_blank" rel="noopener" style="color:var(--gold)">' + esc(m.telefone) + '</a></p>' : "") +
+      (m.telefone ? '<p class="agm-line">📞 <a href="https://wa.me/' + m.telefone.replace(/\D/g,"") + '" target="_blank" rel="noopener" style="color:var(--gold-text)">' + esc(m.telefone) + '</a></p>' : "") +
       (m.cupom ? '<p class="agm-line">🎟️ ' + esc(m.cupom) + '</p>' : "") +
       (m.observacoes ? '<p class="agm-line">📝 ' + esc(m.observacoes) + '</p>' : "") +
       '<p class="agm-val">💰 ' + val + '</p>';
@@ -850,25 +872,26 @@
     }
   });
 })();
-</script><footer class="site-footer">
+</script></main>
+<footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <a class="brand" href="../"><img class="brand-mark" src="../img/mark.png" alt="Inova Beauty">Inova <span>Beauty</span></a>
-      <p>Beleza, precisão e cuidado em cada detalhe. Especialistas em sobrancelhas e pestanas. Em Canidelo, Vila Nova de Gaia.</p>
+      <a class="brand" href="../"><img class="brand-mark" src="../img/mark-96.webp" alt="" width="96" height="96">Inova <span>Beauty</span></a>
+      <p>Beleza, precisão e cuidado em cada detalhe. Sobrancelhas, pestanas e lábios em Canidelo, Vila Nova de Gaia.</p>
     </div>
     <div>
-      <h4>Navegação</h4>
+      <h2 class="footer-title">Navegação</h2>
       <ul>
         <li><a href="../servicos/">Serviços</a></li>
         <li><a href="../precario/">Preçário</a></li>
         <li><a href="../processos/">Processos</a></li>
         <li><a href="../sobre/">Sobre</a></li>
-        <li><a href="../contato/">Contato</a></li>
+        <li><a href="../contato/">Contacto</a></li>
         <li><a href="../localizacao/">Localização</a></li>
       </ul>
     </div>
     <div>
-      <h4>Contactos</h4>
+      <h2 class="footer-title">Contactos</h2>
       <ul>
         <li><a href="../agendar/">✨ Marcar horário online</a></li>
         <li><a href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener">Dúvidas no WhatsApp: +351 919 277 205</a></li>
@@ -877,13 +900,32 @@
         <li><a href="../app/">📱 Instalar a APP</a></li>
       </ul>
     </div>
+    <div>
+      <h2 class="footer-title">Legal</h2>
+      <ul>
+        <li><a href="../privacidade/">Política de Privacidade</a></li>
+        <li><a href="../termos/">Termos e Condições</a></li>
+        <li><a href="../cookies/">Política de Cookies</a></li>
+        <li><a href="../cancelamento/">Cancelamento e reembolso</a></li>
+        <li><a class="lre-link" href="https://www.livroreclamacoes.pt/" target="_blank" rel="noopener">Livro de Reclamações</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-legal">
+    <div class="legal-id">
+      <div><span class="lbl">Prestador de serviços</span> <span class="val" data-sem-traducao>Inova Beauty — <span class="a-preencher" data-campo="nome">A PREENCHER</span></span></div>
+      <div><span class="lbl">NIF</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="nif">A PREENCHER</span></span></div>
+      <div><span class="lbl">Morada</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="morada">A PREENCHER</span></span></div>
+      <div><span class="lbl">Email</span> <span class="val" data-sem-traducao><span class="a-preencher" data-campo="email">A PREENCHER</span></span></div>
+      <div><span class="lbl">Telemóvel</span> <span class="val" data-sem-traducao>+351 919 277 205</span></div>
+    </div>
   </div>
   <div class="container footer-bottom">
-    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../privacidade/" style="color:inherit">Privacidade</a> · <a href="../termos/" style="color:inherit">Termos</a> · <a href="../painel/" style="color:inherit">Área reservada</a>
+    © 2026 Inova Beauty — Todos os direitos reservados. · <a href="../painel/">Área reservada</a>
   </div>
 </footer>
-<a class="app-float" href="../app/home/" aria-label="Abrir a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
-<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener" aria-label="Tirar dúvidas no WhatsApp" title="Dúvidas? Fale connosco"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg><span class="wa-float-tip">Dúvidas?</span></a>
+<nav class="float-nav" aria-label="Atalhos: app e WhatsApp"><a class="app-float" href="../app/home/" aria-label="Abrir a app Inova Beauty"><span><span class="af-icon">📱</span>APP</span></a>
+<a class="wa-float" href="https://wa.me/351919277205?text=Ol%C3%A1%20Inova%20Beauty%21%20Tenho%20uma%20d%C3%BAvida%2C%20pode%20ajudar%3F%20%F0%9F%98%8A" target="_blank" rel="noopener" aria-label="Tirar dúvidas no WhatsApp" title="Dúvidas? Fale connosco"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C9.4 3 4 8.3 4 14.9c0 2.6.8 5 2.3 7L4 29l7.3-2.2c1.5.8 3.1 1.2 4.7 1.2 6.6 0 12-5.3 12-11.9S22.6 3 16 3zm5.9 16.9c-.3.8-1.5 1.5-2.4 1.7-.6.1-1.4.2-4.2-.9-3.5-1.5-5.8-5-6-5.3-.2-.2-1.4-1.9-1.4-3.6s.9-2.6 1.2-2.9c.3-.3.7-.4 1-.4h.7c.2 0 .5-.1.8.6.3.8 1 2.6 1.1 2.8.1.2.2.4 0 .7-.1.2-.2.4-.4.6l-.6.7c-.2.2-.4.4-.2.8.2.4 1 1.7 2.2 2.7 1.5 1.4 2.8 1.8 3.2 2 .4.2.6.2.9-.1.2-.3 1-1.2 1.3-1.6.3-.4.5-.3.9-.2.4.1 2.4 1.1 2.8 1.3.4.2.7.3.8.5.1.2.1 1-.2 1.6z"/></svg><span class="wa-float-tip">Dúvidas?</span></a></nav>
 <script>window.INOVA_PREFIX="../";</script>
 <script src="../auth.js"></script>
 <script src="../main.js"></script>
