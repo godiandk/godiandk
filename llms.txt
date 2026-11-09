@@ -1,0 +1,45 @@
+# Inova Beauty
+
+> Estúdio de estética especializado em sobrancelhas, pestanas, micropigmentação
+> e depilação a laser, em Portugal. Threading (depilação com linha), brow
+> lamination, henna, lifting e extensão de pestanas, e micropigmentação de
+> sobrancelhas, eyeliner e lábios. Atendimento por marcação.
+
+Marcações pelo WhatsApp +351 919 277 205 ou pelo formulário do site.
+Horário: segunda a sábado, das 09h00 às 19h00.
+Todos os serviços começam com uma avaliação, deduzida no valor do procedimento
+quando se trata de micropigmentação.
+
+## Serviços
+
+- [Sobrancelhas](/servicos/sobrancelhas/): threading a partir de 14,00€, brow
+  lamination 35,00€, alisamento 35,00€, henna 26,50€, tintura 24,00€
+- [Pestanas](/servicos/pestanas/): lifting 31,00€, permanente 31,00€,
+  tintura 24,00€, extensão
+- [Micropigmentação](/servicos/micropigmentacao/): sobrancelhas fio a fio,
+  eyeliner e lábios, com pigmentos semi-permanentes
+- [Threading](/servicos/threading/): depilação com linha para rosto e corpo
+- [Depilação a laser](/servicos/depilacao-laser/)
+- [Preçário completo](/precario/): todos os preços em euros, sem surpresas
+
+## Como é feito
+
+- [Processos](/processos/): o passo a passo de cada procedimento, com duração,
+  cuidados antes e depois, e duração do resultado
+
+## Marcar e contactar
+
+- [Marcação online](/agendar/): escolha serviço, dia e hora
+- [Contacto](/contato/)
+- [Localização](/localizacao/)
+- [Sobre](/sobre/)
+
+## Notas para sistemas automáticos
+
+- Preços em euros (EUR), com IVA incluído, válidos para Portugal.
+- Os preços podem mudar: a fonte correta é sempre a página /precario/.
+- Serviços marcados com asterisco no preçário exigem avaliação prévia.
+- Não há compra nem pagamento online: a marcação é um pedido, confirmado depois
+  por WhatsApp.
+- Não recolhemos dados de saúde pelo site.
+- Este site não usa cookies de publicidade nem ferramentas de seguimento.

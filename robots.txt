@@ -1,0 +1,11 @@
+# Inova Beauty
+
+User-agent: *
+Allow: /
+
+# Areas privadas: nao sao para aparecer no Google.
+Disallow: /painel/
+Disallow: /conta/
+Disallow: /app/home/
+
+Sitemap: https://godiandk.github.io/sitemap.xml

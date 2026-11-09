@@ -156,6 +156,16 @@ section { padding: 4.5rem 0; }
   transition: color .2s, border-color .2s;
 }
 .main-nav a.nav-link:hover { color: var(--gold); }
+
+/* Entre 1081px e 1400px o menu horizontal ficava mais largo que o .container
+   (1140px) e era cortado do lado direito. Aperta-se o espacamento em vez de
+   esconder itens: continuam todos visiveis e legiveis. */
+@media (min-width: 1081px) and (max-width: 1500px) {
+  .main-nav > ul { gap: .8rem; }
+  .main-nav a.nav-link { font-size: .74rem; letter-spacing: .07em; }
+  .brand { font-size: 1.18rem; letter-spacing: .15em; }
+  .nav-wrap { gap: .6rem; }
+}
 .main-nav li.active > a.nav-link {
   color: var(--gold);
   border-bottom-color: var(--gold);
@@ -223,7 +233,7 @@ section { padding: 4.5rem 0; }
   transition: all .3s;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   .nav-toggle { display: block; }
   .main-nav {
     position: fixed;
@@ -1223,7 +1233,7 @@ section { padding: 4.5rem 0; }
   transition: all .2s;
 }
 .nav-auth .btn-signup:hover { background: var(--gold); color: var(--white); }
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   .nav-auth { justify-content: center; margin-top: .6rem; }
 }
 
