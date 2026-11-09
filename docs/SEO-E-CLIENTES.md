@@ -81,7 +81,7 @@ num servidor local sem a compressão que o GitHub Pages aplica (o peso real das 
 | `/` | 40 → **76** | 5,2 s → **1,7 s** | 96 → 100 | 96 → 100 | 100 → 100 |
 | `/servicos/sobrancelhas/threading/` | 62 → **78** | 5,2 s → **1,4 s** | 100 → 100 | 96 → 100 | 100 → 100 |
 | `/precario/` | 63 → **78** | 5,1 s → **1,5 s** | 100 → 100 | 96 → 100 | 100 → 100 |
-| `/agendar/` | 64 → **68** | 5,0 s → **4,7 s** | 100 → 100 | 96 → 100 | 100 → 100 |
+| `/agendar/` | 64 → **77** | 5,0 s → **1,5 s** | 100 → 100 | 96 → 100 | 100 → 100 |
 | `/localizacao/` | 65 → **95** | 4,9 s → **1,4 s** | 100 → 100 | 96 → 100 | 100 → 100 |
 
 Com a rede lenta **emulada de verdade** (1,6 Mbps, 150 ms de latência, processador 4× mais lento), em vez de simulada:
